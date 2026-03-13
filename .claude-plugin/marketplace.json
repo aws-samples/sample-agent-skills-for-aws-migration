@@ -1,0 +1,18 @@
+{
+  "name": "sample-agent-skills-for-aws-migration",
+  "owner": {
+    "name": "aws-samples"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "description": "AI agent skills for AWS migration across Claude Code, Cursor, and Kiro"
+  },
+  "plugins": [
+    {
+      "name": "migration-to-aws",
+      "source": "./features/migration-to-aws",
+      "version": "1.0.0",
+      "description": "This no-cost tool assesses your current cloud provider's usage, geography, and billing data to estimate and compare AWS services and pricing, and recommends migration or continued use of your current provider. AWS pricing is based on current published pricing and may vary over time. The tool may generate a .migration folder containing comparison and migration execution data, which you may delete upon completion or use to migrate to AWS."
+    }
+  ]
+}
