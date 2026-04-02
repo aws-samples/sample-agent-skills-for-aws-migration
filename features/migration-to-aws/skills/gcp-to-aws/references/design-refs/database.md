@@ -33,6 +33,8 @@
 - **Ad-hoc SQL queries** → Athena (serverless SQL; cheaper for infrequent queries)
 - **ML models in warehouse** → Redshift ML (or SageMaker) vs BigQuery ML
 
+**Human Expertise Required:** BigQuery migrations involve query pattern translation, large-scale data movement, ETL pipeline rewiring, and BI integration updates that vary significantly by workload. Set `human_expertise_required: true` on all BigQuery resource mappings and include this advisory in the rationale: "BigQuery migrations benefit from specialist guidance. Contact your AWS account team to discuss migration planning for query patterns, data volumes, ETL pipelines, and BI integrations."
+
 ### Memorystore (Redis)
 
 - **In-memory cache** → ElastiCache Redis (fast-path, 1:1 mapping)
@@ -93,6 +95,7 @@ Apply in order:
 - Criterion 3 (User Preference): If `design_constraints.gcp_monthly_spend` indicates cost sensitivity → Athena (pay per query, no idle cost)
 - → **AWS: Athena (Glue catalog, parquet format in S3)**
 - Confidence: `inferred`
+- **`human_expertise_required`: `true`** — BigQuery migrations benefit from specialist guidance. Contact your AWS account team to discuss migration planning for query patterns, data volumes, ETL pipelines, and BI integrations.
 
 ## Output Schema
 
@@ -113,6 +116,7 @@ Apply in order:
     "region": "us-east-1"
   },
   "confidence": "deterministic",
+  "human_expertise_required": false,
   "rationale": "1:1 mapping; Cloud SQL PostgreSQL → RDS Aurora PostgreSQL",
   "rubric_applied": [
     "Eliminators: PASS",

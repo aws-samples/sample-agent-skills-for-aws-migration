@@ -84,7 +84,7 @@ IF `generation-billing.json` AND `aws-design-billing.json` exist:
 
 Produces: `terraform/skeleton.tf` (with TODO markers)
 
-### Documentation (ALWAYS runs last)
+### Documentation (ALWAYS runs after artifact generation)
 
 AFTER all above artifact generation sub-files complete:
 
@@ -92,12 +92,22 @@ AFTER all above artifact generation sub-files complete:
 
 Produces: `MIGRATION_GUIDE.md`, `README.md`
 
+### HTML Report (ALWAYS runs last, after documentation)
+
+AFTER generate-artifacts-docs.md completes:
+
+> Load `generate-artifacts-report.md`
+
+Produces: `migration-report.html`
+
+**Non-blocking:** If report generation fails, log a warning and continue to Phase Completion. Do not fail the phase.
+
 ## Phase Completion
 
 Verify both stages are complete:
 
 1. **Stage 1**: At least one `generation-*.json` file exists
-2. **Stage 2**: At least one artifact directory or file was produced, plus documentation
+2. **Stage 2**: At least one artifact directory or file was produced, plus documentation (HTML report is optional — its absence does not block completion)
 
 Use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.generate` set to `"completed"` — **in the same turn** as the summary below.
 
@@ -106,10 +116,10 @@ Use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` 
 Present final summary to user:
 
 1. **Plans generated** — List all `generation-*.json` files produced
-2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md)
+2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md, migration-report.html)
 3. **Key timelines** — Highlight migration timeline from the generation plans
 4. **Key risks** — Highlight top risks from the generation plans
 5. **TODO markers** — Note any TODO markers in generated artifacts that require manual attention
 6. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
 
-Output to user: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete."
+Output to user: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.html"

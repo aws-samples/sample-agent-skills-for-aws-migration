@@ -201,7 +201,7 @@ Interpret → `ai_model_baseline`. Default: auto-detect from code, fallback Q16 
 
 ---
 
-## Q20 — Do you need vision (image understanding) or just text?
+## Q20 — What input types must the model accept: text only, images (vision), or audio/video?
 
 > A) Text only
 > B) Vision required — model must process images

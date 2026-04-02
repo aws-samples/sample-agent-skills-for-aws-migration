@@ -32,6 +32,26 @@ Recursively scan the entire target directory tree for source code and dependency
 
 ---
 
+## Step 0.5: Auth SDK Exclusion List
+
+Before scanning for GCP imports, check for third-party auth SDK imports. These are **recognized but excluded** from migration — they carry no AWS recommendation.
+
+| Import Pattern                                                           | Auth Provider      |
+| ------------------------------------------------------------------------ | ------------------ |
+| `auth0` / `@auth0/` / `auth0-python`                                     | Auth0              |
+| `@supabase/supabase-js` / `supabase` (with `.auth`)                      | Supabase Auth      |
+| `firebase-admin` (with `.auth`) / `firebase/auth` / `@angular/fire/auth` | Firebase Auth      |
+| `@clerk/` / `clerk-sdk-python`                                           | Clerk              |
+| `@okta/` / `okta-sdk-python` / `okta-jwt-verifier`                       | Okta               |
+| `keycloak` / `@keycloak/keycloak-admin-client` / `python-keycloak`       | Keycloak           |
+| `next-auth` / `@auth/core`                                               | NextAuth / Auth.js |
+
+If any auth SDK import is detected:
+
+1. Log: "Detected [provider] auth SDK in [file] — excluded from migration scope. Keep your existing auth solution."
+2. Do **not** infer a GCP resource or recommend an AWS replacement
+3. Do **not** include in the AI signal scan or any output artifact
+
 ## Step 1: Detect GCP SDK Imports
 
 Scan source files for GCP service imports:

@@ -24,7 +24,7 @@ For each PRIMARY resource in the cluster:
 
 1. Extract GCP type (e.g., `google_sql_database_instance`)
 2. Look up in `design-refs/fast-path.md` → Direct Mappings table
-3. If found (deterministic 1:1 match): assign AWS service with confidence = `deterministic`
+3. If found (deterministic 1:1 match): assign AWS service with confidence = `deterministic`. Set `human_expertise_required: false` (no fast-path resource requires it).
 4. If not found: proceed to Pass 2
 
 ### Pass 2: Rubric-Based Selection
@@ -55,6 +55,10 @@ For resources not covered by fast-path:
    - **Simplicity**: Prefer fewer resources / less config
 
 4. Select best-fit AWS service. Confidence = `inferred`
+
+5. **Set `human_expertise_required`**: If the resource type is `google_bigquery_dataset`, set `human_expertise_required: true`. For all other resource types, set `human_expertise_required: false`. This field is REQUIRED on every resource in the output.
+
+6. **Preferred AWS target check**: Verify the selected `aws_service` aligns with the Preferred AWS Target Services table in `design-refs/fast-path.md`. If a non-preferred service is selected (e.g., App Runner for containerized workloads), substitute the preferred alternative (e.g., Fargate). Add a note to the rationale: "Preferred target: [alternative] selected for stronger ecosystem integration."
 
 ## Step 3: Handle Secondary Resources
 
@@ -121,6 +125,7 @@ For each mapped AWS service, verify:
             "region": "us-east-1"
           },
           "confidence": "deterministic",
+          "human_expertise_required": false,
           "rationale": "1:1 compute mapping with Cold Start considerations",
           "rubric_applied": [
             "Eliminators: PASS",
@@ -146,6 +151,7 @@ For each mapped AWS service, verify:
 - Every cluster has `cluster_id` matching a cluster from `gcp-resource-clusters.json`
 - Every cluster has `gcp_region` and `aws_region`
 - Every resource has `gcp_address`, `gcp_type`, `gcp_config`, `aws_service`, `aws_config`
+- Every resource has `human_expertise_required` (boolean) — set to `true` for BigQuery mappings, `false` for all others
 - All `confidence` values are either `"deterministic"` or `"inferred"`
 - All `rationale` fields are non-empty
 - Every resource from every evaluated cluster appears in the output
@@ -159,5 +165,6 @@ After writing `aws-design.json`, present a concise summary to the user:
 1. Total resources mapped and cluster count
 2. Per-cluster table: GCP resource → AWS service (one line each, include confidence)
 3. Any warnings (regional fallbacks, inferred mappings with low confidence)
+4. If any resource has `human_expertise_required: true`: display a prominent advisory — "**Note:** BigQuery migrations benefit from specialist guidance. Contact your AWS account team to discuss migration planning for query patterns, data volumes, ETL pipelines, and BI integrations."
 
 Keep it under 20 lines. The user can ask for details or re-read `aws-design.json` at any time.

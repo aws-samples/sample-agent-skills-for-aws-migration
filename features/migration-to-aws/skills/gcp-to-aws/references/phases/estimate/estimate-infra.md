@@ -118,27 +118,29 @@ Present a side-by-side comparison:
 
 ## Part 4: One-Time Migration Costs
 
-Beyond recurring AWS service costs, the customer should budget for the following one-time cost categories. Actual amounts depend on team size, hourly rates, existing AWS experience, and migration complexity — do not estimate specific dollar amounts.
+**Billing data check:** Before generating this section, check if `$MIGRATION_DIR/billing-profile.json` exists.
 
-**Development & Testing** — the largest one-time cost. Activities include:
+### IF billing data IS available (`billing-profile.json` exists):
 
-- Architecture design and detailed planning
-- Code migration and application updates
-- Testing and validation (functional, performance, security)
-- Data migration (schema conversion, bulk transfer, validation)
-- Deployment and production cutover
+**Data Transfer** — egress fees from GCP during migration. GCP charges for outbound data transfer; volume depends on database sizes and storage to migrate. Use the billing data to estimate the volume of data that needs to move.
 
-Note the complexity factors that affect effort (derived from `aws-design.json`):
+Set `billing_data_available: true` in the output `migration_cost_considerations` object.
 
-- **Lower effort**: ≤3 services, no database migration, no compliance constraints
-- **Moderate effort**: 4–8 services, or includes database migration
-- **Higher effort**: >8 services, or includes database + compliance constraints, or multi-region
+### IF billing data is NOT available (`billing-profile.json` does not exist):
 
-**Data Transfer** — egress fees from GCP during migration. GCP charges for outbound data transfer; volume depends on database sizes and storage to migrate.
+**Omit the one-time migration cost section entirely.** Without billing data, there is no grounding for data transfer estimates or cost-based effort sizing. Instead, include only this note in the output:
 
-**Infrastructure Setup** — AWS account configuration, IAM setup, VPC provisioning, and initial resource provisioning for testing environments.
+Set `migration_cost_considerations` to:
 
-**Training & Documentation** — team AWS training, updated operational runbooks, and documentation for the new architecture. More significant if the team is new to AWS.
+```json
+{
+  "categories": [],
+  "billing_data_available": false,
+  "note": "Data transfer cost estimates require GCP billing data. Re-run discovery with a GCP billing export to see GCP egress fee projections."
+}
+```
+
+In the user-facing summary, replace the one-time cost section with: "Data transfer cost estimates require GCP billing data. Provide a billing export and re-run discovery to see GCP egress fee projections."
 
 ---
 
@@ -157,7 +159,7 @@ Present the monthly and annual cost difference between GCP baseline and each AWS
 
 **Non-cost benefits to present:** operational efficiency, global reach, service breadth, enterprise integration, vendor diversification, scaling flexibility (auto-scaling, spot instances, savings plans).
 
-**Note:** One-time migration costs are customer-specific and excluded from ROI calculations. The customer should factor their own one-time cost estimates (from Part 4 categories) into their business case.
+**Note:** Data transfer egress fees (if estimated in Part 4) are one-time costs excluded from recurring ROI calculations.
 
 ---
 
@@ -203,7 +205,7 @@ After writing `estimation-infra.json`, present a concise summary to the user:
 2. GCP baseline vs AWS projected (balanced tier) — one-line comparison
 3. Three-tier table: Premium / Balanced / Optimized with monthly totals
 4. Per-service cost breakdown (balanced tier, 1 line per service)
-5. One-time cost categories the customer should budget for
+5. **If billing data available**: Estimated GCP data transfer egress fees. **If billing data NOT available**: "Data transfer cost estimates require GCP billing data."
 6. Monthly and annual savings (or increase) vs GCP per tier
 7. Top 2-3 optimization opportunities with savings amounts
 
@@ -214,7 +216,7 @@ Keep it under 25 lines. The user can ask for details or re-read `estimation-infr
 The Generate phase (`generate.md`) uses `estimation-infra.json` as follows:
 
 1. **`projected_costs.breakdown`** — Budget allocation per cluster migration phase
-2. **`migration_cost_considerations`** — Categories of one-time costs the customer should plan for
+2. **`migration_cost_considerations`** — Data transfer egress cost estimates (if billing data available)
 3. **`optimization_opportunities`** — Which optimizations to implement and when (some during initial migration, some post-migration)
 4. **`cost_comparison`** — Set cost monitoring targets and alerts for each migrated cluster
 5. **`recommendation.next_steps`** — Prerequisites for starting generation
