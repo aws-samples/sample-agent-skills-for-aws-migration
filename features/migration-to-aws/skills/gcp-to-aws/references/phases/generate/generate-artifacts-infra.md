@@ -75,7 +75,8 @@ For each domain with resources in the generation manifest:
 - Consult `references/design-refs/*.md` for AWS configuration best practices
 - A single GCP resource may map to multiple AWS resources (1:Many expansion)
 - Use `gcp_config` values from `aws-design.json` to populate resource attributes
-- For `confidence: "inferred"` resources, add comment: `# Inferred mapping — verify configuration`
+- For `confidence: "inferred"` resources, add comment: `# Tailored to your setup — verify configuration (JSON confidence: inferred)`
+- For `confidence: "deterministic"` resources, optional comment: `# Standard pairing (fixed mapping list)`
 - Include `secondary_resources` from the cluster (IAM roles, security groups)
 - Tag every resource: Project, Environment, ManagedBy, MigrationId
 

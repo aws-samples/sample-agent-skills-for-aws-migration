@@ -215,6 +215,7 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 | Zero downtime required       | Q7 = No downtime                             | Blue/green + AWS DMS required                             |
 | HIPAA compliance             | Q2 = HIPAA                                   | BAA services only, specific regions                       |
 | FedRAMP required             | Q2 = FedRAMP                                 | GovCloud regions only                                     |
+| CCPA / CPRA                  | Q2 = G (CCPA / CPRA)                         | Consumer privacy, logging/retention, data-inventory posture; confirm regions with legal review |
 | Gateway-only AI              | Q14 = B only (LLM router/gateway)            | Config change only; skip SDK migration                    |
 | LangChain/LangGraph AI       | Q14 includes C                               | Provider swap via ChatBedrock; 1–3 days                   |
 | OpenAI Agents SDK            | Q14 includes E                               | Highest AI effort; Bedrock Agents; 2–4 weeks              |

@@ -18,14 +18,16 @@ Sort clusters by `creation_order_depth` (lowest first, representing foundational
 
 For each cluster, process `primary_resources` first, then `secondary_resources` (as classified during discover phase — see `gcp-resource-clusters.json`).
 
-### Pass 1: Fast-Path Lookup
+### Pass 1: Fast-Path Lookup (Direct Mappings table only)
 
 For each PRIMARY resource in the cluster:
 
 1. Extract GCP type (e.g., `google_sql_database_instance`)
-2. Look up in `design-refs/fast-path.md` → Direct Mappings table
-3. If found (deterministic 1:1 match): assign AWS service with confidence = `deterministic`. Set `human_expertise_required: false` (no fast-path resource requires it).
-4. If not found: proceed to Pass 2
+2. Look up in `design-refs/fast-path.md` → **Direct Mappings** table (not the Preferred Target table — that applies later in Pass 2).
+3. If found and conditions match: assign AWS service with confidence = **`deterministic`**. Set `human_expertise_required: false` (no Direct Mapping row requires it).
+4. If not found: proceed to Pass 2 (confidence will be **`inferred`** after rubric, or **`billing_inferred`** on the billing-only path).
+
+**Definitions:** See the top of `design-refs/fast-path.md` for **`deterministic` vs `inferred` vs `billing_inferred`** and the note that **index.md “Typical AWS target” ≠ deterministic**.
 
 ### Pass 2: Rubric-Based Selection
 
@@ -132,9 +134,9 @@ For each mapped AWS service, verify:
             "memory": "1024",
             "region": "us-east-1"
           },
-          "confidence": "deterministic",
+          "confidence": "inferred",
           "human_expertise_required": false,
-          "rationale": "1:1 compute mapping with Cold Start considerations",
+          "rationale": "Rubric: Compute Engine → Fargate (example — not a Direct Mapping row; Cloud Run/Compute Engine use Pass 2)",
           "rubric_applied": [
             "Eliminators: PASS",
             "Operational Model: Managed Fargate",
@@ -172,8 +174,8 @@ For each mapped AWS service, verify:
 After writing `aws-design.json`, present a concise summary to the user:
 
 1. Total resources mapped and cluster count
-2. Per-cluster table: GCP resource → AWS service (one line each, include confidence)
-3. Any warnings (regional fallbacks, inferred mappings with low confidence)
+2. Per-cluster table: GCP resource → AWS service (one line each). For how each mapping was chosen, use **plain English** from `design-refs/fast-path.md` → **User-facing vocabulary** — **Standard pairing** (`deterministic`), **Tailored to your setup** (`inferred`), or **Estimated from billing only** (`billing_inferred`). Lead with the bold phrase; include the JSON value in parentheses only if the user is technical.
+3. Any warnings (regional fallbacks; call out **Tailored to your setup** rows that deserve extra review)
 4. If any resource has **`Deferred — specialist engagement`**: state **prominently** that **no AWS analytics target was chosen**. Direct the user to **their AWS account team and/or a data analytics migration partner**. Do **not** recommend Athena, Redshift, Glue, or EMR in the chat summary.
 
 Keep it under 20 lines. The user can ask for details or re-read `aws-design.json` at any time.

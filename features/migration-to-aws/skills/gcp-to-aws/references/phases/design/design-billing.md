@@ -176,8 +176,8 @@ Write to `$MIGRATION_DIR/aws-design-billing.json`:
 After writing `aws-design-billing.json`, present a concise summary to the user:
 
 1. Mapped X of Y GCP billing services to AWS equivalents
-2. Accuracy notice: billing-inferred confidence, provide .tf files for higher accuracy
-3. Per-service table: GCP service → AWS service (with monthly GCP cost)
+2. Accuracy notice: every mapping here is **Estimated from billing only** (JSON: `billing_inferred`) — suggest providing Terraform for a tighter mapping
+3. Per-service table: GCP service → AWS service (with monthly GCP cost); label recommendation type as **Estimated from billing only** unless you also have IaC-backed design
 4. Unmapped services list with suggestions
 5. Total monthly GCP spend
 6. If any service has **`Deferred — specialist engagement`**: state **prominently** that **no AWS analytics target was chosen**; direct the user to **AWS account team** and/or **data analytics migration partner**. Do **not** recommend Athena, Redshift, or Glue in the summary.

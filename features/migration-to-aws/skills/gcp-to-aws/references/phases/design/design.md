@@ -58,7 +58,7 @@ Output to user: "AWS Architecture designed. Proceeding to Phase 4: Estimate Cost
 Sub-design files may reference rubrics in `design-refs/`:
 
 - `design-refs/index.md` — GCP type → rubric file lookup
-- `design-refs/fast-path.md` — Deterministic 1:1 GCP→AWS mappings
+- `design-refs/fast-path.md` — Direct (table) mappings vs rubric path; **User-facing vocabulary** for presenting `confidence` to users (**Standard pairing** / **Tailored to your setup** / **Estimated from billing only**)
 - `design-refs/compute.md` — Compute service rubric
 - `design-refs/database.md` — Database service rubric
 - `design-refs/storage.md` — Storage service rubric

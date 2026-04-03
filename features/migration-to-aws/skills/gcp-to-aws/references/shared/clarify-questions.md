@@ -115,8 +115,11 @@
 - B. Standard (HIPAA, PCI-DSS, SOC2)
 - C. Strict (FedRAMP, GxP, GDPR)
 - D. Varies by service
+- E. CCPA / CPRA (California Consumer Privacy Act / California Privacy Rights Act)
 
 **Default (Mode C):** A (None)
+
+**Note:** In Category A (IDE) flow, the canonical compliance list and letter mapping live in `references/phases/clarify/clarify-global.md` Q2 — including **G) CCPA / CPRA** before **I don't know**.
 
 ---
 

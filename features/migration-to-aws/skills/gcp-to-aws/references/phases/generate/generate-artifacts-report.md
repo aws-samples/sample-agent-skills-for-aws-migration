@@ -60,7 +60,8 @@ The executive summary is the first thing visible when opening the report. Design
 
 **Section 2 — Recommended AWS Architecture:**
 
-- Table with columns: GCP Service, AWS Service, Confidence
+- Table with columns: GCP Service, AWS Service, **How we chose this**
+- **How we chose this** values: use `design-refs/fast-path.md` → **User-facing vocabulary** — **Standard pairing** (`deterministic`), **Tailored to your setup** (`inferred`), **Estimated from billing only** (`billing_inferred`). Show the **bold phrase** in the table; JSON value optional in a tooltip or footnote for technical readers only.
 - One row per mapped service
 - If any service has `human_expertise_required: true`, mark it with a warning indicator and footnote: "Specialist guidance recommended — contact your AWS account team"
 - Source: design artifact
@@ -95,9 +96,9 @@ For each mapped service, include:
 
 - GCP service name and type
 - AWS service recommendation
-- Confidence level (deterministic / inferred / billing_inferred)
+- **How the mapping was chosen** — use **Standard pairing**, **Tailored to your setup**, or **Estimated from billing only** (`design-refs/fast-path.md` → User-facing vocabulary); JSON `confidence` may appear in parentheses for support
 - Full rationale text from design artifact
-- If rubric was applied: list the 6 criteria evaluations
+- If the mapping was **Tailored to your setup** (`inferred`) and `rubric_applied` is present: list the 6 criteria evaluations (appendix detail — optional in executive summary)
 - If `human_expertise_required: true`: include the specialist guidance callout
 
 Source: design artifact (aws-design.json or aws-design-billing.json)
@@ -218,12 +219,12 @@ The inline CSS must include:
 
 - `.callout-warning`: background #fff8e1; border-left 4px solid #ff9900; padding 12px 16px; margin 1rem 0; border-radius 0 4px 4px 0
 
-**Confidence badges:**
+**Confidence badges (visible text = user-facing vocabulary, not JSON):**
 
 - `.badge`: display inline-block; padding 2px 8px; border-radius 12px; font-size 0.75rem; font-weight 600
-- `.badge-deterministic`: background #e6f4ea; color #137333
-- `.badge-inferred`: background #fef7e0; color #b05a00
-- `.badge-billing`: background #fce8e6; color #c5221f
+- `.badge-deterministic`: background #e6f4ea; color #137333 — label **Standard pairing**
+- `.badge-inferred`: background #fef7e0; color #b05a00 — label **Tailored to your setup**
+- `.badge-billing`: background #fce8e6; color #c5221f — label **Estimated from billing only**
 
 **Print styles:**
 
