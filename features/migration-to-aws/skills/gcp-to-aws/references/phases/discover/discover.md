@@ -132,7 +132,7 @@ Output to user — build message from whichever artifacts exist:
 - If `ai-workload-profile.json` exists: "Detected AI workloads (source: [ai_source])."
 - If `billing-profile.json` exists: "Parsed billing data ($Z/month across N services)."
 
-Format: "Discover phase complete. [artifact summaries joined by space] Proceeding to Phase 2: Clarify."
+Format: "Discover phase complete. [artifact summaries joined by space] Next required step: Phase 2 — Clarify. Load `references/phases/clarify/clarify.md` now. Do not load Design, Estimate, or Generate until Clarify completes and `.phase-status.json` marks `phases.clarify` as `completed`."
 
 ## Output Files
 

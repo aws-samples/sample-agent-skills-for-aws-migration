@@ -114,7 +114,7 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
       "Vendor diversification (reduce single-vendor risk)",
       "Auto-scaling, spot instances, savings plans flexibility"
     ],
-    "note": "Data transfer egress fees (if estimated) are one-time costs excluded from recurring ROI calculations."
+    "note": "GCP data transfer egress fees (if estimated) are vendor one-time charges excluded from recurring ROI calculations. Human/professional-services migration costs are not modeled here."
   },
 
   "optimization_opportunities": [
@@ -192,8 +192,8 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
 - Every service in `aws-design.json` is represented in the cost breakdown
 - `cost_comparison` shows all three options with monthly and annual differences
 - `migration_cost_considerations.billing_data_available` is `true` if `billing-profile.json` exists, `false` otherwise
-- If `billing_data_available` is `true`: `migration_cost_considerations.categories` lists data transfer cost category
-- If `billing_data_available` is `false`: `migration_cost_considerations.categories` is empty; `note` explains that billing data is required for data transfer cost estimates
+- If `billing_data_available` is `true`: `migration_cost_considerations.categories` lists **GCP vendor egress / data transfer** only (never human or professional-services costs)
+- If `billing_data_available` is `false`: `migration_cost_considerations.categories` is empty; `note` explains that billing data is required for GCP egress fee estimates
 - `roi_analysis` presents recurring monthly/annual savings (or increase) per tier
 - `roi_analysis` is honest — if migration increases cost, say so and justify with non-cost benefits
 - `optimization_opportunities` only includes strategies relevant to the designed architecture

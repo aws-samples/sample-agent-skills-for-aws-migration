@@ -70,7 +70,7 @@ The executive summary is the first thing visible when opening the report. Design
 - Side-by-side display: Current GCP Monthly vs Projected AWS Monthly (balanced tier)
 - Percent change (savings or increase)
 - If 3 tiers available: show a compact row for Premium / Balanced / Optimized
-- **Only include "One-Time Migration Cost" if `migration_cost_considerations.billing_data_available` is `true`** in the estimation artifact. If `false`, add footnote: "One-time migration costs require GCP billing data to estimate."
+- **Only include "GCP data transfer egress (est.)" when the infra estimation artifact has `migration_cost_considerations.billing_data_available === true`.** Never present human one-time migration costs. If `false` or only non-infra estimates exist, footnote: "GCP data transfer egress estimates require billing data and the infra estimate path."
 - Source: estimation artifact
 
 **Section 4 — Timeline:**

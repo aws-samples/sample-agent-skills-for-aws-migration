@@ -92,9 +92,9 @@ Secrets Migration (only if `scripts/04-migrate-secrets.sh` exists): `./scripts/0
 
 **Section 4: Service Migration** — Per-cluster migration steps from generation-infra.json, organized by creation_order depth.
 
-**Human Expertise Advisory** — If any service in the generation plan has `human_expertise_required: true`, include a prominent callout box in Section 4 next to that service:
+**Human Expertise Advisory (BigQuery / deferred analytics)** — If any service has `human_expertise_required: true` for BigQuery or `aws_service` is **`Deferred — specialist engagement`**, include a prominent callout in Section 4 next to that service:
 
-> **Specialist Guidance Recommended:** BigQuery migrations involve query pattern translation, large-scale data movement, ETL pipeline rewiring, and BI integration updates that vary significantly by workload. Contact your AWS account team to discuss migration planning before proceeding with this service.
+> **Specialist engagement required (BigQuery):** This plugin **does not** choose an AWS analytics or warehouse target (no Athena/Redshift/Glue recommendation). Engage your **AWS account team** and/or a **data analytics migration partner** before data warehouse, lake, or SQL analytics design. BigQuery work involves query patterns, data movement, ETL/ELT, and BI integration that must be assessed by specialists.
 
 #### IF AI track ran (generation-ai.json exists)
 
@@ -186,7 +186,7 @@ Subsections:
 
 #### Cost Summary
 
-Table from estimation artifacts with: Current GCP Monthly, Projected AWS Monthly, Timeline. **Only include "One-Time Migration Cost" column if `migration_cost_considerations.billing_data_available` is `true` in the estimation artifact.** If `false`, add a note below the table: "One-time migration costs are not shown because no GCP billing data was provided. Provide a billing export and re-run discovery to see these figures."
+Table from estimation artifacts with: Current GCP Monthly, Projected AWS Monthly, Timeline. **Only include a "GCP data transfer egress (est.)" column when `estimation-infra.json` exists and `migration_cost_considerations.billing_data_available` is `true`.** Do **not** add columns or rows for human labor, professional services, or other people-time migration costs. If billing data is unavailable, add a note below the table: "GCP data transfer egress estimates require billing data. Provide a billing export and re-run discovery to see vendor egress projections."
 
 #### Key Decisions
 

@@ -50,6 +50,8 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 | Fargate, ECS, Lambda, EC2                             | `compute.tf`    |
 | CloudWatch, SNS (for alarms)                          | `monitoring.tf` |
 
+**BigQuery / specialist-deferred:** If `aws_service` is **`Deferred — specialist engagement`**, **do not** generate Terraform for that resource (no Glue, Athena, Redshift, or EMR modules from the plugin). Optionally add **`terraform/README-BIGQUERY-DEFERRED.md`** with a short checklist: engage **AWS account team** and/or **data analytics migration partner** before implementing analytics infrastructure.
+
 ## Step 1: Generate main.tf
 
 **Requirements:**

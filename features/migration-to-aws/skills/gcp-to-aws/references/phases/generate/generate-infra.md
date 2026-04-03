@@ -122,7 +122,7 @@ Add additional risks based on discovered infrastructure:
 - If **stateful services** (Redis, Elasticsearch): Add "State migration data loss" (low/critical)
 - If **multiple regions** in GCP: Add "Cross-region dependency during migration" (medium/medium)
 - If **AI workloads** coexist: Add "Model performance drift on Bedrock" (medium/high)
-- If **BigQuery** resources exist (any resource with `human_expertise_required: true` in `aws-design.json`): Add "BigQuery migration complexity" (high/high) with mitigation: "Engage AWS account team for specialist guidance on query pattern translation, data volumes, ETL pipeline rewiring, and BI integration updates"
+- If **BigQuery** resources exist (`google_bigquery_*` or `aws_service` is **`Deferred — specialist engagement`** in `aws-design.json`): Add "BigQuery migration complexity" (high/high) with mitigation: "**No automated AWS analytics target** — engage **AWS account team** and/or **data analytics migration partner** before architecture or cost commitments; plugin does not prescribe Athena/Redshift/Glue."
 
 ## Part 3: Success Metrics
 
