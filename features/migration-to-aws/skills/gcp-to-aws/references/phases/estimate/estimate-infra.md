@@ -211,7 +211,7 @@ After writing `estimation-infra.json`, present a concise summary to the user:
 
 1. **Pricing source and accuracy**: State whether prices came from cache or live API, and the accuracy range (±5-10% for infrastructure from cache/live, ±15-25% if cache is stale). Example: "Estimates based on cached AWS pricing (2026-03-07), accuracy ±5-10%."
 2. GCP baseline vs AWS projected (balanced tier) — one-line comparison
-3. Three-tier table: Premium / Balanced / Optimized with monthly totals
+3. Three-tier table: **Premium**, **Balanced**, **Optimized** with monthly totals. Under or beside each label, use the **short subtitles**: Premium — *Highest resilience / highest monthly estimate in this model*; Balanced — *Default scenario; compare GCP to this first*; Optimized — *Lower monthly estimate; reservations / Spot / storage trade-offs assumed*. Add a one-line **How to read**: three figures are **pricing scenarios** for the same architecture (high → mid → low); **not** three Terraform stacks. When Terraform is generated later, it aligns with **Balanced**.
 4. Per-service cost breakdown (balanced tier, 1 line per service)
 5. **If billing data available**: Estimated GCP data transfer egress fees. **If billing data NOT available**: "Data transfer cost estimates require GCP billing data."
 6. Monthly and annual savings (or increase) vs GCP per tier
@@ -228,5 +228,6 @@ The Generate phase (`generate.md`) uses `estimation-infra.json` as follows:
 3. **`optimization_opportunities`** — Which optimizations to implement and when (some during initial migration, some post-migration)
 4. **`cost_comparison`** — Set cost monitoring targets and alerts for each migrated cluster
 5. **`recommendation.next_steps`** — Prerequisites for starting generation
+6. **Cost tier vs Terraform** — Generated **`terraform/`** implements **one** baseline aligned with the **Balanced** scenario; **Premium** and **Optimized** are **estimate-only** bands unless the user changes IaC. See `generate-artifacts-infra.md` (`terraform/README.md`, `migration_summary` output).
 
 The generated artifacts reference the cost estimates to set per-cluster cost monitoring thresholds and validate that actual AWS spend aligns with projections after each cluster migration.

@@ -68,9 +68,14 @@ The executive summary is the first thing visible when opening the report. Design
 
 **Section 3 — Cost Comparison:**
 
-- Side-by-side display: Current GCP Monthly vs Projected AWS Monthly (balanced tier)
+- Side-by-side display: Current GCP Monthly vs Projected AWS Monthly (**Balanced** tier — the default scenario for comparing to GCP)
 - Percent change (savings or increase)
-- If 3 tiers available: show a compact row for Premium / Balanced / Optimized
+- **How to read cost tiers (callout box — required when infra estimation with three tiers exists):** The three AWS monthly figures are **pricing scenarios** for the **same** mapped architecture (same services in `aws-design.json`), not three different generated Terraform stacks. **Order = highest → middle → lowest** monthly estimate in this model. Use **Balanced** as the **primary** row vs GCP; **Premium** and **Optimized** are **bounds** (higher HA / newer skew vs cost-optimization skew). When `terraform/` is present, it implements **one** infrastructure baseline aligned with the **Balanced** cost scenario (see `terraform/README.md` and `migration_summary` output).
+- If 3 tiers available: show **Premium**, **Balanced**, and **Optimized** with **short subtitles** (second line or subtext under each label):
+  - **Premium** — *Highest resilience / highest monthly estimate in this model*
+  - **Balanced** — *Default scenario; compare GCP to this row first*
+  - **Optimized** — *Lower monthly estimate; reservations, Spot, or storage trade-offs assumed*
+- **Footnote (required):** *Only one Terraform configuration is generated (Balanced-aligned baseline). Premium and Optimized are what-if cost models in `estimation-infra.json` — adjust IaC yourself if you want those postures in production.*
 - **Only include "GCP data transfer egress (est.)" when the infra estimation artifact has `migration_cost_considerations.billing_data_available === true`.** Never present human one-time migration costs. If `false` or only non-infra estimates exist, footnote: "GCP data transfer egress estimates require billing data and the infra estimate path."
 - Source: estimation artifact
 
@@ -109,7 +114,9 @@ Source: design artifact (aws-design.json or aws-design-billing.json)
 
 Source: estimation artifact projected_costs.breakdown
 
-**Three-tier comparison table** with columns: Tier, Monthly Cost, vs GCP Monthly, Annual Difference.
+**Three-tier comparison table** with columns: **Tier** (name + subtitle as in Section 3), Monthly Cost, vs GCP Monthly, Annual Difference.
+
+Repeat the **How to read cost tiers** callout from Section 3 here or include a one-line pointer: *See executive summary — three tiers are scenario $ only; generated Terraform matches **Balanced** baseline.*
 
 Source: estimation artifact cost_comparison
 
@@ -142,7 +149,7 @@ Source: generation plan
 
 List all files and directories generated during the Generate phase:
 
-- `terraform/` — list .tf files
+- `terraform/` — list .tf files and **`README.md`**
 - `scripts/` — list migration scripts
 - `ai-migration/` — list adapter files (if applicable)
 - `MIGRATION_GUIDE.md`, `README.md`
