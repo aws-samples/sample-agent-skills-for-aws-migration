@@ -50,22 +50,26 @@ For each billing service, attempt lookup in order:
 
 Look up `gcp_service_type` in the table below. These are default mappings for common GCP services when no configuration data is available. The IaC path uses the full rubric in category files and may select a different AWS target based on actual configuration.
 
-| `gcp_service_type`               | Billing Name         | Default AWS Target | Alternatives (chosen by IaC path) |
-| -------------------------------- | -------------------- | ------------------ | --------------------------------- |
-| `google_cloud_run_service`       | Cloud Run            | Fargate            | Lambda, EC2                       |
-| `google_cloudfunctions_function` | Cloud Functions      | Lambda             | Fargate                           |
-| `google_compute_instance`        | Compute Engine       | EC2                | Fargate, ASG                      |
-| `google_container_cluster`       | GKE                  | EKS                | ECS, Fargate                      |
-| `google_app_engine_application`  | App Engine           | Fargate            | Amplify, Lambda                   |
-| `google_firestore_database`      | Firestore            | DynamoDB           | —                                 |
-| `google_bigquery_dataset`        | BigQuery             | Athena             | Redshift                          |
-| `google_compute_forwarding_rule` | Cloud Load Balancing | ALB                | NLB                               |
-| `google_compute_backend_service` | Cloud Load Balancing | ALB Target Groups  | NLB                               |
-| `google_pubsub_topic`            | Pub/Sub              | SNS                | SQS, SNS FIFO                     |
-| `google_pubsub_subscription`     | Pub/Sub              | SQS                | SNS Subscription                  |
-| `google_cloud_tasks_queue`       | Cloud Tasks          | SQS                | EventBridge                       |
+| `gcp_service_type`               | Billing Name         | Default AWS Target | Alternatives (chosen by IaC path)              |
+| -------------------------------- | -------------------- | ------------------ | ---------------------------------------------- |
+| `google_cloud_run_service`       | Cloud Run            | Fargate            | Lambda, EC2                                    |
+| `google_cloudfunctions_function` | Cloud Functions      | Lambda             | Fargate                                        |
+| `google_compute_instance`        | Compute Engine       | EC2                | Fargate, ASG                                   |
+| `google_container_cluster`       | GKE                  | EKS                | ECS, Fargate                                   |
+| `google_app_engine_application`  | App Engine           | Fargate            | Amplify, Lambda                                |
+| `google_firestore_database`      | Firestore            | DynamoDB           | —                                              |
+| `google_bigquery_dataset`        | BigQuery             | Athena             | Redshift. **`human_expertise_required: true`** |
+| `google_compute_forwarding_rule` | Cloud Load Balancing | ALB                | NLB                                            |
+| `google_compute_backend_service` | Cloud Load Balancing | ALB Target Groups  | NLB                                            |
+| `google_pubsub_topic`            | Pub/Sub              | SNS                | SQS, SNS FIFO                                  |
+| `google_pubsub_subscription`     | Pub/Sub              | SQS                | SNS Subscription                               |
+| `google_cloud_tasks_queue`       | Cloud Tasks          | SQS                | EventBridge                                    |
 
 If found: assign the Default AWS Target. Set rationale to: "Billing heuristic: [GCP service] → [AWS service]. Provide Terraform files for configuration-aware mapping."
+
+**Set `human_expertise_required`**: If `gcp_service_type` is `google_bigquery_dataset`, set `human_expertise_required: true`. For all other services, set `human_expertise_required: false`. This field is REQUIRED on every service in the output.
+
+**Preferred AWS target check**: Verify the assigned `aws_service` aligns with the Preferred AWS Target Services table in `design-refs/fast-path.md`. If a non-preferred service is selected (e.g., App Runner for containerized workloads), substitute the preferred alternative (e.g., Fargate). Add a note to the rationale: "Preferred target: [alternative] selected for stronger ecosystem integration."
 
 **2c. If not found in either table:** proceed to Step 3.
 
@@ -124,6 +128,7 @@ Write to `$MIGRATION_DIR/aws-design-billing.json`:
       },
       "monthly_cost": 450.00,
       "confidence": "billing_inferred",
+      "human_expertise_required": false,
       "rationale": "Fast-path: Cloud Run → Fargate. SKU hints: CPU + Memory allocation.",
       "sku_hints": ["CPU Allocation Time", "Memory Allocation Time"]
     },
@@ -160,6 +165,7 @@ Write to `$MIGRATION_DIR/aws-design-billing.json`:
 - `metadata.total_services` equals `mapped_services` + `unmapped_services`
 - Every service from `billing-profile.json` appears in either `services[]` or `unknowns[]`
 - All `confidence` values are `"billing_inferred"`
+- Every `services[]` entry has `human_expertise_required` (boolean) — set to `true` for BigQuery mappings, `false` for all others
 - Every `services[]` entry has `gcp_service`, `aws_service`, `monthly_cost`, `rationale`
 - Every `unknowns[]` entry has `gcp_service`, `monthly_cost`, `reason`, `suggestion`
 - Output is valid JSON
@@ -173,5 +179,6 @@ After writing `aws-design-billing.json`, present a concise summary to the user:
 3. Per-service table: GCP service → AWS service (with monthly GCP cost)
 4. Unmapped services list with suggestions
 5. Total monthly GCP spend
+6. If any service has `human_expertise_required: true`: display a prominent advisory — "**Note:** BigQuery migrations benefit from specialist guidance. Contact your AWS account team to discuss migration planning for query patterns, data volumes, ETL pipelines, and BI integrations."
 
 Keep it under 20 lines. The user can ask for details or re-read `aws-design-billing.json` at any time.

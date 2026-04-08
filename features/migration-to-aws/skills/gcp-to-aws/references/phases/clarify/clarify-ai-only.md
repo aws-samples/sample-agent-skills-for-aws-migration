@@ -89,7 +89,7 @@ Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → 
 
 Interpret → `ai_model_baseline`. Default: auto-detect, fallback Q2 priority-based.
 
-## Q6 — Vision or text only?
+## Q6 — What input types must the model accept: text only, images (vision), or audio/video?
 
 > A) Text only | B) Vision required | C) Audio/Video inputs
 

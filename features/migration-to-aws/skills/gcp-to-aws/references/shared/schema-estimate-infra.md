@@ -86,18 +86,11 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
   },
 
   "migration_cost_considerations": {
+    "billing_data_available": true,
     "categories": [
-      "Development & testing (architecture design, code migration, testing, data migration, deployment)",
-      "Data transfer (GCP egress fees based on migration volume)",
-      "Infrastructure setup (AWS account, IAM, VPC, test environments)",
-      "Training & documentation (team AWS training, operational runbooks)"
+      "Data transfer (GCP egress fees based on migration volume)"
     ],
-    "complexity_factors": [
-      "medium: 6 services with database migration",
-      "standard database migration",
-      "container-based compute migration"
-    ],
-    "note": "Actual costs depend on team size, hourly rates, existing AWS experience, and migration complexity. Budget for these categories based on your organization's context."
+    "note": "GCP charges for outbound data transfer during migration. Volume depends on database sizes and storage to migrate."
   },
 
   "roi_analysis": {
@@ -121,7 +114,7 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
       "Vendor diversification (reduce single-vendor risk)",
       "Auto-scaling, spot instances, savings plans flexibility"
     ],
-    "note": "One-time migration costs are customer-specific. Factor your organization's one-time cost estimates into the business case."
+    "note": "Data transfer egress fees (if estimated) are one-time costs excluded from recurring ROI calculations."
   },
 
   "optimization_opportunities": [
@@ -198,8 +191,9 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
 - `projected_costs.breakdown` covers compute, database, storage, networking, and supporting services
 - Every service in `aws-design.json` is represented in the cost breakdown
 - `cost_comparison` shows all three options with monthly and annual differences
-- `migration_cost_considerations` lists categories relevant to this migration's complexity
-- `migration_cost_considerations.complexity_factors` derived from `aws-design.json` and `preferences.json`
+- `migration_cost_considerations.billing_data_available` is `true` if `billing-profile.json` exists, `false` otherwise
+- If `billing_data_available` is `true`: `migration_cost_considerations.categories` lists data transfer cost category
+- If `billing_data_available` is `false`: `migration_cost_considerations.categories` is empty; `note` explains that billing data is required for data transfer cost estimates
 - `roi_analysis` presents recurring monthly/annual savings (or increase) per tier
 - `roi_analysis` is honest — if migration increases cost, say so and justify with non-cost benefits
 - `optimization_opportunities` only includes strategies relevant to the designed architecture

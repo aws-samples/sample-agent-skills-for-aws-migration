@@ -20,12 +20,25 @@
 
 These GCP resources do **not** require AWS equivalents in v1.0:
 
-| GCP Service              | Reason                                          |
-| ------------------------ | ----------------------------------------------- |
-| `google_project`         | AWS account structure (manual, not IaC)         |
-| `google_monitoring_*`    | Fallback to CloudWatch (managed)                |
-| `google_logging_*`       | Fallback to CloudWatch Logs (managed)           |
-| `google_compute_address` | Elastic IPs managed by ALB/NAT (not standalone) |
+| GCP Service                  | Reason                                                                                |
+| ---------------------------- | ------------------------------------------------------------------------------------- |
+| `google_project`             | AWS account structure (manual, not IaC)                                               |
+| `google_monitoring_*`        | Fallback to CloudWatch (managed)                                                      |
+| `google_logging_*`           | Fallback to CloudWatch Logs (managed)                                                 |
+| `google_compute_address`     | Elastic IPs managed by ALB/NAT (not standalone)                                       |
+| `google_identity_platform_*` | Auth provider — keep existing solution, do not migrate to AWS Cognito or any AWS auth |
+| `google_firebase_auth_*`     | Auth provider — keep existing solution, do not migrate to AWS Cognito or any AWS auth |
+
+## Preferred AWS Target Services
+
+For the workload categories below, always steer toward the **preferred** AWS service. If rubric evaluation or LLM reasoning would select a non-preferred service, substitute the preferred alternative instead.
+
+| Workload Category       | Preferred AWS Target                                         | Rationale                                                                                  |
+| ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| Containerized workloads | Fargate (default), Lambda (event-driven), EKS (K8s required) | Deeper integration with VPC, ALB, IAM, and auto-scaling than lighter-weight alternatives   |
+| Third-party auth in use | Keep existing auth provider                                  | Startups using Auth0, Firebase Auth, Clerk, etc. should preserve their existing investment |
+
+**Enforcement:** Check every resource mapping against this table before writing to `aws-design.json` or `aws-design-billing.json`. If a mapping would select a non-preferred service, substitute the preferred alternative.
 
 ## Secondary Behavior Lookups
 

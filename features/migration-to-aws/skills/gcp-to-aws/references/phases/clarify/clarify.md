@@ -323,7 +323,7 @@ Apply the interpret rule for every answered question (defined in each category f
 | Q17 — Critical feature  | J (none)             | no additional override                            |
 | Q18 — Volume + cost     | A (low + quality)    | `ai_token_volume: "low"`                          |
 | Q19 — Current model     | _(auto-detect)_      | `ai_model_baseline` from code detection           |
-| Q20 — Vision            | A (text only)        | no constraint                                     |
+| Q20 — Input types       | A (text only)        | no constraint                                     |
 | Q21 — AI latency        | B (important)        | `ai_latency: "important"`                         |
 | Q22 — Task complexity   | B (moderate)         | `ai_complexity: "moderate"`                       |
 
