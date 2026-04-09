@@ -80,6 +80,12 @@ Present the GCP baseline as a total and per-service breakdown, noting which sour
 
 For each service in `aws-design.json`, calculate monthly cost using rates from `pricing-cache.md`. Track `pricing_source` per service.
 
+**BigQuery / deferred analytics (mandatory):** For any resource where `aws_service` is exactly **`Deferred — specialist engagement`** OR `gcp_type` starts with `google_bigquery_`:
+
+- **Do not** apply Athena, Redshift, Glue, or EMR rates as the plugin’s “projected” analytics stack.
+- **Exclude** these resources from Premium / Balanced / Optimized **numeric totals** (or list them under a `deferred_services[]` / `excluded_from_totals` section in `estimation-infra.json` with reason: *pending specialist engagement*).
+- In the user-facing summary, state that **AWS analytics costs are unknown** until the **AWS account team** and/or **data analytics migration partner** defines the target architecture.
+
 Calculate 3 cost tiers to show the optimization range:
 
 | Tier          | Description                             | Examples                                                            |
@@ -116,19 +122,21 @@ Present a side-by-side comparison:
 
 ---
 
-## Part 4: One-Time Migration Costs
+## Part 4: GCP Data Transfer Egress (Vendor Fees Only)
+
+This section covers **GCP vendor/network charges** for outbound data during migration — not human labor or professional-services costs (those are never presented as dollar estimates by this advisor).
 
 **Billing data check:** Before generating this section, check if `$MIGRATION_DIR/billing-profile.json` exists.
 
 ### IF billing data IS available (`billing-profile.json` exists):
 
-**Data Transfer** — egress fees from GCP during migration. GCP charges for outbound data transfer; volume depends on database sizes and storage to migrate. Use the billing data to estimate the volume of data that needs to move.
+**Data transfer** — egress fees from GCP during migration. GCP charges for outbound data transfer; volume depends on database sizes and storage to migrate. Use the billing data to estimate the volume of data that needs to move.
 
 Set `billing_data_available: true` in the output `migration_cost_considerations` object.
 
 ### IF billing data is NOT available (`billing-profile.json` does not exist):
 
-**Omit the one-time migration cost section entirely.** Without billing data, there is no grounding for data transfer estimates or cost-based effort sizing. Instead, include only this note in the output:
+**Omit GCP data transfer fee estimates.** Without billing data, there is no grounding for egress projections. Instead, include only this note in the output:
 
 Set `migration_cost_considerations` to:
 
@@ -140,7 +148,7 @@ Set `migration_cost_considerations` to:
 }
 ```
 
-In the user-facing summary, replace the one-time cost section with: "Data transfer cost estimates require GCP billing data. Provide a billing export and re-run discovery to see GCP egress fee projections."
+In the user-facing summary, when billing data is missing, state: "GCP data transfer egress estimates require billing data. Provide a billing export and re-run discovery to see vendor egress projections."
 
 ---
 
@@ -159,7 +167,7 @@ Present the monthly and annual cost difference between GCP baseline and each AWS
 
 **Non-cost benefits to present:** operational efficiency, global reach, service breadth, enterprise integration, vendor diversification, scaling flexibility (auto-scaling, spot instances, savings plans).
 
-**Note:** Data transfer egress fees (if estimated in Part 4) are one-time costs excluded from recurring ROI calculations.
+**Note:** GCP data transfer egress fees (if estimated in Part 4) are **vendor** one-time charges excluded from recurring ROI calculations — not human migration costs.
 
 ---
 
@@ -203,7 +211,7 @@ After writing `estimation-infra.json`, present a concise summary to the user:
 
 1. **Pricing source and accuracy**: State whether prices came from cache or live API, and the accuracy range (±5-10% for infrastructure from cache/live, ±15-25% if cache is stale). Example: "Estimates based on cached AWS pricing (2026-03-07), accuracy ±5-10%."
 2. GCP baseline vs AWS projected (balanced tier) — one-line comparison
-3. Three-tier table: Premium / Balanced / Optimized with monthly totals
+3. Three-tier table: **Premium**, **Balanced**, **Optimized** with monthly totals. Under or beside each label, use the **short subtitles**: Premium — *Highest resilience / highest monthly estimate in this model*; Balanced — *Default scenario; compare GCP to this first*; Optimized — *Lower monthly estimate; reservations / Spot / storage trade-offs assumed*. Add a one-line **How to read**: three figures are **pricing scenarios** for the same architecture (high → mid → low); **not** three Terraform stacks. When Terraform is generated later, it aligns with **Balanced**.
 4. Per-service cost breakdown (balanced tier, 1 line per service)
 5. **If billing data available**: Estimated GCP data transfer egress fees. **If billing data NOT available**: "Data transfer cost estimates require GCP billing data."
 6. Monthly and annual savings (or increase) vs GCP per tier
@@ -220,5 +228,6 @@ The Generate phase (`generate.md`) uses `estimation-infra.json` as follows:
 3. **`optimization_opportunities`** — Which optimizations to implement and when (some during initial migration, some post-migration)
 4. **`cost_comparison`** — Set cost monitoring targets and alerts for each migrated cluster
 5. **`recommendation.next_steps`** — Prerequisites for starting generation
+6. **Cost tier vs Terraform** — Generated **`terraform/`** implements **one** baseline aligned with the **Balanced** scenario; **Premium** and **Optimized** are **estimate-only** bands unless the user changes IaC. See `generate-artifacts-infra.md` (`terraform/README.md`, `migration_summary` output).
 
 The generated artifacts reference the cost estimates to set per-cluster cost monitoring thresholds and validate that actual AWS spend aligns with projections after each cluster migration.

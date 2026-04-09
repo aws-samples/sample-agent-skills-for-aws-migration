@@ -58,18 +58,18 @@ Look up `gcp_service_type` in the table below. These are default mappings for co
 | `google_container_cluster`       | GKE                  | EKS                | ECS, Fargate                                   |
 | `google_app_engine_application`  | App Engine           | Fargate            | Amplify, Lambda                                |
 | `google_firestore_database`      | Firestore            | DynamoDB           | —                                              |
-| `google_bigquery_dataset`        | BigQuery             | Athena             | Redshift. **`human_expertise_required: true`** |
+| `google_bigquery_dataset`        | BigQuery             | **`Deferred — specialist engagement`** | **No** Athena/Redshift/Glue in automated output. **`human_expertise_required: true`**. User must engage **AWS account team** and/or **data analytics migration partner**. |
 | `google_compute_forwarding_rule` | Cloud Load Balancing | ALB                | NLB                                            |
 | `google_compute_backend_service` | Cloud Load Balancing | ALB Target Groups  | NLB                                            |
 | `google_pubsub_topic`            | Pub/Sub              | SNS                | SQS, SNS FIFO                                  |
 | `google_pubsub_subscription`     | Pub/Sub              | SQS                | SNS Subscription                               |
 | `google_cloud_tasks_queue`       | Cloud Tasks          | SQS                | EventBridge                                    |
 
-If found: assign the Default AWS Target. Set rationale to: "Billing heuristic: [GCP service] → [AWS service]. Provide Terraform files for configuration-aware mapping."
+If found: assign the Default AWS Target. Set rationale to: "Billing heuristic: [GCP service] → [AWS service]. Provide Terraform files for configuration-aware mapping." **Exception:** For BigQuery, use: "Billing indicates BigQuery spend — **no automated AWS analytics target**; engage AWS account team / data analytics migration partner (`Deferred — specialist engagement`)."
 
-**Set `human_expertise_required`**: If `gcp_service_type` is `google_bigquery_dataset`, set `human_expertise_required: true`. For all other services, set `human_expertise_required: false`. This field is REQUIRED on every service in the output.
+**Set `human_expertise_required`**: If `gcp_service_type` is `google_bigquery_dataset` (or billing rows clearly represent BigQuery analytics), set `human_expertise_required: true` and `aws_service` to **`Deferred — specialist engagement`** (same rules as `design-infra.md` BigQuery gate). For all other services, set `human_expertise_required: false`. This field is REQUIRED on every service in the output.
 
-**Preferred AWS target check**: Verify the assigned `aws_service` aligns with the Preferred AWS Target Services table in `design-refs/fast-path.md`. If a non-preferred service is selected (e.g., App Runner for containerized workloads), substitute the preferred alternative (e.g., Fargate). Add a note to the rationale: "Preferred target: [alternative] selected for stronger ecosystem integration."
+**Preferred AWS target check**: **Skip** when `aws_service` is **`Deferred — specialist engagement`**. Otherwise verify the assigned `aws_service` aligns with the Preferred AWS Target Services table in `design-refs/fast-path.md`. If a non-preferred service is selected (e.g., App Runner for containerized workloads), substitute the preferred alternative (e.g., Fargate). Add a note to the rationale: "Preferred target: [alternative] selected for stronger ecosystem integration."
 
 **2c. If not found in either table:** proceed to Step 3.
 
@@ -165,7 +165,8 @@ Write to `$MIGRATION_DIR/aws-design-billing.json`:
 - `metadata.total_services` equals `mapped_services` + `unmapped_services`
 - Every service from `billing-profile.json` appears in either `services[]` or `unknowns[]`
 - All `confidence` values are `"billing_inferred"`
-- Every `services[]` entry has `human_expertise_required` (boolean) — set to `true` for BigQuery mappings, `false` for all others
+- Every `services[]` entry has `human_expertise_required` (boolean) — `true` for BigQuery; `false` for all others
+- BigQuery entries must have `aws_service` exactly **`Deferred — specialist engagement`** (not Athena/Redshift/Glue)
 - Every `services[]` entry has `gcp_service`, `aws_service`, `monthly_cost`, `rationale`
 - Every `unknowns[]` entry has `gcp_service`, `monthly_cost`, `reason`, `suggestion`
 - Output is valid JSON
@@ -175,10 +176,10 @@ Write to `$MIGRATION_DIR/aws-design-billing.json`:
 After writing `aws-design-billing.json`, present a concise summary to the user:
 
 1. Mapped X of Y GCP billing services to AWS equivalents
-2. Accuracy notice: billing-inferred confidence, provide .tf files for higher accuracy
-3. Per-service table: GCP service → AWS service (with monthly GCP cost)
+2. Accuracy notice: every mapping here is **Estimated from billing only** (JSON: `billing_inferred`) — suggest providing Terraform for a tighter mapping
+3. Per-service table: GCP service → AWS service (with monthly GCP cost); label recommendation type as **Estimated from billing only** unless you also have IaC-backed design
 4. Unmapped services list with suggestions
 5. Total monthly GCP spend
-6. If any service has `human_expertise_required: true`: display a prominent advisory — "**Note:** BigQuery migrations benefit from specialist guidance. Contact your AWS account team to discuss migration planning for query patterns, data volumes, ETL pipelines, and BI integrations."
+6. If any service has **`Deferred — specialist engagement`**: state **prominently** that **no AWS analytics target was chosen**; direct the user to **AWS account team** and/or **data analytics migration partner**. Do **not** recommend Athena, Redshift, or Glue in the summary.
 
 Keep it under 20 lines. The user can ask for details or re-read `aws-design-billing.json` at any time.

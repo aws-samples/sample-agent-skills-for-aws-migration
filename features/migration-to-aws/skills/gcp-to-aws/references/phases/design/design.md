@@ -4,7 +4,8 @@
 
 ## Prerequisites
 
-Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
+1. Read `$MIGRATION_DIR/.phase-status.json`. If missing, invalid, or `phases.clarify` is not exactly `"completed"`: **STOP**. Output: "Phase 2 (Clarify) not completed or phase state is missing/invalid. Run `references/phases/clarify/clarify.md` until Clarify finishes and `.phase-status.json` shows `phases.clarify`: `completed`."
+2. Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
 
 Check which discovery artifacts exist in `$MIGRATION_DIR/`:
 
@@ -57,7 +58,7 @@ Output to user: "AWS Architecture designed. Proceeding to Phase 4: Estimate Cost
 Sub-design files may reference rubrics in `design-refs/`:
 
 - `design-refs/index.md` — GCP type → rubric file lookup
-- `design-refs/fast-path.md` — Deterministic 1:1 GCP→AWS mappings
+- `design-refs/fast-path.md` — Direct (table) mappings vs rubric path; **User-facing vocabulary** for presenting `confidence` to users (**Standard pairing** / **Tailored to your setup** / **Estimated from billing only**)
 - `design-refs/compute.md` — Compute service rubric
 - `design-refs/database.md` — Database service rubric
 - `design-refs/storage.md` — Storage service rubric

@@ -60,17 +60,23 @@ The executive summary is the first thing visible when opening the report. Design
 
 **Section 2 — Recommended AWS Architecture:**
 
-- Table with columns: GCP Service, AWS Service, Confidence
+- Table with columns: GCP Service, AWS Service, **How we chose this**
+- **How we chose this** values: use `design-refs/fast-path.md` → **User-facing vocabulary** — **Standard pairing** (`deterministic`), **Tailored to your setup** (`inferred`), **Estimated from billing only** (`billing_inferred`). Show the **bold phrase** in the table; JSON value optional in a tooltip or footnote for technical readers only.
 - One row per mapped service
 - If any service has `human_expertise_required: true`, mark it with a warning indicator and footnote: "Specialist guidance recommended — contact your AWS account team"
 - Source: design artifact
 
 **Section 3 — Cost Comparison:**
 
-- Side-by-side display: Current GCP Monthly vs Projected AWS Monthly (balanced tier)
+- Side-by-side display: Current GCP Monthly vs Projected AWS Monthly (**Balanced** tier — the default scenario for comparing to GCP)
 - Percent change (savings or increase)
-- If 3 tiers available: show a compact row for Premium / Balanced / Optimized
-- **Only include "One-Time Migration Cost" if `migration_cost_considerations.billing_data_available` is `true`** in the estimation artifact. If `false`, add footnote: "One-time migration costs require GCP billing data to estimate."
+- **How to read cost tiers (callout box — required when infra estimation with three tiers exists):** The three AWS monthly figures are **pricing scenarios** for the **same** mapped architecture (same services in `aws-design.json`), not three different generated Terraform stacks. **Order = highest → middle → lowest** monthly estimate in this model. Use **Balanced** as the **primary** row vs GCP; **Premium** and **Optimized** are **bounds** (higher HA / newer skew vs cost-optimization skew). When `terraform/` is present, it implements **one** infrastructure baseline aligned with the **Balanced** cost scenario (see `terraform/README.md` and `migration_summary` output).
+- If 3 tiers available: show **Premium**, **Balanced**, and **Optimized** with **short subtitles** (second line or subtext under each label):
+  - **Premium** — *Highest resilience / highest monthly estimate in this model*
+  - **Balanced** — *Default scenario; compare GCP to this row first*
+  - **Optimized** — *Lower monthly estimate; reservations, Spot, or storage trade-offs assumed*
+- **Footnote (required):** *Only one Terraform configuration is generated (Balanced-aligned baseline). Premium and Optimized are what-if cost models in `estimation-infra.json` — adjust IaC yourself if you want those postures in production.*
+- **Only include "GCP data transfer egress (est.)" when the infra estimation artifact has `migration_cost_considerations.billing_data_available === true`.** Never present human one-time migration costs. If `false` or only non-infra estimates exist, footnote: "GCP data transfer egress estimates require billing data and the infra estimate path."
 - Source: estimation artifact
 
 **Section 4 — Timeline:**
@@ -95,9 +101,9 @@ For each mapped service, include:
 
 - GCP service name and type
 - AWS service recommendation
-- Confidence level (deterministic / inferred / billing_inferred)
+- **How the mapping was chosen** — use **Standard pairing**, **Tailored to your setup**, or **Estimated from billing only** (`design-refs/fast-path.md` → User-facing vocabulary); JSON `confidence` may appear in parentheses for support
 - Full rationale text from design artifact
-- If rubric was applied: list the 6 criteria evaluations
+- If the mapping was **Tailored to your setup** (`inferred`) and `rubric_applied` is present: list the 6 criteria evaluations (appendix detail — optional in executive summary)
 - If `human_expertise_required: true`: include the specialist guidance callout
 
 Source: design artifact (aws-design.json or aws-design-billing.json)
@@ -108,7 +114,9 @@ Source: design artifact (aws-design.json or aws-design-billing.json)
 
 Source: estimation artifact projected_costs.breakdown
 
-**Three-tier comparison table** with columns: Tier, Monthly Cost, vs GCP Monthly, Annual Difference.
+**Three-tier comparison table** with columns: **Tier** (name + subtitle as in Section 3), Monthly Cost, vs GCP Monthly, Annual Difference.
+
+Repeat the **How to read cost tiers** callout from Section 3 here or include a one-line pointer: *See executive summary — three tiers are scenario $ only; generated Terraform matches **Balanced** baseline.*
 
 Source: estimation artifact cost_comparison
 
@@ -141,7 +149,7 @@ Source: generation plan
 
 List all files and directories generated during the Generate phase:
 
-- `terraform/` — list .tf files
+- `terraform/` — list .tf files and **`README.md`**
 - `scripts/` — list migration scripts
 - `ai-migration/` — list adapter files (if applicable)
 - `MIGRATION_GUIDE.md`, `README.md`
@@ -218,12 +226,12 @@ The inline CSS must include:
 
 - `.callout-warning`: background #fff8e1; border-left 4px solid #ff9900; padding 12px 16px; margin 1rem 0; border-radius 0 4px 4px 0
 
-**Confidence badges:**
+**Confidence badges (visible text = user-facing vocabulary, not JSON):**
 
 - `.badge`: display inline-block; padding 2px 8px; border-radius 12px; font-size 0.75rem; font-weight 600
-- `.badge-deterministic`: background #e6f4ea; color #137333
-- `.badge-inferred`: background #fef7e0; color #b05a00
-- `.badge-billing`: background #fce8e6; color #c5221f
+- `.badge-deterministic`: background #e6f4ea; color #137333 — label **Standard pairing**
+- `.badge-inferred`: background #fef7e0; color #b05a00 — label **Tailored to your setup**
+- `.badge-billing`: background #fce8e6; color #c5221f — label **Estimated from billing only**
 
 **Print styles:**
 

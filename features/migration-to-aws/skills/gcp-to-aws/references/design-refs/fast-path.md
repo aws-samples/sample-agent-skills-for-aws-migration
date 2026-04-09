@@ -1,6 +1,36 @@
 # Fast-Path: Direct GCP→AWS Mappings
 
-**Confidence: `deterministic`** (1:1 mapping, no rubric evaluation needed)
+## What `deterministic` vs `inferred` means
+
+Use these labels **only** as defined here — they describe *how the mapping was chosen*, not whether the AWS architecture is “obvious.”
+
+| Label | Meaning |
+| ----- | ------- |
+| **`deterministic`** | The GCP **Terraform resource type** appears in the **Direct Mappings** table below, the row’s **Conditions** are satisfied, and the AWS target is taken from that row. **No** 6-criteria rubric is run for that mapping. |
+| **`inferred`** | The resource type is **not** in Direct Mappings (or BigQuery / specialist gate applies). The agent loads the category file from `design-refs/index.md`, runs eliminators and the **6-criteria rubric** (and may apply **Preferred AWS Target Services**), then picks the AWS service. |
+| **`billing_inferred`** | Billing-only design path: mappings from billing SKUs/service names — see `references/phases/design/design-billing.md`. |
+
+### User-facing vocabulary (chat, MIGRATION_GUIDE, migration-report)
+
+JSON artifacts **must** keep the `confidence` string values above. When speaking or writing **for end users**, lead with plain English — do **not** use "deterministic," "inferred," or "rubric" as the primary label unless the user asks for technical detail.
+
+| JSON `confidence` | Say this to users | Optional one-line hint |
+| ----------------- | ----------------- | ---------------------- |
+| `deterministic` | **Standard pairing** | Same AWS target for this GCP resource type whenever it matches our fixed list — quick to sanity-check. |
+| `inferred` | **Tailored to your setup** | Based on your Terraform configuration, how the resource fits the rest of your stack, and your migration preferences — review again if those change. |
+| `billing_inferred` | **Estimated from billing only** | From GCP spend line items without full infrastructure detail — add Terraform for a tighter mapping. |
+
+**BigQuery / specialist gate** rows still store `confidence: "inferred"` in JSON; in user-facing text you may say **Tailored to your setup** and emphasize **specialist engagement** (no automated AWS analytics target).
+
+**Canonical reference:** This subsection — other phase files should point here instead of redefining wording.
+
+**Common confusion:** `references/design-refs/index.md` lists a **typical AWS target** per GCP service. That is **not** the same as **`deterministic`**. For example, **Cloud Run → Fargate** is the usual rubric outcome but **Cloud Run is not** in the Direct Mappings table, so confidence is **`inferred`**, not `deterministic`. **GCS → S3** and **`google_compute_network` → VPC** *are* in Direct Mappings, so they are **`deterministic`**.
+
+**Add-ons (ALB, NAT, etc.):** A row may say “Fargate” while the architecture diagram also includes an **ALB** or **NAT Gateway** from **other** Terraform resources. Confidence is still per **resource row** — e.g. `google_cloud_run_service` = `inferred`; `google_compute_forwarding_rule` + backend = often `inferred` (see `networking.md`).
+
+---
+
+**Direct Mappings use confidence: `deterministic`** (fixed table lookup — no rubric for that resource)
 
 ## Direct Mappings Table
 

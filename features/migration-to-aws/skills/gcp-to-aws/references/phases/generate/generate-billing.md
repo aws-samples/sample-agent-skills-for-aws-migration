@@ -120,7 +120,7 @@ For each service in `aws-design-billing.json.services[]`, generate a migration s
 ```
 Service: [gcp_service] → [aws_service]
 Monthly Cost: $[monthly_cost] (GCP) → $[aws_mid] estimated (AWS)
-Confidence: billing_inferred
+How chosen: Estimated from billing only (JSON: billing_inferred) — see design-refs/fast-path.md User-facing vocabulary
 
 Steps:
 1. [ ] Determine actual configuration (instance size, storage, etc.)
@@ -141,7 +141,7 @@ Unknowns:
 ```
 Service: Cloud Run → Fargate
 Monthly Cost: $450.00 (GCP) → $270-$630 estimated (AWS)
-Confidence: billing_inferred
+How chosen: Estimated from billing only (JSON: billing_inferred)
 SKU Hints: CPU Allocation Time, Memory Allocation Time
 
 Steps:

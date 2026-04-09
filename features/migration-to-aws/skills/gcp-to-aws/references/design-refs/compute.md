@@ -2,7 +2,7 @@
 
 **Applies to:** Cloud Run, Cloud Functions, Compute Engine, GKE, App Engine
 
-**Quick lookup (no rubric):** Check `fast-path.md` first (Cloud Run → Fargate, Cloud Functions → Lambda, etc.)
+**Table lookup first:** Check `fast-path.md` **Direct Mappings** for this Terraform type. **Cloud Run, Cloud Functions, GKE, Compute Engine, and App Engine are not** in Direct Mappings — go straight to the rubric below (confidence will be **`inferred`**). Only types in Direct Mappings (e.g. none of the above for compute) get **`deterministic`** from that file.
 
 ## Eliminators (Hard Blockers)
 

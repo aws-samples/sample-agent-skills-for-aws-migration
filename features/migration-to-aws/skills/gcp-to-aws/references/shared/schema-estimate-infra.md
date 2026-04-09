@@ -4,6 +4,22 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
 
 ---
 
+## Cost tiers (`projected_costs` / `cost_comparison`)
+
+The fields **`aws_monthly_premium`**, **`aws_monthly_balanced`**, **`aws_monthly_optimized`** (under `projected_costs`) and **`option_a_premium`**, **`option_b_balanced`**, **`option_c_optimized`** (under `cost_comparison`) are **three pricing scenarios** for the **same** GCP→AWS mapping in `aws-design.json`. They are **not** three alternative Terraform roots.
+
+| Tier key      | User-facing label | Subtitle (use in reports / MIGRATION_GUIDE)                                                                 |
+| ------------- | ----------------- | ----------------------------------------------------------------------------------------------------------- |
+| **`premium`** | Premium           | *Highest resilience / highest monthly estimate in this model*                                                 |
+| **`balanced`** | Balanced | *Default scenario; compare GCP to this first* |
+| **`optimized`** | Optimized       | *Lower monthly estimate; reservations / Spot / storage trade-offs assumed*                                 |
+
+**How to read:** Scenario order is **highest → middle → lowest** monthly AWS estimate for the modeled architecture. **Balanced** is the **primary** comparison row vs the GCP baseline. **Premium** and **Optimized** are **bounds** (HA vs cost-optimization skew).
+
+**Terraform:** When the Generate phase produces `terraform/`, it implements **one** infrastructure baseline aligned with the **Balanced** scenario (`aligned_with_estimate_tier` in the `migration_summary` output). **Premium** and **Optimized** remain **estimate-only** unless the customer edits IaC. See `references/phases/generate/generate-artifacts-infra.md` (`terraform/README.md`, `main.tf` header comment).
+
+---
+
 ## estimation-infra.json schema
 
 ```json
@@ -114,7 +130,7 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
       "Vendor diversification (reduce single-vendor risk)",
       "Auto-scaling, spot instances, savings plans flexibility"
     ],
-    "note": "Data transfer egress fees (if estimated) are one-time costs excluded from recurring ROI calculations."
+    "note": "GCP data transfer egress fees (if estimated) are vendor one-time charges excluded from recurring ROI calculations. Human/professional-services migration costs are not modeled here."
   },
 
   "optimization_opportunities": [
@@ -188,12 +204,13 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
 - `current_costs.source` is `"billing_data"` if `billing-profile.json` was used, `"inventory_estimate"`, `"preferences"`, `"user_provided"` (asked during estimate), or `"unavailable"` (user declined) otherwise
 - `current_costs.gcp_monthly` matches billing-profile.json total (if used) or is a reasonable estimate
 - `projected_costs` has all three tiers (premium, balanced, optimized)
+- **Tier semantics:** Three totals are **scenario $** only (same design); **Balanced** matches generated Terraform baseline — see **Cost tiers** section above; user-facing labels must use the subtitles there (also `estimate-infra.md` Present Summary / `generate-artifacts-report.md`)
 - `projected_costs.breakdown` covers compute, database, storage, networking, and supporting services
 - Every service in `aws-design.json` is represented in the cost breakdown
 - `cost_comparison` shows all three options with monthly and annual differences
 - `migration_cost_considerations.billing_data_available` is `true` if `billing-profile.json` exists, `false` otherwise
-- If `billing_data_available` is `true`: `migration_cost_considerations.categories` lists data transfer cost category
-- If `billing_data_available` is `false`: `migration_cost_considerations.categories` is empty; `note` explains that billing data is required for data transfer cost estimates
+- If `billing_data_available` is `true`: `migration_cost_considerations.categories` lists **GCP vendor egress / data transfer** only (never human or professional-services costs)
+- If `billing_data_available` is `false`: `migration_cost_considerations.categories` is empty; `note` explains that billing data is required for GCP egress fee estimates
 - `roi_analysis` presents recurring monthly/annual savings (or increase) per tier
 - `roi_analysis` is honest — if migration increases cost, say so and justify with non-cost benefits
 - `optimization_opportunities` only includes strategies relevant to the designed architecture
