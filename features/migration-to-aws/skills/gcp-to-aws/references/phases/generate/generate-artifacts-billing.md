@@ -81,7 +81,7 @@ For each mapped service in `aws-design-billing.json.services[]`, generate a reso
 
 For compute stubs: include ECS cluster + task definition with `FARGATE` compatibility, `awsvpc` network mode, `awslogs` log configuration.
 
-For database stubs: include `storage_encrypted = true`, `skip_final_snapshot = true # TODO: Set to false for production`.
+For database stubs: include `storage_encrypted = true`, `skip_final_snapshot = false`, `final_snapshot_identifier = "${var.project_name}-final-snapshot"`. Add comment: `# Set skip_final_snapshot = true only for disposable dev/test instances`.
 
 For storage stubs: include bucket with account ID suffix, versioning enabled, SSE-KMS encryption.
 

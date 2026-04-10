@@ -58,7 +58,8 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 **Requirements:**
 
 - **File header comment block (first lines in `main.tf`, before `terraform {`):** Explain that (1) this directory implements the **single** architecture in `aws-design.json`; (2) the migration report’s **Premium / Balanced / Optimized** figures are **three pricing scenarios** from `estimation-infra.json` for that same map — **not** three separate generated stacks; (3) **this Terraform is aligned with the Balanced cost scenario** (default sizing/HA posture used for the middle estimate); (4) **Premium** = higher HA / higher $ model; **Optimized** = cost-optimization assumptions — users must **edit IaC or add modules** to realize those postures. Point readers to `terraform/README.md` and the `migration_summary` output.
-- `terraform` block: `required_version >= 1.5.0`, `hashicorp/aws ~> 5.0`, commented S3 backend
+- **State backend security warning (comment block above the commented-out S3 backend):** Include a `# WARNING:` block stating that the default local state stores sensitive values (DB endpoints, IAM ARNs, passwords) in plaintext on disk. Before running `terraform apply` against real infrastructure, uncomment and configure the S3 backend with `encrypt = true` and DynamoDB locking — or use another remote backend with encryption. Local state is acceptable only for initial review of the generated plan (`terraform plan`).
+- `terraform` block: `required_version >= 1.5.0`, `hashicorp/aws ~> 5.0`, commented S3 backend (preceded by the WARNING block above)
 - `provider "aws"` block: `region = var.aws_region`, `default_tags` with Project, Environment, ManagedBy, MigrationId
 - Data sources: `aws_caller_identity`, `aws_region`, `aws_availability_zones`
 
@@ -73,6 +74,7 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 3. **Which scenario this Terraform matches** — **Balanced** (primary comparison to GCP; default migration posture in the advisor model). Premium and Optimized are **not** auto-generated as alternate roots.
 4. **If you need Premium or Optimized in production** — Manually adjust instance classes, Multi-AZ, Spot mix, Reserved Instances / Savings Plans, storage classes, etc., then re-estimate.
 5. **Artifacts** — Reference `estimation-infra.json`, `migration-report.html` / `MIGRATION_GUIDE.md` for full tier tables.
+6. **Version control** — If you copy `terraform/` or `scripts/` outside the `.migration/` directory, add a `.gitignore` that excludes `*.tfstate`, `*.tfstate.backup`, `.terraform/`, `*.tfvars` (when they contain secrets), and any filled-in migration scripts with credentials. Never commit Terraform state files to source control.
 
 Keep it under one screen of text.
 
@@ -103,8 +105,8 @@ For each domain with resources in the generation manifest:
 | Networking | At least 2 AZs; public + private subnets; NAT gateway for private subnet internet                                             |
 | Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda                                    |
 | Storage    | Versioning enabled; SSE-S3 or SSE-KMS encryption; block public access; lifecycle policies                                     |
-| Database   | Private subnets; subnet group + parameter group + security group; backups; encryption                                         |
-| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling                                       |
+| Database   | Private subnets; subnet group + parameter group + security group; backups; encryption; `skip_final_snapshot = false` with `final_snapshot_identifier` (set `true` only for disposable dev/test) |
+| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling; ALB `0.0.0.0/0` ingress on 443 only when source GCP service was public-facing — internal services get VPC-scoped security group rules |
 | Monitoring | Log groups per service; dashboard with key metrics; alarms from `generation-infra.json` success_metrics; 30-day log retention |
 
 ## Step 4: Generate outputs.tf
@@ -148,13 +150,15 @@ Verify these quality rules before reporting completion:
 - [ ] Tags on every resource (Project, Environment, ManagedBy, MigrationId)
 - [ ] Encryption at rest on all storage (S3, EBS, RDS)
 - [ ] Databases and internal services use private subnets
-- [ ] No `0.0.0.0/0` ingress except ALB port 443
+- [ ] No `0.0.0.0/0` ingress except ALB port 443 **when the source GCP service was public-facing** (check `gcp_config` for `ingress: "all"`, external LB, or `google_cloud_run_service` with no IAM invoker restriction). For internal-only GCP services, use VPC CIDR or security group references — do not default to public ALB
 - [ ] Every variable has `type` and `description`
 - [ ] Every output has `description`
 - [ ] Region from `var.aws_region`, never hardcoded
 - [ ] `terraform/README.md` exists with cost-tier vs Terraform explanation
 - [ ] `main.tf` begins with the required cost-tier / Balanced alignment comment block
 - [ ] `migration_summary` output includes `aligned_with_estimate_tier` and `cost_scenarios_modeled_in_terraform`
+- [ ] `main.tf` contains a `# WARNING:` comment block about local state security risks above the commented-out S3 backend
+- [ ] All RDS/Aurora resources use `skip_final_snapshot = false` with a `final_snapshot_identifier` — no silent data loss on destroy
 
 ## Phase Completion
 

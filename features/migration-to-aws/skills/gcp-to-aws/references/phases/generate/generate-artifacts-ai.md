@@ -94,7 +94,7 @@ Generate `ai-migration/setup_bedrock.sh`.
 
 - Dry-run by default (`--execute` flag to run for real)
 - Step 1 — Request model access: List each model from `aws-design-ai.json` → `bedrock_models[].aws_model_id` and the embedding model
-- Step 2 — Create IAM role: Trust policy for the compute platform (Lambda, ECS, or EC2 based on `aws-design.json` if present). Bedrock policy: `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` scoped to `arn:aws:bedrock:*::foundation-model/*`
+- Step 2 — Create IAM role: Trust policy for the compute platform (Lambda, ECS, or EC2 based on `aws-design.json` if present). Bedrock policy: `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` scoped to **specific model ARNs only** — build the resource list from `aws-design-ai.json` → `bedrock_models[].aws_model_id` using the target region from `preferences.json` → `design_constraints.target_region`. Format: `arn:aws:bedrock:{region}::foundation-model/{model_id}` for each model. If embeddings are used, include the embedding model ARN as well. **Do not** use `arn:aws:bedrock:*::foundation-model/*` (wildcard grants access to every model on the platform)
 - Step 3 — Print required environment variables: `AWS_REGION`, `AI_PROVIDER=bedrock`, model IDs
 - Step 4 — Verification: Test Bedrock access with a simple `converse` call using the primary model
 - If `$MIGRATION_DIR/terraform/` exists, print coordination note: "Ensure the IAM role is referenced in compute.tf task definitions"
@@ -110,7 +110,7 @@ Skip if `ai_framework` = `"direct"` or absent. Read `preferences.json` → `ai_c
 
 - Map each model from `aws-design-ai.json` to a `bedrock/MODEL_ID` entry with `aws_region_name`
 - Include embedding model entry if embeddings are used
-- Note required env vars: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`
+- Note auth requirements: **Prefer IAM roles** (ECS task role, EC2 instance profile, or IRSA for EKS) over static credentials — the SDK resolves credentials automatically from the role. If static keys are unavoidable (local development only), set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as environment variables, rotate regularly, and **never commit to source control**. Always set `AWS_REGION`.
 
 **`"framework"`** → Generate `gateway_config.py`:
 
@@ -153,7 +153,8 @@ Verify all generated artifacts:
 - [ ] Test harness includes domain-specific prompts from `usage_context`
 - [ ] Test harness produces structured JSON output with latency and quality metrics
 - [ ] Setup script has correct region from `preferences.json`
-- [ ] Setup script IAM role follows least privilege
+- [ ] Setup script IAM role follows least privilege — resource ARNs list only the specific models from `aws-design-ai.json`, not `foundation-model/*`
+- [ ] No static AWS access keys in generated config files — IAM roles are the documented primary auth method; static keys mentioned only as local-dev fallback with rotation and no-commit warnings
 - [ ] All scripts default to dry-run mode
 - [ ] Evaluation artifacts (if generated) have correct model IDs and region
 - [ ] No hardcoded credentials in any file
