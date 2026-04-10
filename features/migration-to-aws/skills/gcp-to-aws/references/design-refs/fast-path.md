@@ -1,12 +1,14 @@
 # Fast-Path: Direct GCP→AWS Mappings
 
+**Confidence: `deterministic`** (1:1 mapping, no rubric evaluation needed)
+
 ## What `deterministic` vs `inferred` means
 
-Use these labels **only** as defined here — they describe *how the mapping was chosen*, not whether the AWS architecture is “obvious.”
+Use these labels **only** as defined here — they describe *how the mapping was chosen*, not whether the AWS architecture is "obvious."
 
 | Label | Meaning |
 | ----- | ------- |
-| **`deterministic`** | The GCP **Terraform resource type** appears in the **Direct Mappings** table below, the row’s **Conditions** are satisfied, and the AWS target is taken from that row. **No** 6-criteria rubric is run for that mapping. |
+| **`deterministic`** | The GCP **Terraform resource type** appears in the **Direct Mappings** table below, the row's **Conditions** are satisfied, and the AWS target is taken from that row. **No** 6-criteria rubric is run for that mapping. |
 | **`inferred`** | The resource type is **not** in Direct Mappings (or BigQuery / specialist gate applies). The agent loads the category file from `design-refs/index.md`, runs eliminators and the **6-criteria rubric** (and may apply **Preferred AWS Target Services**), then picks the AWS service. |
 | **`billing_inferred`** | Billing-only design path: mappings from billing SKUs/service names — see `references/phases/design/design-billing.md`. |
 
@@ -24,9 +26,9 @@ JSON artifacts **must** keep the `confidence` string values above. When speaking
 
 **Canonical reference:** This subsection — other phase files should point here instead of redefining wording.
 
-**Common confusion:** `references/design-refs/index.md` lists a **typical AWS target** per GCP service. That is **not** the same as **`deterministic`**. For example, **Cloud Run → Fargate** is the usual rubric outcome but **Cloud Run is not** in the Direct Mappings table, so confidence is **`inferred`**, not `deterministic`. **GCS → S3** and **`google_compute_network` → VPC** *are* in Direct Mappings, so they are **`deterministic`**.
+**Common confusion:** `references/design-refs/index.md` lists a **typical AWS target** per GCP service. That is not automatically the same as **`deterministic`**. Confidence is `deterministic` only when the exact Terraform resource type appears in the Direct Mappings table above and its conditions are met; otherwise confidence is `inferred` via rubric evaluation.
 
-**Add-ons (ALB, NAT, etc.):** A row may say “Fargate” while the architecture diagram also includes an **ALB** or **NAT Gateway** from **other** Terraform resources. Confidence is still per **resource row** — e.g. `google_cloud_run_service` = `inferred`; `google_compute_forwarding_rule` + backend = often `inferred` (see `networking.md`).
+**Add-ons (ALB, NAT, etc.):** A row may say "Fargate" while the architecture diagram also includes an **ALB** or **NAT Gateway** from **other** Terraform resources. Confidence is still per **resource row** — e.g. `google_cloud_run_service` = `inferred`; `google_compute_forwarding_rule` + backend = often `inferred` (see `networking.md`).
 
 ---
 
@@ -37,6 +39,10 @@ JSON artifacts **must** keep the `confidence` string values above. When speaking
 | GCP Service                                 | AWS Service           | Conditions | Notes                                                |
 | ------------------------------------------- | --------------------- | ---------- | ---------------------------------------------------- |
 | `google_storage_bucket`                     | S3                    | Always     | 1:1 mapping; preserve ACL/versioning/lifecycle rules |
+| `google_cloud_run_service`                  | Fargate               | Always     | Preferred container runtime target                    |
+| `google_cloud_run_v2_service`               | Fargate               | Always     | v2 API variant of Cloud Run                           |
+| `google_cloudfunctions_function`            | Lambda                | Always     | Gen 1 function mapping                                |
+| `google_cloudfunctions2_function`           | Lambda                | Always     | Gen 2 function mapping                                |
 | `google_sql_database_instance` (PostgreSQL) | RDS Aurora PostgreSQL | Always     | Serverless v2 for dev; Provisioned for prod          |
 | `google_sql_database_instance` (MySQL)      | RDS Aurora MySQL      | Always     | Serverless v2 for dev; Provisioned for prod          |
 | `google_sql_database_instance` (SQL Server) | RDS SQL Server        | Always     | Always provisioned (no serverless)                   |
@@ -44,18 +50,20 @@ JSON artifacts **must** keep the `confidence` string values above. When speaking
 | `google_compute_firewall`                   | Security Group        | Always     | 1:1 rule mapping; adjust CIDR if needed              |
 | `google_dns_managed_zone`                   | Route 53 Hosted Zone  | Always     | Preserve zone name and records                       |
 | `google_service_account`                    | IAM Role              | Always     | Map permissions directly; adjust service principals  |
+| `google_secret_manager_secret`              | Secrets Manager       | Always     | Create secret metadata and IAM-scoped access         |
+| `google_secret_manager_secret_version`      | Secrets Manager       | Always     | Carry current value or explicit migration TODO       |
 | `google_redis_instance`                     | ElastiCache Redis     | Always     | 1:1 mapping; preserve cluster mode and node type     |
 
 ## Skip Mappings Table
 
 These GCP resources do **not** require AWS equivalents in v1.0:
 
-| GCP Service                  | Reason                                                                                |
-| ---------------------------- | ------------------------------------------------------------------------------------- |
-| `google_project`             | AWS account structure (manual, not IaC)                                               |
-| `google_monitoring_*`        | Fallback to CloudWatch (managed)                                                      |
-| `google_logging_*`           | Fallback to CloudWatch Logs (managed)                                                 |
-| `google_compute_address`     | Elastic IPs managed by ALB/NAT (not standalone)                                       |
+| GCP Service              | Reason                                          |
+| ------------------------ | ----------------------------------------------- |
+| `google_project`         | AWS account structure (manual, not IaC)         |
+| `google_monitoring_*`    | Fallback to CloudWatch (managed)                |
+| `google_logging_*`       | Fallback to CloudWatch Logs (managed)           |
+| `google_compute_address` | Elastic IPs managed by ALB/NAT (not standalone) |
 | `google_identity_platform_*` | Auth provider — keep existing solution, do not migrate to AWS Cognito or any AWS auth |
 | `google_firebase_auth_*`     | Auth provider — keep existing solution, do not migrate to AWS Cognito or any AWS auth |
 

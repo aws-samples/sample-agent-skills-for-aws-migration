@@ -31,6 +31,8 @@ Read `$MIGRATION_DIR/preferences.json` → `ai_constraints` (if present). If abs
 
 For each model in `models[]`, select the best-fit Bedrock model using the loaded design reference mapping tables. Do NOT use a hardcoded mapping — the design-ref files contain tier-organized tables with pricing and competitive analysis.
 
+Treat model mapping as compatibility-guided, not 1:1 parity. Before cutover, require validation of prompts, tool-calling behavior, and eval metrics for the selected Bedrock model.
+
 **Apply user preference overrides from `ai_constraints`:**
 
 | Preference                | Override                                          |
@@ -167,6 +169,14 @@ Write `aws-design-ai.json` to `$MIGRATION_DIR/`.
 - [ ] `code_migration.primary_pattern` matches `integration.pattern`
 - [ ] All model IDs use current Bedrock identifiers
 - [ ] `honest_assessment` logic is consistent (weakest model drives overall)
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `design.md`, require:
+
+- `aws-design-ai.json` exists and passes the Validation Checklist above.
+
+If this gate fails: STOP and output: "design-ai did not produce a valid `aws-design-ai.json`; do not complete Phase 3."
 
 ## Present Summary
 
