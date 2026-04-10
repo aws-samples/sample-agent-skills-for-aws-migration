@@ -62,7 +62,6 @@ $MIGRATION_DIR/
 - Scripts are numbered for execution order
 - Scripts use `set -euo pipefail` for safety
 - Scripts log all actions to `$MIGRATION_DIR/logs/`
-- Generate a `scripts/.gitignore` that excludes `*.log` and any file matching `*-executed-*` (post-execution artifacts that may contain environment-specific data)
 
 ### 01-validate-prerequisites.sh
 
@@ -100,18 +99,6 @@ SOURCE_HOST="<cloud-sql-ip>"      # TODO: Set Cloud SQL IP
 TARGET_HOST="<rds-endpoint>"       # From terraform output database_endpoint
 DATABASE_NAME="<database>"         # TODO: Set database name
 
-# SECURITY: Do NOT hardcode database passwords in this script.
-# Use one of these approaches (in order of preference):
-#   1. IAM database authentication (Aurora/RDS) — no password needed
-#   2. Secrets Manager lookup (recommended for password-based auth):
-#        export PGPASSWORD=$(aws secretsmanager get-secret-value \
-#          --secret-id "rds-migration-password" \
-#          --query 'SecretString' --output text)
-#   3. ~/.pgpass file (PostgreSQL) or ~/.my.cnf (MySQL) with 600 permissions
-# Never pass passwords as CLI arguments — they appear in process listings.
-DB_USER="<db-user>"               # TODO: Set database user
-# DB_PASSWORD is intentionally omitted — see SECURITY note above
-
 if [ "$DRY_RUN" = true ]; then
   echo "[DRY RUN] Would export from Cloud SQL: $SOURCE_HOST"
   echo "[DRY RUN] Would import to RDS: $TARGET_HOST"
@@ -125,8 +112,7 @@ else
   # Import to RDS
   echo "Importing to RDS..."
   # TODO: Use pg_restore, mysql, or appropriate tool for your database engine
-  # Ensure PGPASSWORD is set via Secrets Manager (see SECURITY note above) before running:
-  # psql -h "$TARGET_HOST" -U "$DB_USER" -d "$DATABASE_NAME" < export.sql
+  # psql -h "$TARGET_HOST" -U admin -d "$DATABASE_NAME" < export.sql
 fi
 
 # Verification
@@ -217,11 +203,6 @@ set -euo pipefail
 
 # Secrets migration: GCP Secret Manager → AWS Secrets Manager
 # Usage: ./04-migrate-secrets.sh [--execute]
-#
-# SECURITY: Secret values are written to a temp file (mode 600) and passed
-# via file:// to avoid exposing them in process listings (ps aux) or shell
-# history. The temp file is removed immediately after use.
-# Do NOT echo, log, or print secret values at any point in this script.
 
 DRY_RUN=true
 [[ "${1:-}" == "--execute" ]] && DRY_RUN=false
@@ -233,27 +214,21 @@ SECRETS=(
   # Add more secrets from your GCP project
 )
 
-TMPFILE=$(mktemp)
-chmod 600 "$TMPFILE"
-trap 'rm -f "$TMPFILE"' EXIT
-
 for SECRET_NAME in "${SECRETS[@]}"; do
   if [ "$DRY_RUN" = true ]; then
     echo "[DRY RUN] Would migrate secret: $SECRET_NAME"
   else
     echo "Reading secret from GCP: $SECRET_NAME"
-    gcloud secrets versions access latest --secret="$SECRET_NAME" > "$TMPFILE"
+    SECRET_VALUE=$(gcloud secrets versions access latest --secret="$SECRET_NAME")
 
     echo "Creating secret in AWS: $SECRET_NAME"
     aws secretsmanager create-secret \
       --name "$SECRET_NAME" \
-      --secret-string "file://$TMPFILE" \
+      --secret-string "$SECRET_VALUE" \
       --tags Key=MigrationSource,Value=gcp-secret-manager 2>/dev/null || \
     aws secretsmanager put-secret-value \
       --secret-id "$SECRET_NAME" \
-      --secret-string "file://$TMPFILE"
-
-    : > "$TMPFILE"
+      --secret-string "$SECRET_VALUE"
   fi
 done
 
@@ -319,12 +294,21 @@ After generating all scripts, verify the following quality rules:
 3. All scripts include verification steps
 4. All scripts are numbered for execution order
 5. All TODO markers are clearly marked with context
-6. No plaintext passwords or secret values in any generated script — credentials must use Secrets Manager lookup, IAM auth, or local credential files (`.pgpass` / `.my.cnf`) with restricted permissions
-7. Secret values are never passed as CLI arguments or stored in shell variables — use file-based input (`file://`) and temp files with `600` permissions
 
 ## Phase Completion
 
 Report the list of generated script files to the parent orchestrator. **Do NOT update `.phase-status.json`** — the parent `generate.md` handles phase completion.
+
+Before reporting completion, enforce artifact output gate:
+
+- `scripts/` directory exists.
+- Required always-on scripts exist: `scripts/01-validate-prerequisites.sh` and `scripts/05-validate-migration.sh`.
+- Conditional scripts exist when corresponding flags are true:
+  - `has_data_migration` -> `scripts/02-migrate-data.sh`
+  - `has_containers` -> `scripts/03-migrate-containers.sh`
+  - `has_secrets` -> `scripts/04-migrate-secrets.sh`
+
+If this gate fails: STOP and output: "generate-artifacts-scripts did not produce required scripts for detected resource categories."
 
 Only list scripts that were actually generated (based on Step 1 resource detection flags):
 

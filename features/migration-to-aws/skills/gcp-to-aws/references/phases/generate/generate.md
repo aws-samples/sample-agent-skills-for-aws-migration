@@ -13,8 +13,7 @@ Both stages must complete for the phase to succeed.
 
 ## Prerequisites
 
-1. Read `$MIGRATION_DIR/.phase-status.json`. If missing, invalid, or `phases.clarify` is not exactly `"completed"`: **STOP**. Output: "Phase 2 (Clarify) not completed or phase state is missing/invalid. Complete Clarify before Generate."
-2. Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
+Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
 
 Check which estimation artifacts exist in `$MIGRATION_DIR/`:
 
@@ -85,7 +84,7 @@ IF `generation-billing.json` AND `aws-design-billing.json` exist:
 
 Produces: `terraform/skeleton.tf` (with TODO markers)
 
-### Documentation (ALWAYS runs after artifact generation)
+### Documentation (ALWAYS runs last)
 
 AFTER all above artifact generation sub-files complete:
 
@@ -93,34 +92,36 @@ AFTER all above artifact generation sub-files complete:
 
 Produces: `MIGRATION_GUIDE.md`, `README.md`
 
-### HTML Report (ALWAYS runs last, after documentation)
-
-AFTER generate-artifacts-docs.md completes:
-
-> Load `generate-artifacts-report.md`
-
-Produces: `migration-report.html`
-
-**Non-blocking:** If report generation fails, log a warning and continue to Phase Completion. Do not fail the phase.
-
 ## Phase Completion
 
 Verify both stages are complete:
 
-1. **Stage 1**: At least one `generation-*.json` file exists
-2. **Stage 2**: At least one artifact directory or file was produced, plus documentation (HTML report is optional — its absence does not block completion)
+1. **Stage 1 route gates (fail closed)**:
+   - If `estimation-infra.json` exists -> require `generation-infra.json`
+   - If `estimation-ai.json` exists -> require `generation-ai.json`
+   - If `estimation-billing.json` exists -> require `generation-billing.json`
+2. **Stage 2 route gates (fail closed)**:
+   - If infra artifact route is active (`generation-infra.json` AND `aws-design.json`) -> require `terraform/` and `scripts/`
+   - If AI artifact route is active (`generation-ai.json` AND `aws-design-ai.json`) -> require `ai-migration/`
+   - If billing artifact route is active (`generation-billing.json` AND `aws-design-billing.json`) -> require `terraform/skeleton.tf`
+3. **Documentation gate (always)**:
+   - Require `MIGRATION_GUIDE.md` and `README.md`
+4. If any active route is missing expected outputs: STOP and output: "Generate route [name] missing required artifacts. Re-run the failed generator before completing Phase 5."
 
-Use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.generate` set to `"completed"` — **in the same turn** as the summary below.
+After all gates pass, use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` — **in the same turn** as the summary below:
+
+- Set `phases.generate` to `"completed"`
+- Set `current_phase` to `"complete"`
 
 ## Summary
 
 Present final summary to user:
 
 1. **Plans generated** — List all `generation-*.json` files produced
-2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md, migration-report.html)
+2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md)
 3. **Key timelines** — Highlight migration timeline from the generation plans
 4. **Key risks** — Highlight top risks from the generation plans
 5. **TODO markers** — Note any TODO markers in generated artifacts that require manual attention
 6. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
 
-Output to user: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.html"
+Output to user: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete."

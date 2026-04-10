@@ -106,13 +106,21 @@ Difference:
   Worst case: [high vs GCP] (potential increase of $X/month)
 ```
 
-## Step 4: Human One-Time Migration Costs (Out of Scope)
+## Step 4: One-Time Migration Costs
 
-**Do not** present human labor, professional services, engineering, training, discovery/design effort, or similar people-time work as one-time migration **costs** or budget categories.
+Beyond recurring AWS costs, the customer should budget for the following one-time cost categories. Billing-only migrations carry additional uncertainty because the source infrastructure configuration is unknown.
 
-Populate `migration_cost_considerations.categories` as an **empty array** `[]`. Use `migration_cost_considerations.note` to state that human and professional-services one-time migration costs are intentionally excluded. You may still recommend IaC discovery in `recommendation.next_steps` or `unknowns` as a **precision** improvement — without framing it as a cost line item.
+**Cost categories to plan for:**
 
-**Vendor fees:** If you discuss GCP egress in narrative, describe it only as **vendor/network charges** when grounded in `billing-profile.json` (do not invent dollar amounts). Do not mix human effort into “one-time cost” lists.
+- **Discovery refinement** — Running IaC discovery (providing Terraform files) to reduce unknowns and narrow cost estimates. Strongly recommended.
+- **Architecture design** — More effort required without source configuration detail. Expect higher effort than IaC-based migrations.
+- **Code migration** — Application changes to target AWS services. Scope is harder to estimate without source configuration.
+- **Testing & validation** — Functional, performance, and security testing. More testing needed when source config is unknown.
+- **Data migration** — Schema conversion, bulk data transfer, and validation. Volume-dependent.
+- **Data transfer egress** — GCP charges for outbound data transfer during migration.
+- **Training & documentation** — Team AWS training and updated operational runbooks.
+
+**Note:** Without source configuration, these categories carry wider uncertainty than IaC-based migrations. Running IaC discovery would significantly narrow the scope of each category.
 
 ## Step 5: Document Unknowns
 
@@ -188,8 +196,15 @@ Write `estimation-billing.json`.
   },
 
   "migration_cost_considerations": {
-    "categories": [],
-    "note": "Human and professional-services one-time migration costs are not presented by this advisor. Billing-only source increases estimate variance; IaC discovery narrows recurring cost ranges.",
+    "categories": [
+      "Discovery refinement (IaC scan recommended)",
+      "Architecture design (higher effort without source config)",
+      "Code migration (scope unknown without IaC)",
+      "Testing & validation",
+      "Data migration & transfer egress",
+      "Training & documentation"
+    ],
+    "note": "Billing-only migrations carry wider uncertainty. IaC discovery would significantly narrow scope.",
     "complexity_factors": ["billing_only_source", "unknown_infrastructure_config"]
   },
 
@@ -237,11 +252,18 @@ Write `estimation-billing.json`.
 - Every service has low/mid/high estimates
 - `unknowns` array is populated with resolution steps
 - `recommendation.confidence` is `"low"` (billing-only never produces high confidence)
-- `migration_cost_considerations.categories` is `[]` — no human one-time migration costs presented
 - No reference to Terraform-based configurations
 - All unknowns documented with impact and resolution
 - All cost values are numbers, not strings
 - Output is valid JSON
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `estimate.md`, require:
+
+- `estimation-billing.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "estimate-billing did not produce a valid `estimation-billing.json`; do not complete Phase 4."
 
 ## Present Summary
 
@@ -251,8 +273,9 @@ After writing `estimation-billing.json`, present a concise summary to the user:
 2. GCP baseline from billing data (total monthly spend)
 3. AWS projected cost ranges: low / mid / high per service
 4. Total projection: best case / expected / worst case vs GCP
-5. Key unknowns that would narrow the estimates
-6. Recommendation: run IaC discovery for tighter estimates (±10-15% vs ±30-40%) — as a precision step, not as a human cost estimate
+5. One-time cost categories the customer should budget for
+6. Key unknowns that would narrow the estimates
+7. Recommendation: run IaC discovery for tighter estimates (±10-15% vs ±30-40%)
 
 Keep it under 20 lines. The user can ask for details or re-read `estimation-billing.json` at any time.
 
@@ -263,4 +286,3 @@ The Generate phase uses `estimation-billing.json`:
 - Uses wide cost ranges for conservative timeline planning
 - Recommends IaC discovery as a prerequisite step
 - Documents unknowns as prerequisites per generation step
-- **Do not** surface human one-time migration **costs** from this artifact — `migration_cost_considerations.categories` remains empty in user-facing docs

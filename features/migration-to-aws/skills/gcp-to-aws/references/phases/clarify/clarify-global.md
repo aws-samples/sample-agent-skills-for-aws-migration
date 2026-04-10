@@ -48,8 +48,7 @@ Default: A — single region, closest AWS region to GCP region in inventory.
 > D) HIPAA — Healthcare data
 > E) FedRAMP / Government — Federal compliance
 > F) GDPR / Data residency — EU data sovereignty requirements
-> G) CCPA / CPRA — California Consumer Privacy Act / California Privacy Rights Act
-> H) I don't know
+> G) I don't know
 >
 > _(Multiple selections allowed)_
 
@@ -61,7 +60,6 @@ Default: A — single region, closest AWS region to GCP region in inventory.
 | HIPAA             | BAA-eligible services only, encryption in transit and at rest mandatory, specific logging requirements, us-east-1/us-west-2 preferred      |
 | FedRAMP           | GovCloud regions required (us-gov-east-1, us-gov-west-1), GovCloud-specific service endpoints, limited service catalog                     |
 | GDPR              | EU regions required (eu-west-1, eu-central-1), data residency constraints, no cross-region replication outside EU without explicit consent |
-| CCPA / CPRA       | Consumer privacy posture: data inventory, access/deletion workflows, opt-out of sale/sharing where applicable, retention minimization, encryption and audit logging (CloudTrail); prefer documenting data flows and subprocessors — confirm target regions with legal/compliance (often US) |
 
 Interpret:
 
@@ -72,8 +70,7 @@ C -> compliance: ["pci"] — Dedicated VPC, WAF required, strict segmentation
 D -> compliance: ["hipaa"] — BAA-eligible services only, encryption mandatory, us-east-1/us-west-2 preferred
 E -> compliance: ["fedramp"] — GovCloud regions required (us-gov-east-1, us-gov-west-1)
 F -> compliance: ["gdpr"] — EU regions required (eu-west-1, eu-central-1), data residency constraints
-G -> compliance: ["ccpa"] — CCPA/CPRA: logging, retention, consumer-request readiness; document data flows; align region/subprocessor choices with legal review
-H -> same as default (A) — no constraint assumed; verify with compliance team before production
+G -> same as default (A) — no constraint assumed; verify with compliance team before production
 ```
 
 Default: A — no constraint.

@@ -18,6 +18,12 @@ Confidence: `deterministic` (always 1:1, no decision tree)
 - Regional location → S3 region selection
 - Encryption (default or CSEK) → S3 encryption (default AES-256 or KMS)
 
+**Security baseline (mandatory):**
+
+- Buckets are private by default (`block_public_* = true`, no public bucket policy).
+- If source workload requires public object delivery, prefer CloudFront with OAC and keep S3 private.
+- Do not emit `Principal = "*"` S3 bucket policies unless user explicitly requests public buckets.
+
 ## GCS → S3 Attribute Mapping
 
 | GCS Attribute                 | S3 Equivalent                               | Notes                                        |

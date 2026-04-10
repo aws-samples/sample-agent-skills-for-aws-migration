@@ -81,7 +81,7 @@ Default: B — `kubernetes: "eks-or-ecs"`.
 
 _Fire when:_ Compute resources present AND WebSocket usage cannot be determined from inventory.
 
-**Rationale:** WebSocket support affects load balancer configuration. App Runner is no longer recommended for any workload — this question confirms whether ALB WebSocket configuration is needed in templates.
+**Rationale:** WebSocket support affects load balancer configuration. App Runner is now on KTLO (keep the lights on) and is no longer recommended for any workload — this question confirms whether ALB WebSocket configuration is needed in templates.
 
 > WebSocket support affects load balancer configuration. This confirms whether ALB WebSocket configuration is needed in the migration templates.
 >

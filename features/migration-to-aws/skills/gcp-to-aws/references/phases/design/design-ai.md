@@ -168,6 +168,14 @@ Write `aws-design-ai.json` to `$MIGRATION_DIR/`.
 - [ ] All model IDs use current Bedrock identifiers
 - [ ] `honest_assessment` logic is consistent (weakest model drives overall)
 
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `design.md`, require:
+
+- `aws-design-ai.json` exists and passes the Validation Checklist above.
+
+If this gate fails: STOP and output: "design-ai did not produce a valid `aws-design-ai.json`; do not complete Phase 3."
+
 ## Present Summary
 
 After writing `aws-design-ai.json`, present under 25 lines:

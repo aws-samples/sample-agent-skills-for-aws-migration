@@ -100,16 +100,15 @@ A 15-week timeline with extended discovery and parallel-run phases to account fo
 
 Risks are higher for billing-only migrations due to configuration uncertainty.
 
-| Risk                                                   | Probability | Impact | Mitigation                                                                                                          |
-| ------------------------------------------------------ | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| Incorrect service sizing                               | high        | high   | Extended discovery phase (Weeks 1-4); right-size after parallel run                                                 |
-| Missing dependencies discovered late                   | high        | medium | Manual dependency mapping in Week 1-2; extra buffer in timeline                                                     |
-| Data migration complexity underestimated               | medium      | high   | Dry run in Week 9; parallel run (Weeks 10-12) as safety net                                                         |
-| Cost overrun due to unknown configurations             | high        | medium | Set billing alerts at 80% of high estimate; weekly cost reviews                                                     |
-| Performance regression from incorrect sizing           | medium      | high   | Parallel run comparison; resize before cutover                                                                      |
-| Longer timeline than planned                           | high        | medium | Build 3-week buffer into schedule; communicate 15-week plan upfront                                                 |
-| Unmapped services block migration                      | medium      | high   | Address unknowns in discovery refinement (Weeks 1-4)                                                                |
-| BigQuery migration complexity (if BigQuery in billing) | high        | high   | Engage AWS account team for specialist guidance on query patterns, data volumes, ETL pipelines, and BI integrations |
+| Risk                                         | Probability | Impact | Mitigation                                                          |
+| -------------------------------------------- | ----------- | ------ | ------------------------------------------------------------------- |
+| Incorrect service sizing                     | high        | high   | Extended discovery phase (Weeks 1-4); right-size after parallel run |
+| Missing dependencies discovered late         | high        | medium | Manual dependency mapping in Week 1-2; extra buffer in timeline     |
+| Data migration complexity underestimated     | medium      | high   | Dry run in Week 9; parallel run (Weeks 10-12) as safety net         |
+| Cost overrun due to unknown configurations   | high        | medium | Set billing alerts at 80% of high estimate; weekly cost reviews     |
+| Performance regression from incorrect sizing | medium      | high   | Parallel run comparison; resize before cutover                      |
+| Longer timeline than planned                 | high        | medium | Build 3-week buffer into schedule; communicate 15-week plan upfront |
+| Unmapped services block migration            | medium      | high   | Address unknowns in discovery refinement (Weeks 1-4)                |
 
 ## Part 4: Per-Service Migration Steps
 
@@ -120,7 +119,7 @@ For each service in `aws-design-billing.json.services[]`, generate a migration s
 ```
 Service: [gcp_service] → [aws_service]
 Monthly Cost: $[monthly_cost] (GCP) → $[aws_mid] estimated (AWS)
-How chosen: Estimated from billing only (JSON: billing_inferred) — see design-refs/fast-path.md User-facing vocabulary
+Confidence: billing_inferred
 
 Steps:
 1. [ ] Determine actual configuration (instance size, storage, etc.)
@@ -141,7 +140,7 @@ Unknowns:
 ```
 Service: Cloud Run → Fargate
 Monthly Cost: $450.00 (GCP) → $270-$630 estimated (AWS)
-How chosen: Estimated from billing only (JSON: billing_inferred)
+Confidence: billing_inferred
 SKU Hints: CPU Allocation Time, Memory Allocation Time
 
 Steps:
@@ -253,7 +252,6 @@ Generate `generation-billing.json` in `$MIGRATION_DIR/` with the following schem
         "monthly_cost_gcp": 450.00,
         "estimated_cost_aws_mid": 450.00,
         "confidence": "billing_inferred",
-        "human_expertise_required": false,
         "unknowns": ["instance sizing", "scaling config"]
       }
     ]
@@ -304,6 +302,14 @@ Generate `generation-billing.json` in `$MIGRATION_DIR/` with the following schem
 - `recommendation.iac_discovery_offered` is `true`
 - `recommendation.confidence` is `"low"`
 - Output is valid JSON
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `generate.md`, require:
+
+- `generation-billing.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "generate-billing did not produce a valid `generation-billing.json`; do not continue Generate Stage 2."
 
 ## Generate Phase Integration
 

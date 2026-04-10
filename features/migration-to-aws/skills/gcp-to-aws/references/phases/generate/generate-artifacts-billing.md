@@ -81,7 +81,7 @@ For each mapped service in `aws-design-billing.json.services[]`, generate a reso
 
 For compute stubs: include ECS cluster + task definition with `FARGATE` compatibility, `awsvpc` network mode, `awslogs` log configuration.
 
-For database stubs: include `storage_encrypted = true`, `skip_final_snapshot = false`, `final_snapshot_identifier = "${var.project_name}-final-snapshot"`. Add comment: `# Set skip_final_snapshot = true only for disposable dev/test instances`.
+For database stubs: include `storage_encrypted = true`, `skip_final_snapshot = true # TODO: Set to false for production`.
 
 For storage stubs: include bucket with account ID suffix, versioning enabled, SSE-KMS encryption.
 
@@ -101,6 +101,14 @@ For storage stubs: include bucket with account ID suffix, versioning enabled, SS
 ## Phase Completion
 
 Report generated files to the parent orchestrator. **Do NOT update `.phase-status.json`** — the parent `generate.md` handles phase completion.
+
+Before reporting completion, enforce artifact output gate:
+
+- `terraform/skeleton.tf` must exist.
+- If `terraform/main.tf` or `terraform/variables.tf` were generated in this step, they must exist and contain billing-skeleton warning headers.
+- `skeleton.tf` must include TODO markers and unmapped-service notes when `unknowns[]` is non-empty.
+
+If this gate fails: STOP and output: "generate-artifacts-billing did not produce required billing skeleton artifacts."
 
 ```
 Generated billing skeleton artifacts:

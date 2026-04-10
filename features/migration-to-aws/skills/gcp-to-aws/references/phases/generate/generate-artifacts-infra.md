@@ -17,7 +17,7 @@ Read from `$MIGRATION_DIR/`:
 - `preferences.json` (REQUIRED) — User preferences including target region, sizing, compliance
 - `gcp-resource-clusters.json` (REQUIRED) — Cluster dependency graph for ordering
 
-Reference files (read as needed): `references/design-refs/index.md` and domain-specific files (compute.md, database.md, storage.md, networking.md, messaging.md, ai.md).
+Reference files (read as needed): `references/design-refs/index.md` and domain-specific files (compute.md, database.md, storage.md, networking.md, messaging.md, security.md, ai.md).
 
 If any REQUIRED file is missing: **STOP**. Output: "Missing required artifact: [filename]. Complete the prior phase that produces it."
 
@@ -31,12 +31,11 @@ Generate `$MIGRATION_DIR/terraform/` with only the files needed for domains that
 | `variables.tf`  | core       | All input variables with types and defaults      |
 | `outputs.tf`    | core       | Resource outputs and migration summary           |
 | `vpc.tf`        | networking | VPC, subnets, NAT, security groups, route tables |
-| `security.tf`   | security   | IAM roles, policies, KMS keys                    |
+| `security.tf`   | security   | IAM roles, policies, KMS keys, Secrets Manager   |
 | `storage.tf`    | storage    | S3 buckets, EFS, backup vaults                   |
 | `database.tf`   | database   | RDS/Aurora instances, parameter groups           |
 | `compute.tf`    | compute    | Fargate/ECS, Lambda, EC2                         |
 | `monitoring.tf` | monitoring | CloudWatch dashboards, alarms, log groups        |
-| `README.md`     | core       | Cost tiers vs this Terraform (one stack; Balanced-aligned) |
 
 ## Step 0: Plan Generation Scope
 
@@ -45,7 +44,7 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 | AWS Service                                           | Target File     |
 | ----------------------------------------------------- | --------------- |
 | VPC, Subnet, NAT Gateway, Security Group, Route Table | `vpc.tf`        |
-| IAM Role, IAM Policy, KMS Key                         | `security.tf`   |
+| IAM Role, IAM Policy, KMS Key, Secrets Manager        | `security.tf`   |
 | S3, EFS, Backup Vault                                 | `storage.tf`    |
 | RDS, Aurora, DynamoDB, ElastiCache                    | `database.tf`   |
 | Fargate, ECS, Lambda, EC2                             | `compute.tf`    |
@@ -57,26 +56,9 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 
 **Requirements:**
 
-- **File header comment block (first lines in `main.tf`, before `terraform {`):** Explain that (1) this directory implements the **single** architecture in `aws-design.json`; (2) the migration report’s **Premium / Balanced / Optimized** figures are **three pricing scenarios** from `estimation-infra.json` for that same map — **not** three separate generated stacks; (3) **this Terraform is aligned with the Balanced cost scenario** (default sizing/HA posture used for the middle estimate); (4) **Premium** = higher HA / higher $ model; **Optimized** = cost-optimization assumptions — users must **edit IaC or add modules** to realize those postures. Point readers to `terraform/README.md` and the `migration_summary` output.
-- **State backend security warning (comment block above the commented-out S3 backend):** Include a `# WARNING:` block stating that the default local state stores sensitive values (DB endpoints, IAM ARNs, passwords) in plaintext on disk. Before running `terraform apply` against real infrastructure, uncomment and configure the S3 backend with `encrypt = true` and DynamoDB locking — or use another remote backend with encryption. Local state is acceptable only for initial review of the generated plan (`terraform plan`).
-- `terraform` block: `required_version >= 1.5.0`, `hashicorp/aws ~> 5.0`, commented S3 backend (preceded by the WARNING block above)
+- `terraform` block: `required_version >= 1.5.0`, `hashicorp/aws ~> 5.0`, commented S3 backend
 - `provider "aws"` block: `region = var.aws_region`, `default_tags` with Project, Environment, ManagedBy, MigrationId
 - Data sources: `aws_caller_identity`, `aws_region`, `aws_availability_zones`
-
-## Step 1b: Generate terraform/README.md
-
-**Always create** `$MIGRATION_DIR/terraform/README.md` when generating Terraform (same pass as Step 1).
-
-**Required sections:**
-
-1. **What this directory is** — Implements one deployable baseline from `aws-design.json` (and `generation-infra.json` / `preferences.json` as applicable).
-2. **Cost tiers in the migration report** — Premium, Balanced, and Optimized are **monthly cost scenarios** in `estimation-infra.json` for the **same** service mapping; order is high → mid → low estimate.
-3. **Which scenario this Terraform matches** — **Balanced** (primary comparison to GCP; default migration posture in the advisor model). Premium and Optimized are **not** auto-generated as alternate roots.
-4. **If you need Premium or Optimized in production** — Manually adjust instance classes, Multi-AZ, Spot mix, Reserved Instances / Savings Plans, storage classes, etc., then re-estimate.
-5. **Artifacts** — Reference `estimation-infra.json`, `migration-report.html` / `MIGRATION_GUIDE.md` for full tier tables.
-6. **Version control** — If you copy `terraform/` or `scripts/` outside the `.migration/` directory, add a `.gitignore` that excludes `*.tfstate`, `*.tfstate.backup`, `.terraform/`, `*.tfvars` (when they contain secrets), and any filled-in migration scripts with credentials. Never commit Terraform state files to source control.
-
-Keep it under one screen of text.
 
 ## Step 2: Generate variables.tf
 
@@ -93,8 +75,7 @@ For each domain with resources in the generation manifest:
 - Consult `references/design-refs/*.md` for AWS configuration best practices
 - A single GCP resource may map to multiple AWS resources (1:Many expansion)
 - Use `gcp_config` values from `aws-design.json` to populate resource attributes
-- For `confidence: "inferred"` resources, add comment: `# Tailored to your setup — verify configuration (JSON confidence: inferred)`
-- For `confidence: "deterministic"` resources, optional comment: `# Standard pairing (fixed mapping list)`
+- For `confidence: "inferred"` resources, add comment: `# Inferred mapping — verify configuration`
 - Include `secondary_resources` from the cluster (IAM roles, security groups)
 - Tag every resource: Project, Environment, ManagedBy, MigrationId
 
@@ -102,43 +83,16 @@ For each domain with resources in the generation manifest:
 
 | Domain     | Key Rules                                                                                                                     |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Networking | At least 2 AZs; public + private subnets; NAT gateway for private subnet internet                                             |
-| Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda                                    |
-| Storage    | Versioning enabled; SSE-S3 or SSE-KMS encryption; block public access; lifecycle policies                                     |
-| Database   | Private subnets; subnet group + parameter group + security group; backups; encryption; `skip_final_snapshot = false` with `final_snapshot_identifier` (set `true` only for disposable dev/test) |
-| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling; ALB `0.0.0.0/0` ingress on 443 only when source GCP service was public-facing — internal services get VPC-scoped security group rules |
+| Networking | At least 2 AZs; public + private subnets; NAT gateway for private subnet internet; internet-facing ALB must terminate TLS on 443 and HTTP 80 must redirect to HTTPS |
+| Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda; Secrets Manager resources with no plaintext defaults |
+| Storage    | Versioning enabled; SSE-S3 or SSE-KMS encryption; block public access by default; lifecycle policies; if public content is required use CloudFront/OAC instead of public bucket policy |
+| Database   | Private subnets; subnet group + parameter group + security group; backups; encryption                                         |
+| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling                                       |
 | Monitoring | Log groups per service; dashboard with key metrics; alarms from `generation-infra.json` success_metrics; 30-day log retention |
 
 ## Step 4: Generate outputs.tf
 
-Output identifiers for key resources (VPC ID, database endpoint, ECS cluster name, etc.) plus a **`migration_summary` output** (object) including at minimum:
-
-| Key | Type / example | Purpose |
-| --- | -------------- | ------- |
-| `aws_region` | string | From `var.aws_region` |
-| `environment` | string | From `var.environment` |
-| `migration_id` | string | From `var.migration_id` |
-| `service_count` | number | Count of primary logical services / resources represented |
-| `aligned_with_estimate_tier` | string | Always **`"balanced"`** for this advisor — generated IaC matches the **Balanced** scenario in `estimation-infra.json` |
-| `cost_scenarios_modeled_in_terraform` | string | e.g. **`"design_baseline_only"`** — only one stack generated; Premium/Optimized exist as **pricing** scenarios in estimates, not as additional Terraform trees |
-
-Add VPC ID or other IDs when known from resources. Descriptions on every output.
-
-**Example shape:**
-
-```hcl
-output "migration_summary" {
-  description = "Migration run metadata and cost-tier alignment (Balanced baseline)"
-  value = {
-    aws_region                            = var.aws_region
-    environment                           = var.environment
-    migration_id                          = var.migration_id
-    service_count                         = <number>
-    aligned_with_estimate_tier            = "balanced"
-    cost_scenarios_modeled_in_terraform   = "design_baseline_only"
-  }
-}
-```
+Output identifiers for key resources (VPC ID, database endpoint, ECS cluster name, etc.) plus a `migration_summary` output with region, VPC ID, environment, service count, and migration ID.
 
 ## Step 5: Self-Check
 
@@ -150,23 +104,27 @@ Verify these quality rules before reporting completion:
 - [ ] Tags on every resource (Project, Environment, ManagedBy, MigrationId)
 - [ ] Encryption at rest on all storage (S3, EBS, RDS)
 - [ ] Databases and internal services use private subnets
-- [ ] No `0.0.0.0/0` ingress except ALB port 443 **when the source GCP service was public-facing** (check `gcp_config` for `ingress: "all"`, external LB, or `google_cloud_run_service` with no IAM invoker restriction). For internal-only GCP services, use VPC CIDR or security group references — do not default to public ALB
+- [ ] ALB listeners enforce HTTPS (443) and HTTP (80) only redirects to HTTPS
+- [ ] No S3 bucket policy with `Principal = "*"` unless explicitly approved by user requirements
+- [ ] No `0.0.0.0/0` ingress except ALB port 443
 - [ ] Every variable has `type` and `description`
 - [ ] Every output has `description`
 - [ ] Region from `var.aws_region`, never hardcoded
-- [ ] `terraform/README.md` exists with cost-tier vs Terraform explanation
-- [ ] `main.tf` begins with the required cost-tier / Balanced alignment comment block
-- [ ] `migration_summary` output includes `aligned_with_estimate_tier` and `cost_scenarios_modeled_in_terraform`
-- [ ] `main.tf` contains a `# WARNING:` comment block about local state security risks above the commented-out S3 backend
-- [ ] All RDS/Aurora resources use `skip_final_snapshot = false` with a `final_snapshot_identifier` — no silent data loss on destroy
 
 ## Phase Completion
 
 Report generated files to the parent orchestrator. **Do NOT update `.phase-status.json`** — the parent `generate.md` handles phase completion.
 
+Before reporting completion, enforce artifact output gate:
+
+- `terraform/` directory exists.
+- At minimum: `terraform/main.tf`, `terraform/variables.tf`, and `terraform/outputs.tf` exist.
+- At least one domain file exists among: `vpc.tf`, `security.tf`, `storage.tf`, `database.tf`, `compute.tf`, `monitoring.tf`.
+
+If this gate fails: STOP and output: "generate-artifacts-infra did not produce required Terraform artifacts; do not complete Generate Stage 2."
+
 ```
 Generated terraform artifacts:
-- terraform/README.md
 - terraform/main.tf
 - terraform/variables.tf
 - terraform/outputs.tf

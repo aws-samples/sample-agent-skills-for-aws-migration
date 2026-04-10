@@ -148,6 +148,14 @@ Write `generation-ai.json` to `$MIGRATION_DIR/`.
 - [ ] `rollback_plan.mechanism` is `"feature_flag"`
 - [ ] `success_criteria` covers quality, latency, and cost
 
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `generate.md`, require:
+
+- `generation-ai.json` exists and passes the Validation Checklist above.
+
+If this gate fails: STOP and output: "generate-ai did not produce a valid `generation-ai.json`; do not continue Generate Stage 2."
+
 ## Generate Phase Integration
 
 The parent orchestrator (`generate.md`) uses `generation-ai.json` to:

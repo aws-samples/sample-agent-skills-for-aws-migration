@@ -111,6 +111,7 @@ For each risk, assess:
 | Performance regression on AWS    | medium      | high     | PoC testing (Weeks 3-4); load testing (Week 5); performance baseline comparison                 |
 | Extended downtime during cutover | medium      | high     | Practice cutover in staging; automate DNS switch; rollback procedure on standby                 |
 | Cost overrun vs estimates        | medium      | medium   | Set billing alerts at 80% and 100% of projected; weekly cost review                             |
+| Team capacity constraints        | medium      | medium   | Allocate 2 FTE engineers dedicated for 12 weeks; identify backup resources                      |
 | Cross-region latency             | low         | medium   | Validate latency in PoC phase; consider same-region deployment for latency-sensitive services   |
 | Terraform state corruption       | low         | high     | Remote state with locking (S3 + DynamoDB); state backups before each apply                      |
 
@@ -122,7 +123,7 @@ Add additional risks based on discovered infrastructure:
 - If **stateful services** (Redis, Elasticsearch): Add "State migration data loss" (low/critical)
 - If **multiple regions** in GCP: Add "Cross-region dependency during migration" (medium/medium)
 - If **AI workloads** coexist: Add "Model performance drift on Bedrock" (medium/high)
-- If **BigQuery** resources exist (`google_bigquery_*` or `aws_service` is **`Deferred — specialist engagement`** in `aws-design.json`): Add "BigQuery migration complexity" (high/high) with mitigation: "**No automated AWS analytics target** — engage **AWS account team** and/or **data analytics migration partner** before architecture or cost commitments; plugin does not prescribe Athena/Redshift/Glue."
+- If **`google_bigquery_*`** or **`Deferred — specialist engagement`** appears in `aws-design.json`: Add "BigQuery / analytics architecture undefined" (high/high) with mitigation: "**No automated AWS analytics target** — engage **AWS account team** and/or **data analytics migration partner** before warehouse or lake design; plugin does not prescribe Athena/Redshift/Glue."
 
 ## Part 3: Success Metrics
 
@@ -203,6 +204,12 @@ Initiate rollback if ANY of:
 | Rollback execution     | R              | R                       | R                 | I                     | I           |
 
 **R** = Responsible, **A** = Accountable, **C** = Consulted, **I** = Informed
+
+### Staffing Estimate
+
+- **Minimum**: 2 FTE engineers for 12 weeks
+- **Recommended**: 3 FTE (1 infra, 1 database/data, 1 app/QA) for 12 weeks
+- **With AI track**: Add 1 FTE ML engineer for weeks 3-8
 
 ## Part 6: Go/No-Go Framework
 
@@ -298,8 +305,7 @@ Generate `generation-infra.json` in `$MIGRATION_DIR/` with the following schema:
         "migration_week": 5,
         "cluster_id": "compute_cloudrun_us-central1_001",
         "estimated_effort_hours": 40,
-        "data_migration_required": false, // derive from resource detection flags (has_databases, has_storage)
-        "human_expertise_required": false // propagate from aws-design.json; true for BigQuery mappings
+        "data_migration_required": false // derive from resource detection flags (has_databases, has_storage)
       }
     ],
     "critical_path": [
@@ -351,6 +357,12 @@ Generate `generation-infra.json` in `$MIGRATION_DIR/` with the following schema:
     "post_cutover_rto": "2-4 hours",
     "rollback_window": "Reversible until 48 hours post-DNS cutover"
   },
+  "team_roles": {
+    "minimum_fte": 2,
+    "recommended_fte": 3,
+    "duration_weeks": 12,
+    "roles": ["Migration Lead", "Infrastructure Engineer", "Database Engineer"]
+  },
   "go_no_go_criteria": [
     {
       "gate": "G1",
@@ -384,10 +396,19 @@ Generate `generation-infra.json` in `$MIGRATION_DIR/` with the following schema:
 - `risks` array has at least 3 entries with probability, impact, mitigation
 - `success_metrics` has both `per_service` and `overall` sections
 - `rollback_procedures` has trigger conditions and RTO values
+- `team_roles` has minimum and recommended FTE counts
 - `go_no_go_criteria` has at least 4 gates
 - `post_migration` specifies monitoring duration and teardown timing
 - All cluster IDs reference valid clusters from `gcp-resource-clusters.json`
 - Output is valid JSON
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `generate.md`, require:
+
+- `generation-infra.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "generate-infra did not produce a valid `generation-infra.json`; do not continue Generate Stage 2."
 
 ## Generate Phase Integration
 
