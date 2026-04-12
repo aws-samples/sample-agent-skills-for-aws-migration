@@ -2,7 +2,35 @@
 
 **Standalone flow** — Used when ONLY `ai-workload-profile.json` exists (no infrastructure or billing artifacts). Infrastructure stays on GCP; only AI/LLM calls move to AWS Bedrock.
 
-Produces the same `preferences.json` output but with `design_constraints` limited to region and `ai_constraints` fully populated.
+Produces the same `preferences.json` output but with `design_constraints` limited to region and `ai_constraints` fully populated. Questions are presented in **two progressive batches** with an intermediate save — partial answers persist across sessions.
+
+---
+
+## Step 0: Prior Run Check
+
+Check `$MIGRATION_DIR/` for existing state:
+
+**Case 1 — Completed preferences exist** (`preferences.json` present):
+
+> "I found existing migration preferences from a previous run. Would you like to:"
+>
+> A) Re-use these preferences and skip questions
+> B) Start fresh and re-answer all questions
+
+- If A: skip to Step 3 (Validation), proceed with existing file.
+- If B: delete `preferences.json`, continue to Step 1.
+
+**Case 2 — Draft preferences exist** (`preferences-draft.json` present, no `preferences.json`):
+
+> "I found a partial set of answers from a previous session (1 of 2 batches completed). Would you like to:"
+>
+> A) Resume from where you left off — I'll pick up the remaining questions
+> B) Start fresh and re-answer all questions
+
+- If A: load the draft, skip Batch 1 in Step 2, present Batch 2 directly.
+- If B: delete `preferences-draft.json`, continue to Step 1.
+
+**Case 3 — No prior state**: Continue to Step 1.
 
 ---
 
@@ -19,9 +47,23 @@ Produces the same `preferences.json` output but with `design_constraints` limite
 
 ---
 
-## Step 2: Ask Questions (Q1–Q10)
+## Step 2: Ask Questions in Progressive Batches (Q1–Q10)
 
-Present all questions at once. User can answer each, skip individual ones (use defaults), or say "use all defaults."
+Questions are presented in two batches with a save after the first. The user can skip individual questions (defaults applied), say **"use defaults for the rest"** to apply defaults for all remaining questions and proceed immediately, or answer normally.
+
+### Batch 1 — AI Strategy & Setup (Q1–Q5)
+
+Present with this intro:
+
+```
+Before designing your Bedrock migration, I have two short sections of questions.
+You can answer each, skip individual ones (I'll use sensible defaults),
+or say "use defaults for the rest" at any point.
+
+Let's start with your AI strategy and current setup.
+
+--- AI Strategy & Setup ---
+```
 
 ## Q1 — AI framework or orchestration layer (select all that apply)
 
@@ -89,6 +131,45 @@ Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → 
 
 Interpret → `ai_model_baseline`. Default: auto-detect, fallback Q2 priority-based.
 
+### Batch 1 → Save Draft and Present Batch 2
+
+After the user responds to Batch 1:
+
+1. Interpret all Batch 1 answers (apply interpret rules above; apply defaults for skipped questions).
+2. Write `$MIGRATION_DIR/preferences-draft.json` with Batch 1 answers:
+
+```json
+{
+  "metadata": {
+    "draft": true,
+    "batches_completed": ["ai-strategy"],
+    "batches_remaining": ["ai-technical"],
+    "migration_type": "ai-only",
+    "timestamp": "<ISO timestamp>",
+    "discovery_artifacts": ["ai-workload-profile.json"],
+    "questions_asked": ["Q1", "Q2", ...],
+    "questions_defaulted": [...]
+  },
+  "design_constraints": { ... },
+  "ai_constraints": { ... }
+}
+```
+
+3. Present Batch 2:
+
+```
+Got it — your AI strategy preferences are saved.
+
+Last section — 5 questions about your technical requirements, then we're ready to design.
+You can answer each, skip individual ones, or say "use defaults for the rest."
+
+--- Technical Requirements ---
+```
+
+**"Use defaults for the rest" handling:** If the user says this during Batch 1, apply defaults for all unanswered Batch 1 questions and all Batch 2 questions, then skip directly to Step 3.
+
+### Batch 2 — Technical Requirements (Q6–Q10)
+
 ## Q6 — What input types must the model accept: text only, images (vision), or audio/video?
 
 > A) Text only | B) Vision required | C) Audio/Video inputs
@@ -150,9 +231,15 @@ Same decision logic as Q17 in `clarify-ai.md`.
 
 Interpret → `ai_critical_feature`. Default: J → no override.
 
+### Batch 2 Complete
+
+After the user responds to Batch 2, interpret all Batch 2 answers and proceed to Step 3.
+
 ---
 
-## Step 3: Write preferences.json
+## Step 3: Assemble and Write preferences.json
+
+Assemble all interpreted answers from both batches into the final file. If `preferences-draft.json` exists, use it as the base — merge in Batch 2 answers, remove draft-specific metadata fields (`draft`, `batches_completed`, `batches_remaining`), and set `metadata.timestamp` to the current time.
 
 Write `$MIGRATION_DIR/preferences.json`:
 
@@ -178,6 +265,8 @@ Write `$MIGRATION_DIR/preferences.json`:
 | `ai_capabilities_required` | `ai_constraints.ai_capabilities_required` | Derived from `capabilities_summary`         |
 
 Each `ai_constraints` field uses `{ "value": ..., "chosen_by": "user"|"extracted"|"derived" }` format. No nulls. All schema rules from `clarify.md` apply.
+
+After writing `preferences.json`, delete `$MIGRATION_DIR/preferences-draft.json` if it exists.
 
 ---
 
