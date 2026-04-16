@@ -1,5 +1,13 @@
 # Changelog — GCP-to-AWS Migration Plugin
 
+## Bedrock: Claude Opus 4.7 (2026-04-16)
+
+**Change:** Documented **Claude Opus 4.7** (`anthropic.claude-opus-4-7`) in the pricing cache with the same headline on-demand **$5 / $25** per 1M input/output as Opus 4.6 (US East N. Virginia standard table), added **batch N/A** + prompt-cache columns per the Bedrock pricing page when this was updated, and refreshed clarify / design-ref guidance so **Opus 4.7** is the default name for hardest-reasoning Opus work while **Sonnet 4.6** stays the balanced default.
+
+**Files:** `references/shared/pricing-cache.md`, `references/phases/clarify/clarify-ai.md`, `references/phases/clarify/clarify-ai-only.md`, `references/phases/clarify/clarify.md`, `references/design-refs/ai-gemini-to-bedrock.md`, `references/design-refs/ai-openai-to-bedrock.md`.
+
+---
+
 ## Summary
 
 Eight epics were addressed across 18 files (17 modified, 1 new). All changes are prompt-only — no application code was added or changed. Epic 4 (Gemini 3.1 Pro GA) is deferred pending confirmed GA date, pricing, and benchmark data.
