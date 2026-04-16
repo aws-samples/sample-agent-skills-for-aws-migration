@@ -203,8 +203,8 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 
 | Scenario                     | Key Answers                                  | Recommendation                                            |
 | ---------------------------- | -------------------------------------------- | --------------------------------------------------------- |
-| Early-stage credits          | Q3 < $5K                                     | AWS Activate Founders or Portfolio credits                |
-| Growth-stage credits         | Q3 ≥ $20K                                    | IW Migrate or MAP credits based on ARR                    |
+| Early-stage funding path     | Q3 = lower spend band                        | Entry-tier migration funding program review               |
+| Growth-stage funding path    | Q3 = higher spend band                       | Migration funding/support program review based on spend profile |
 | Must stay portable           | Q5 = Yes multi-cloud                         | EKS only, no ECS Fargate                                  |
 | Kubernetes-averse            | Q5 = No + Q8 = Frustrated                    | ECS Fargate strongly recommended                          |
 | WebSocket app                | Q9 = Yes                                     | ALB WebSocket config required                             |
