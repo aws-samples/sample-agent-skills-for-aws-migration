@@ -17,7 +17,7 @@ Read from `$MIGRATION_DIR/`:
 - `preferences.json` (REQUIRED) — User preferences including target region, sizing, compliance
 - `gcp-resource-clusters.json` (REQUIRED) — Cluster dependency graph for ordering
 
-Reference files (read as needed): `references/design-refs/index.md` and domain-specific files (compute.md, database.md, storage.md, networking.md, messaging.md, ai.md).
+Reference files (read as needed): `references/design-refs/index.md` and domain-specific files (compute.md, database.md, storage.md, networking.md, messaging.md, security.md, ai.md).
 
 If any REQUIRED file is missing: **STOP**. Output: "Missing required artifact: [filename]. Complete the prior phase that produces it."
 
@@ -31,7 +31,7 @@ Generate `$MIGRATION_DIR/terraform/` with only the files needed for domains that
 | `variables.tf`  | core       | All input variables with types and defaults      |
 | `outputs.tf`    | core       | Resource outputs and migration summary           |
 | `vpc.tf`        | networking | VPC, subnets, NAT, security groups, route tables |
-| `security.tf`   | security   | IAM roles, policies, KMS keys                    |
+| `security.tf`   | security   | IAM roles, policies, KMS keys, Secrets Manager   |
 | `storage.tf`    | storage    | S3 buckets, EFS, backup vaults                   |
 | `database.tf`   | database   | RDS/Aurora instances, parameter groups           |
 | `compute.tf`    | compute    | Fargate/ECS, Lambda, EC2                         |
@@ -45,7 +45,7 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 | AWS Service                                           | Target File     |
 | ----------------------------------------------------- | --------------- |
 | VPC, Subnet, NAT Gateway, Security Group, Route Table | `vpc.tf`        |
-| IAM Role, IAM Policy, KMS Key                         | `security.tf`   |
+| IAM Role, IAM Policy, KMS Key, Secrets Manager        | `security.tf`   |
 | S3, EFS, Backup Vault                                 | `storage.tf`    |
 | RDS, Aurora, DynamoDB, ElastiCache                    | `database.tf`   |
 | Fargate, ECS, Lambda, EC2                             | `compute.tf`    |
@@ -100,9 +100,9 @@ For each domain with resources in the generation manifest:
 
 | Domain     | Key Rules                                                                                                                     |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Networking | At least 2 AZs; public + private subnets; NAT gateway for private subnet internet                                             |
-| Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda                                    |
-| Storage    | Versioning enabled; SSE-S3 or SSE-KMS encryption; block public access; lifecycle policies                                     |
+| Networking | At least 2 AZs; public + private subnets; NAT gateway for private subnet internet; internet-facing ALB must terminate TLS on 443 and HTTP 80 must redirect to HTTPS |
+| Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda; Secrets Manager resources with no plaintext defaults |
+| Storage    | Versioning enabled; SSE-S3 or SSE-KMS encryption; block public access by default; lifecycle policies; if public content is required use CloudFront/OAC instead of public bucket policy |
 | Database   | Private subnets; subnet group + parameter group + security group; backups; encryption                                         |
 | Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling                                       |
 | Monitoring | Log groups per service; dashboard with key metrics; alarms from `generation-infra.json` success_metrics; 30-day log retention |
@@ -148,6 +148,8 @@ Verify these quality rules before reporting completion:
 - [ ] Tags on every resource (Project, Environment, ManagedBy, MigrationId)
 - [ ] Encryption at rest on all storage (S3, EBS, RDS)
 - [ ] Databases and internal services use private subnets
+- [ ] ALB listeners enforce HTTPS (443) and HTTP (80) only redirects to HTTPS
+- [ ] No S3 bucket policy with `Principal = "*"` unless explicitly approved by user requirements
 - [ ] No `0.0.0.0/0` ingress except ALB port 443
 - [ ] Every variable has `type` and `description`
 - [ ] Every output has `description`
@@ -159,6 +161,14 @@ Verify these quality rules before reporting completion:
 ## Phase Completion
 
 Report generated files to the parent orchestrator. **Do NOT update `.phase-status.json`** — the parent `generate.md` handles phase completion.
+
+Before reporting completion, enforce artifact output gate:
+
+- `terraform/` directory exists.
+- At minimum: `terraform/main.tf`, `terraform/variables.tf`, and `terraform/outputs.tf` exist.
+- At least one domain file exists among: `vpc.tf`, `security.tf`, `storage.tf`, `database.tf`, `compute.tf`, `monitoring.tf`.
+
+If this gate fails: STOP and output: "generate-artifacts-infra did not produce required Terraform artifacts; do not complete Generate Stage 2."
 
 ```
 Generated terraform artifacts:

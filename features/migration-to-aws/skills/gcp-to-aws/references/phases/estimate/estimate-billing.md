@@ -237,11 +237,19 @@ Write `estimation-billing.json`.
 - Every service has low/mid/high estimates
 - `unknowns` array is populated with resolution steps
 - `recommendation.confidence` is `"low"` (billing-only never produces high confidence)
-- `migration_cost_considerations.categories` is `[]` — no human one-time migration costs presented
 - No reference to Terraform-based configurations
 - All unknowns documented with impact and resolution
 - All cost values are numbers, not strings
+- `migration_cost_considerations.categories` is `[]` — no human one-time migration costs presented
 - Output is valid JSON
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `estimate.md`, require:
+
+- `estimation-billing.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "estimate-billing did not produce a valid `estimation-billing.json`; do not complete Phase 4."
 
 ## Present Summary
 

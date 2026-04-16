@@ -171,6 +171,14 @@ Write to `$MIGRATION_DIR/aws-design-billing.json`:
 - Every `unknowns[]` entry has `gcp_service`, `monthly_cost`, `reason`, `suggestion`
 - Output is valid JSON
 
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `design.md`, require:
+
+- `aws-design-billing.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "design-billing did not produce a valid `aws-design-billing.json`; do not complete Phase 3."
+
 ## Present Summary
 
 After writing `aws-design-billing.json`, present a concise summary to the user:

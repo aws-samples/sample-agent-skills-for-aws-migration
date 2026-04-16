@@ -97,22 +97,22 @@ Default: A — no constraint.
 
 > Your billing data shows ~$[total_monthly_spend]/month. Does this match your expectation?
 
-| Answer                 | Recommendation Impact                                                                                                        |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| < $1,000/month         | AWS Activate credits eligibility (~$5K–$25K); cost estimates use conservative ranges                                         |
-| $1,000–$5,000/month    | IW Migrate credits at 25% of ARR (~$3K–$15K/yr); mid-range estimates                                                         |
-| $5,000–$20,000/month   | IW Migrate credits at 25% of ARR (~$15K–$60K/yr); Reserved Instance recommendations included                                 |
-| $20,000–$100,000/month | IW Migrate credits at 25% of ARR (~$60K–$300K/yr); Savings Plans analysis; AWS Specialist consultation eligible (>=$60K ARR) |
-| > $100,000/month       | MAP eligibility (>$500K ARR); Enterprise support tier; dedicated migration team engagement                                   |
+| Answer                 | Recommendation Impact                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| < $1,000/month         | Entry-tier migration funding programs may apply; cost estimates use conservative ranges              |
+| $1,000–$5,000/month    | Migration funding review may apply; cost estimates use mid-range assumptions                          |
+| $5,000–$20,000/month   | Migration funding review may apply; reserved pricing options are evaluated in cost recommendations    |
+| $20,000–$100,000/month | Migration funding and support program review may apply; savings commitment options are evaluated      |
+| > $100,000/month       | Enterprise migration program review may apply; dedicated migration support path may be recommended    |
 
 Interpret:
 
 ```
-A -> gcp_monthly_spend: "<$1K" — AWS Activate credits eligibility (~$5K-$25K)
-B -> gcp_monthly_spend: "$1K-$5K" — IW Migrate credits at 25% of ARR (~$3K-$15K/yr)
-C -> gcp_monthly_spend: "$5K-$20K" — IW Migrate credits at 25% of ARR (~$15K-$60K/yr); Reserved Instance recommendations
-D -> gcp_monthly_spend: "$20K-$100K" — IW Migrate credits at 25% of ARR (~$60K-$300K/yr); Savings Plans analysis; AWS Specialist consultation eligible
-E -> gcp_monthly_spend: ">$100K" — MAP eligibility (>$500K ARR); Enterprise support tier; dedicated migration team
+A -> gcp_monthly_spend: "<$1K" — entry-tier funding review; conservative cost assumptions
+B -> gcp_monthly_spend: "$1K-$5K" — funding review; mid-range cost assumptions
+C -> gcp_monthly_spend: "$5K-$20K" — funding review; reserved pricing recommendations
+D -> gcp_monthly_spend: "$20K-$100K" — funding/support review; savings commitment analysis
+E -> gcp_monthly_spend: ">$100K" — enterprise program/support review
 F -> same as default (B)
 ```
 

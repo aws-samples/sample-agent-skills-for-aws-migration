@@ -107,20 +107,34 @@ Produces: `migration-report.html`
 
 Verify both stages are complete:
 
-1. **Stage 1**: At least one `generation-*.json` file exists
-2. **Stage 2**: At least one artifact directory or file was produced, plus documentation (HTML report is optional — its absence does not block completion)
+1. **Stage 1 route gates (fail closed)**:
+   - If `estimation-infra.json` exists -> require `generation-infra.json`
+   - If `estimation-ai.json` exists -> require `generation-ai.json`
+   - If `estimation-billing.json` exists -> require `generation-billing.json`
+2. **Stage 2 route gates (fail closed)**:
+   - If infra artifact route is active (`generation-infra.json` AND `aws-design.json`) -> require `terraform/` and `scripts/`
+   - If AI artifact route is active (`generation-ai.json` AND `aws-design-ai.json`) -> require `ai-migration/`
+   - If billing artifact route is active (`generation-billing.json` AND `aws-design-billing.json`) -> require `terraform/skeleton.tf`
+3. **Documentation gate (always)**:
+   - Require `MIGRATION_GUIDE.md` and `README.md`
+4. If any active route is missing expected outputs: STOP and output: "Generate route [name] missing required artifacts. Re-run the failed generator before completing Phase 5."
 
-Use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.generate` set to `"completed"` — **in the same turn** as the summary below.
+After all gates pass, use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` — **in the same turn** as the summary below:
+
+- Set `phases.generate` to `"completed"`
+- Set `current_phase` to `"complete"`
 
 ## Summary
 
 Present final summary to user:
 
 1. **Plans generated** — List all `generation-*.json` files produced
-2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md, migration-report.html)
+2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md). Include `migration-report.html` only if it exists.
 3. **Key timelines** — Highlight migration timeline from the generation plans
 4. **Key risks** — Highlight top risks from the generation plans
 5. **TODO markers** — Note any TODO markers in generated artifacts that require manual attention
 6. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
 
-Output to user: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.html"
+Output to user:
+- If `migration-report.html` exists: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.html"
+- If `migration-report.html` is missing: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Markdown documentation is available at $MIGRATION_DIR/MIGRATION_GUIDE.md and $MIGRATION_DIR/README.md. (HTML report generation is optional and non-blocking.)"

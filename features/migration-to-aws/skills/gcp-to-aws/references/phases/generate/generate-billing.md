@@ -305,6 +305,14 @@ Generate `generation-billing.json` in `$MIGRATION_DIR/` with the following schem
 - `recommendation.confidence` is `"low"`
 - Output is valid JSON
 
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `generate.md`, require:
+
+- `generation-billing.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "generate-billing did not produce a valid `generation-billing.json`; do not continue Generate Stage 2."
+
 ## Generate Phase Integration
 
 The parent orchestrator (`generate.md`) uses `generation-billing.json` to:

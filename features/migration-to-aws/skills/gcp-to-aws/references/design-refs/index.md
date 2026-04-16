@@ -66,6 +66,8 @@
 | GCP Service      | Resource Type            | Reference File    | Typical AWS target |
 | ---------------- | ------------------------ | ----------------- | ---------- |
 | Service Accounts | `google_service_account` | `networking.md`   | IAM Roles  |
+| Secret Manager (secret) | `google_secret_manager_secret` | `security.md` | Secrets Manager |
+| Secret Manager (version) | `google_secret_manager_secret_version` | `security.md` | Secrets Manager |
 | Cloud Monitoring | (managed)                | Not in v1.0 scope | CloudWatch |
 
 ---

@@ -85,7 +85,7 @@ Using the model selected in the design phase, show:
 
 ## Part 4: Human One-Time Migration Costs (Out of Scope)
 
-**Do not** present human labor, contractors, professional services, or engineering effort as one-time migration **costs** or budget line items (no dollar figures, no “budget for people work” lists, no “one-time migration cost” categories for implementation).
+**Do not** present human labor, contractors, professional services, or engineering effort as one-time migration **costs** or budget line items (no dollar figures, no "budget for people work" lists, no "one-time migration cost" categories for implementation).
 
 Populate `migration_cost_considerations.categories` as an **empty array** `[]`. Use `migration_cost_considerations.note` to state that human and professional-services one-time migration costs are intentionally excluded from this advisor.
 
@@ -98,7 +98,7 @@ From `ai-workload-profile.json`, record non-monetary factors in `migration_cost_
 - `integration.pattern = "rest_api"` → higher endpoint, auth, and parsing changes
 - `summary.total_models_detected` > 3 → multi-model coordination
 
-Do **not** repeat these as “costs” in the user-facing summary.
+Do **not** repeat these as "costs" in the user-facing summary.
 
 ---
 
@@ -113,7 +113,7 @@ Reference `aws-design-ai.json` → `honest_assessment`. If `"recommend_stay"`, p
 
 **Non-cost benefits to present:** model flexibility (30+ models), prompt caching (Claude, 90% savings), AWS ecosystem (Guardrails, Knowledge Bases, Agents), vendor diversification, multi-model strategy.
 
-**Note:** Human and professional-services one-time migration costs are out of scope for this advisor and are excluded from ROI calculations and user-facing summaries.
+**Note:** Human/professional-services one-time migration costs are intentionally out of scope for this advisor and excluded from ROI calculations.
 
 ---
 
@@ -171,6 +171,14 @@ All cost values are numbers, not strings. Output must be valid JSON.
 - [ ] `optimization_opportunities` only includes strategies relevant to user's workload
 - [ ] No compute, database, storage, or networking costs (those belong in `estimate-infra.md`)
 - [ ] `migration_cost_considerations.categories` is `[]` — no human one-time migration costs presented
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `estimate.md`, require:
+
+- `estimation-ai.json` exists and passes the Validation Checklist above.
+
+If this gate fails: STOP and output: "estimate-ai did not produce a valid `estimation-ai.json`; do not complete Phase 4."
 
 ## Present Summary
 

@@ -389,6 +389,14 @@ Generate `generation-infra.json` in `$MIGRATION_DIR/` with the following schema:
 - All cluster IDs reference valid clusters from `gcp-resource-clusters.json`
 - Output is valid JSON
 
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `generate.md`, require:
+
+- `generation-infra.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "generate-infra did not produce a valid `generation-infra.json`; do not continue Generate Stage 2."
+
 ## Generate Phase Integration
 
 The parent orchestrator (`generate.md`) uses `generation-infra.json` to:
