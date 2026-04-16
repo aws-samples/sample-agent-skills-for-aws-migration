@@ -33,6 +33,27 @@ Point this plugin at your codebase, Terraform files, or GCP billing data. It run
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------- |
 | **migration-to-aws** | Migrate GCP infrastructure and AI/agentic workloads to AWS with resource discovery, architecture mapping, cost analysis, and execution planning | Available |
 
+## BigQuery-to-Databricks Migration Skill
+
+A new skill that fills the BigQuery "specialist gate" in the migration plugin with a complete Databricks Lakehouse migration path. Includes SQL translation (SQLGlot), data type/partitioning/ACL mapping, cost estimation, and Terraform generation.
+
+**[Read the Executive Summary](docs/bigquery-to-databricks-executive-summary.md)**
+
+### Quick Demo
+
+```bash
+pip install sqlglot
+python3 demo/bigquery_to_databricks_translator.py
+```
+
+Translates 7 BigQuery SQL patterns to Databricks SQL at 100% success rate — covering SAFE_DIVIDE, QUALIFY, MERGE, UNNEST, date functions, and more.
+
+### Agent Skill Triggers
+
+| Agent Skill                  | Triggers                                                                                                                       |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **bigquery-to-databricks**   | "migrate BigQuery to Databricks", "BigQuery to Lakehouse", "move off BigQuery", "BigQuery migration plan", "BigQuery to Delta Lake" |
+
 ## Installation
 
 ### Claude Code
