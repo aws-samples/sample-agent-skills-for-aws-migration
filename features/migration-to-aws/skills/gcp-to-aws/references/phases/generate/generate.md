@@ -26,6 +26,20 @@ If **none** of these estimation artifacts exist: **STOP**. Output: "No estimatio
 
 ## Stage 1: Migration Planning
 
+**Dirty-state tracking**: Before producing any Stage 1 outputs, set `dirty_state` in `.phase-status.json`:
+
+```json
+"dirty_state": {
+  "phase": "generate",
+  "stage": "stage_1_planning",
+  "started_at": "<ISO 8601 UTC>",
+  "partial_outputs": [],
+  "missing_outputs": ["generation-infra.json", "generation-ai.json", "generation-billing.json"]
+}
+```
+
+Trim `missing_outputs` to only the artifacts expected for the active routes. Update `partial_outputs` and `missing_outputs` after each sub-file completes.
+
 Route based on which estimation artifacts exist. Multiple paths can run independently.
 
 ### Infrastructure Migration Plan
@@ -55,6 +69,20 @@ Produces: `generation-billing.json`
 ## Stage 2: Artifact Generation
 
 **MUST proceed only after Stage 1 completes.** Route based on generation plans + design artifacts.
+
+**Dirty-state tracking**: Before producing any Stage 2 outputs, update `dirty_state` in `.phase-status.json`:
+
+```json
+"dirty_state": {
+  "phase": "generate",
+  "stage": "stage_2_artifacts",
+  "started_at": "<ISO 8601 UTC>",
+  "partial_outputs": ["generation-infra.json"],
+  "missing_outputs": ["terraform/", "scripts/", "MIGRATION_GUIDE.md", "README.md"]
+}
+```
+
+Carry forward `partial_outputs` from Stage 1. Trim `missing_outputs` to only the artifacts expected for the active routes plus mandatory docs. Update after each sub-file completes.
 
 ### Infrastructure Artifacts
 
@@ -126,7 +154,28 @@ After all gates pass, use the Phase Status Update Protocol (read-merge-write) to
 
 ## Summary
 
-Present final summary to user:
+**Use structured completion reporting** (see `shared/artifact-validation.md` Section 3). Present final summary to user:
+
+```
+Phase 5 (Generate) complete.
+
+✓ Produced:
+  - generation-infra.json: [X]-week migration plan
+  - terraform/: [N] files (list key files)
+  - scripts/: [N] files
+  - MIGRATION_GUIDE.md: [N] sections
+  - README.md: artifact catalog + quick start
+  - migration-report.html: executive summary
+  - migration-report.pdf: PDF version [or "skipped — no converter available"]
+
+⊘ Skipped (not applicable):
+  - [artifact]: [reason]
+
+⚠ Skipped (non-blocking failure):
+  - migration-report.html: [failure reason]  ← only if report generation failed
+```
+
+After the structured block, include:
 
 1. **Plans generated** — List all `generation-*.json` files produced
 2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md). Include `migration-report.html` only if it exists.
