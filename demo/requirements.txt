@@ -1,0 +1,2 @@
+sqlglot>=26.0.0
+streamlit>=1.40.0
