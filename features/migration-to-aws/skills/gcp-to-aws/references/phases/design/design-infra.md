@@ -169,6 +169,14 @@ For each mapped AWS service, verify:
 - No duplicate `gcp_address` values across clusters
 - Output is valid JSON
 
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `design.md`, require:
+
+- `aws-design.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "design-infra did not produce a valid `aws-design.json`; do not complete Phase 3."
+
 ## Present Summary
 
 After writing `aws-design.json`, present a concise summary to the user:

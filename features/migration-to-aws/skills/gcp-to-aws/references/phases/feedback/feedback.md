@@ -94,7 +94,14 @@ If trace building failed: set `"trace_included": false`.
 
 ## Step 4: Update Phase Status
 
-Use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.feedback` set to `"completed"` — **in the same turn** as the output message below.
+Before status update, enforce output gate:
+
+- `feedback.json` must exist.
+- If `trace_included` is true, `trace.json` must exist.
+
+If output gate fails: STOP and output: "Feedback outputs are incomplete. Fix feedback artifacts before completion."
+
+Use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` with `phases.feedback` set to `"completed"` — **in the same turn** as the output message below.
 
 Output to user: "Thank you for helping improve this tool."
 

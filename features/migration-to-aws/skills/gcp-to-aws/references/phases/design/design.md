@@ -49,7 +49,23 @@ Produces: `aws-design-ai.json`
 
 ## Phase Completion
 
-After all applicable sub-designs finish, use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.design` set to `"completed"` — **in the same turn** as the output message below.
+Before marking Design complete, enforce route output gates (fail closed):
+
+1. Determine which design routes ran:
+   - IaC route: `gcp-resource-inventory.json` AND `gcp-resource-clusters.json` exist
+   - Billing-only route: `billing-profile.json` exists AND `gcp-resource-inventory.json` does NOT exist
+   - AI route: `ai-workload-profile.json` exists
+2. Require at least one route to be active. If none active: STOP.
+3. For each active route, require its expected artifact:
+   - IaC route -> `aws-design.json`
+   - Billing-only route -> `aws-design-billing.json`
+   - AI route -> `aws-design-ai.json`
+4. If any active route is missing its expected output: STOP and output: "Design route [name] did not produce required artifact(s). Re-run the failed sub-design before completing Phase 3."
+
+After all active route gates pass, use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` — **in the same turn** as the output message below:
+
+- Set `phases.design` to `"completed"`
+- Set `current_phase` to `"estimate"`
 
 Output to user: "AWS Architecture designed. Proceeding to Phase 4: Estimate Costs."
 

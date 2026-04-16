@@ -29,6 +29,7 @@
 - **HTTP/HTTPS + hostname/path routing** → ALB (Layer 7)
 - **TCP/UDP + high throughput** → NLB (Layer 4)
 - **TLS passthrough** → NLB (Layer 4, no termination)
+- For internet-facing ALB: terminate TLS on 443 and configure 80 as redirect-only to HTTPS (no direct HTTP forwarding).
 
 ### Cloud DNS
 
@@ -57,8 +58,8 @@ Apply in order:
 3. **User Preference**: From `preferences.json`: `design_constraints.compliance`?
    - **PCI or HIPAA:** Neither framework mandates Direct Connect. **Bias toward documented private connectivity** between sites and AWS (e.g. **AWS Direct Connect** or **Site-to-Site VPN** with encryption, monitoring, and change control) — choose with your **QSA / BAA / security team**; many compliant designs use VPN-only or no hybrid link when all workloads stay in AWS.
    - **FedRAMP:** GovCloud and federal boundary requirements dominate; **private connectivity** is often part of the approved architecture — still **confirm with your authorizing official / security team**, not this advisor alone.
+   - If `compliance` includes `"ccpa"` (CCPA / CPRA) → VPN or Direct Connect both acceptable; prioritize **documented data paths**, retention controls, and logging for consumer privacy workflows — not a forced Direct Connect gate.
    - If none of the above: VPN or public-internet paths are commonly acceptable when encrypted and documented.
-   - If `compliance` includes `"ccpa"` (CCPA / CPRA) → VPN or Direct Connect both acceptable; prioritize **documented data paths**, retention controls, and logging for consumer privacy workflows — not a forced Direct Connect gate
 4. **Feature Parity**: Does GCP config require AWS-unsupported features?
    - Example: GCP policy-based routing → Custom route table rules (AWS does this)
 5. **Cluster Context**: Are other resources in cluster using specific load balancers? Match

@@ -183,6 +183,16 @@ Each `ai_constraints` field uses `{ "value": ..., "chosen_by": "user"|"extracted
 
 ## Step 4: Update Phase Status
 
-Use the Phase Status Update Protocol to write `.phase-status.json` with `phases.clarify` set to `"completed"` — in the same turn as the output message.
+Before phase completion, enforce output gate:
+
+- `preferences.json` must exist.
+- `preferences.json.metadata.migration_type` must equal `"ai-only"`.
+
+If either check fails: STOP and output: "AI-only clarify output validation failed. Fix `preferences.json` before completing Phase 2."
+
+Use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` in the same turn as the output message:
+
+- Set `phases.clarify` to `"completed"`
+- Set `current_phase` to `"design"`
 
 Output: "Clarification complete. Proceeding to Phase 3: Design AI Migration Architecture."

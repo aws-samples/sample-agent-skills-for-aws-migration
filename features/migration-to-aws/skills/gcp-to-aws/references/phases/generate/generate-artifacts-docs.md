@@ -239,6 +239,15 @@ After generating documentation, verify:
 
 Report the list of generated files to the parent orchestrator. **Do NOT update `.phase-status.json`** — the parent `generate.md` handles phase completion.
 
+Before reporting completion, enforce artifact output gate:
+
+- `MIGRATION_GUIDE.md` exists.
+- `README.md` exists.
+- Conditional sections in docs match tracks that actually ran (infra/ai/billing).
+- Referenced artifact paths in docs exist.
+
+If this gate fails: STOP and output: "generate-artifacts-docs did not produce complete documentation artifacts."
+
 Output:
 
 ```

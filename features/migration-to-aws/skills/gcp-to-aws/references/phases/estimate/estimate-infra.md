@@ -80,6 +80,8 @@ Present the GCP baseline as a total and per-service breakdown, noting which sour
 
 For each service in `aws-design.json`, calculate monthly cost using rates from `pricing-cache.md`. Track `pricing_source` per service.
 
+**Secret Manager coverage (mandatory):** If any mapped resource has `gcp_type` of `google_secret_manager_secret` or `google_secret_manager_secret_version`, ensure an `aws_service` entry for **Secrets Manager** is present in the estimate breakdown. Do not collapse this into a generic "supporting" line item.
+
 **BigQuery / deferred analytics (mandatory):** For any resource where `aws_service` is exactly **`Deferred — specialist engagement`** OR `gcp_type` starts with `google_bigquery_`:
 
 - **Do not** apply Athena, Redshift, Glue, or EMR rates as the plugin’s “projected” analytics stack.
@@ -105,6 +107,7 @@ Calculate 3 cost tiers to show the optimization range:
 | Storage (S3)      | GB × per-GB rate + request estimates                                                  | `aws_config.storage_gb` or source `gcp_config`              |
 | Networking (ALB)  | fixed monthly + LCU estimate                                                          | From compute service count                                  |
 | Networking (NAT)  | fixed monthly × count + GB processed × data rate                                      | From VPC design                                             |
+| Security (Secrets Manager) | secrets_count × per-secret monthly rate + api_calls_10k × per-10K API rate   | `aws_config.secrets_count`, `aws_config.api_calls_10k` (or inferred defaults) |
 | Supporting        | Per-unit rates × quantities (secrets, log GB, metrics)                                | Inferred from service count                                 |
 
 Show calculation breakdown per service: rate × quantity = cost. Present all 3 tiers side-by-side.
@@ -204,6 +207,14 @@ Include migrate/stay decision factors:
 ## Output
 
 Read `shared/schema-estimate-infra.md` for the `estimation-infra.json` schema and validation checklist, then write `estimation-infra.json` to `$MIGRATION_DIR/`.
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `estimate.md`, require:
+
+- `estimation-infra.json` exists and passes `shared/schema-estimate-infra.md` validation.
+
+If this gate fails: STOP and output: "estimate-infra did not produce a valid `estimation-infra.json`; do not complete Phase 4."
 
 ## Present Summary
 
