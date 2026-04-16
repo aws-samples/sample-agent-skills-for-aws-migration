@@ -226,6 +226,7 @@ gcp-to-aws/
 │       ├── schema-discover-ai.md               # ai-workload-profile schema (loaded by discover-app-code.md)
 │       ├── schema-discover-billing.md          # billing-profile schema (loaded by discover-billing.md)
 │       ├── schema-estimate-infra.md            # estimation-infra.json schema (loaded by estimate-infra.md at write time)
+│       ├── migration-complexity.md             # Complexity tier definitions (small/medium/large) for timeline scaling
 │       └── pricing-cache.md                    # Cached AWS + source provider pricing (±5-25%, primary source)
 ```
 
@@ -244,7 +245,7 @@ gcp-to-aws/
 - **Sizing**: Development tier (e.g., `db.t4g.micro` for databases, 0.5 CPU for Fargate)
 - **Migration mode**: Adapts based on available inputs (infrastructure, AI, or billing-only)
 - **Cost currency**: USD
-- **Timeline assumption**: 8-12 weeks total
+- **Timeline assumption**: 2-16 weeks depending on migration complexity — small (2-6 weeks), medium (6-12 weeks), large (12-18 weeks). See `references/shared/migration-complexity.md` for tier definitions.
 
 ## Workflow Execution
 
