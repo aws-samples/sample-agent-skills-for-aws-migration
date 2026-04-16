@@ -17,6 +17,12 @@ The parent `estimate.md` selects the pricing mode before loading this file.
 
 For typical migrations (Claude, Llama, Nova, Mistral, DeepSeek, Gemma, OpenAI gpt-oss, Gemini source pricing), ALL prices are in `pricing-cache.md`. Zero MCP calls needed.
 
+**Model lifecycle:** When building the model comparison table, check `references/shared/ai-model-lifecycle.md` and apply the 90-day exclusion rule:
+
+- **Excluded** (≤90 days to EOL): omit entirely from `model_comparison`, `recommended_model`, and `backup_model`.
+- **Legacy** (>90 days to EOL): include in `model_comparison` with ` (Legacy — EOL YYYY-MM-DD)` annotation. Do not select as `recommended_model` unless no Active alternative exists.
+- **Active**: no restrictions.
+
 ## Prerequisites
 
 Read from `$MIGRATION_DIR/`:
@@ -157,6 +163,8 @@ All cost values are numbers, not strings. Output must be valid JSON.
 ## Validation Checklist
 
 - [ ] `model_comparison` includes ALL viable Bedrock models, not just recommended
+- [ ] Legacy models in `model_comparison` are annotated with EOL dates (per `shared/ai-model-lifecycle.md`)
+- [ ] `recommended_model` is an Active model (not Legacy) unless no Active alternative exists
 - [ ] Every model has `capabilities_match` checked against `ai_capabilities_required`
 - [ ] `recommended_model.rationale` references user's priority, preference, and volume
 - [ ] `roi_analysis` is honest — if migration increases cost, says so

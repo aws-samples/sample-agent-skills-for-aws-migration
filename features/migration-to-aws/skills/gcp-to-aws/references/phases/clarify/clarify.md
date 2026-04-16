@@ -220,12 +220,14 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 | LangChain/LangGraph AI       | Q14 includes C                               | Provider swap via ChatBedrock; 1–3 days                   |
 | OpenAI Agents SDK            | Q14 includes E                               | Highest AI effort; Bedrock Agents; 2–4 weeks              |
 | Multi-agent + MCP            | Q14 = D + F                                  | Bedrock Agents to unify orchestration + MCP               |
-| Voice platform AI            | Q14 includes G                               | Check native Bedrock support; Nova Sonic if needed        |
+| Voice platform AI            | Q14 includes G                               | Check native Bedrock support; Nova 2 Sonic if needed      |
+| GPT-5.4 migration            | Q19 = GPT-5.4                                | Claude Sonnet 4.6 — near price parity; AWS consolidation  |
+| GPT-5.4 Mini/Nano migration  | Q19 = GPT-5.4 Mini or Nano                   | Nova Lite/Micro — 87-94% cheaper on Bedrock               |
 | GPT-4 Turbo migration        | Q19 = GPT-4 Turbo                            | Claude Sonnet 4.6 — 70% cheaper on input                  |
 | o-series migration           | Q19 = o-series                               | Claude Sonnet 4.6 with extended thinking                  |
 | High-volume cost-critical AI | Q18 = High + cost critical                   | Nova Micro or Haiku 4.5 + provisioned throughput          |
 | Reasoning/agent workload     | Q17 = Extended thinking                      | Claude Sonnet 4.6 extended thinking; Opus 4.6 for hardest |
-| Speech-to-speech AI          | Q17 = Real-time speech                       | Nova Sonic                                                |
+| Speech-to-speech AI          | Q17 = Real-time speech                       | Nova 2 Sonic                                              |
 | RAG workload                 | Q17 = RAG optimization                       | Bedrock Knowledge Bases + Titan Embeddings                |
 | Vision workload              | Q20 = Vision required                        | Claude Sonnet 4.6 (multimodal)                            |
 | Latency-critical AI          | Q21 = Critical                               | Haiku 4.5 or Nova Micro + streaming                       |

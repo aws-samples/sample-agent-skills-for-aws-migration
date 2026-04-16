@@ -167,7 +167,8 @@ Write `aws-design-ai.json` to `$MIGRATION_DIR/`.
 - [ ] Every `bedrock_models[]` entry has pricing (`source_provider_price`, `bedrock_price`, `price_comparison`)
 - [ ] `capability_mapping` covers every `true` capability from `capabilities_summary`
 - [ ] `code_migration.primary_pattern` matches `integration.pattern`
-- [ ] All model IDs use current Bedrock identifiers
+- [ ] All model IDs use current Bedrock identifiers (Active status per `shared/ai-model-lifecycle.md`)
+- [ ] No Legacy model is used as `bedrock_models[].aws_model_id` unless no Active alternative exists (with EOL date noted)
 - [ ] `honest_assessment` logic is consistent (weakest model drives overall)
 
 ## Completion Handoff Gate (Fail Closed)

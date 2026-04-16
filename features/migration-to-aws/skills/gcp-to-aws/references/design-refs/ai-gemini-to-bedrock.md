@@ -6,6 +6,8 @@ This file is loaded by `design-ai.md` when `ai-workload-profile.json` has `summa
 
 Verify all pricing via AWS Pricing MCP or `references/shared/pricing-cache.md`.
 
+**Model lifecycle:** Before recommending any Bedrock model, check `references/shared/ai-model-lifecycle.md`. Do not recommend Legacy models as primary selections for new migrations. Legacy models are annotated below where they appear.
+
 ---
 
 ## Competitive Reality (March 2026)
@@ -46,7 +48,7 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 | Nova Pro          | AWS balanced                 | Medium     | High   | 300K    |
 | Nova Lite         | AWS fast + cheapest          | Medium     | High   | 300K    |
 | Nova Micro        | AWS fastest, text-only       | Low        | High   | 128K    |
-| Nova Premier      | Complex reasoning            | High       | Medium | 1M      |
+| Nova Premier      | Complex reasoning            | High       | Medium | 1M      | **Legacy** (EOL Sep 14, 2026) — prefer Nova 2 Pro |
 | DeepSeek-R1       | Chain-of-thought reasoning   | High       | Medium | 128K    |
 | Mistral Large 3   | EU/Multilingual              | High       | Medium | 256K    |
 
@@ -82,7 +84,7 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 | ----------------------- | --------------------- | --------------------- | ---------------- | ---------------------------------- |
 | text-bison / chat-bison | Legacy                | Llama 4 Scout         | $0.17 / $0.66    | Bedrock (better quality + cheaper) |
 | text-embedding-004      | $0.025 / N/A          | Titan Embeddings V2   | $0.02 / N/A      | Bedrock 20% cheaper                |
-| imagen-*                | Varies                | Titan Image Generator | $0.008-$0.04/img | Varies                             |
+| imagen-*                | Varies                | Nova Canvas           | $0.04-$0.08/img  | Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
 
 _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual savings depend on your input/output ratio._
 
@@ -174,5 +176,5 @@ Not available on other Bedrock models. This is a significant Claude advantage fo
 | Streaming              | All major models                                            | Same SSE pattern               |
 | Vision                 | Claude Sonnet/Haiku, Llama 4 Maverick                       | Multimodal parity              |
 | Context caching        | Claude prompt caching                                       | 90% savings on cached portions |
-| Audio/video input      | Nova Sonic (speech), Transcribe/Rekognition (preprocessing) | Different architecture         |
+| Audio/video input      | Nova 2 Sonic (speech), Transcribe/Rekognition (preprocessing) | Nova Sonic v1 is Legacy; use Nova 2 Sonic |
 | Embeddings             | Amazon Titan Embeddings ($0.02/1M, 1536 dims)               | Must re-embed all docs         |
