@@ -80,6 +80,14 @@ Present the GCP baseline as a total and per-service breakdown, noting which sour
 
 For each service in `aws-design.json`, calculate monthly cost using rates from `pricing-cache.md`. Track `pricing_source` per service.
 
+**Secret Manager coverage (mandatory):** If any mapped resource has `gcp_type` of `google_secret_manager_secret` or `google_secret_manager_secret_version`, ensure an `aws_service` entry for **Secrets Manager** is present in the estimate breakdown. Do not collapse this into a generic "supporting" line item.
+
+**BigQuery / deferred analytics (mandatory):** For any resource where `aws_service` is exactly **`Deferred — specialist engagement`** OR `gcp_type` starts with `google_bigquery_`:
+
+- **Do not** apply Athena, Redshift, Glue, or EMR rates as the plugin’s “projected” analytics stack.
+- **Exclude** these resources from Premium / Balanced / Optimized **numeric totals** (or list them under a `deferred_services[]` / `excluded_from_totals` section in `estimation-infra.json` with reason: *pending specialist engagement*).
+- In the user-facing summary, state that **AWS analytics costs are unknown** until the **AWS account team** and/or **data analytics migration partner** defines the target architecture.
+
 Calculate 3 cost tiers to show the optimization range:
 
 | Tier          | Description                             | Examples                                                            |
@@ -99,6 +107,7 @@ Calculate 3 cost tiers to show the optimization range:
 | Storage (S3)      | GB × per-GB rate + request estimates                                                  | `aws_config.storage_gb` or source `gcp_config`              |
 | Networking (ALB)  | fixed monthly + LCU estimate                                                          | From compute service count                                  |
 | Networking (NAT)  | fixed monthly × count + GB processed × data rate                                      | From VPC design                                             |
+| Security (Secrets Manager) | secrets_count × per-secret monthly rate + api_calls_10k × per-10K API rate   | `aws_config.secrets_count`, `aws_config.api_calls_10k` (or inferred defaults) |
 | Supporting        | Per-unit rates × quantities (secrets, log GB, metrics)                                | Inferred from service count                                 |
 
 Show calculation breakdown per service: rate × quantity = cost. Present all 3 tiers side-by-side.
@@ -116,29 +125,33 @@ Present a side-by-side comparison:
 
 ---
 
-## Part 4: One-Time Migration Costs
+## Part 4: GCP Data Transfer Egress (Vendor Fees Only)
 
-Beyond recurring AWS service costs, the customer should budget for the following one-time cost categories. Actual amounts depend on team size, hourly rates, existing AWS experience, and migration complexity — do not estimate specific dollar amounts.
+This section covers **GCP vendor/network charges** for outbound data during migration — not human labor or professional-services costs (those are never presented as dollar estimates by this advisor).
 
-**Development & Testing** — the largest one-time cost. Activities include:
+**Billing data check:** Before generating this section, check if `$MIGRATION_DIR/billing-profile.json` exists.
 
-- Architecture design and detailed planning
-- Code migration and application updates
-- Testing and validation (functional, performance, security)
-- Data migration (schema conversion, bulk transfer, validation)
-- Deployment and production cutover
+### IF billing data IS available (`billing-profile.json` exists):
 
-Note the complexity factors that affect effort (derived from `aws-design.json`):
+**Data transfer** — egress fees from GCP during migration. GCP charges for outbound data transfer; volume depends on database sizes and storage to migrate. Use the billing data to estimate the volume of data that needs to move.
 
-- **Lower effort**: ≤3 services, no database migration, no compliance constraints
-- **Moderate effort**: 4–8 services, or includes database migration
-- **Higher effort**: >8 services, or includes database + compliance constraints, or multi-region
+Set `billing_data_available: true` in the output `migration_cost_considerations` object.
 
-**Data Transfer** — egress fees from GCP during migration. GCP charges for outbound data transfer; volume depends on database sizes and storage to migrate.
+### IF billing data is NOT available (`billing-profile.json` does not exist):
 
-**Infrastructure Setup** — AWS account configuration, IAM setup, VPC provisioning, and initial resource provisioning for testing environments.
+**Omit GCP data transfer fee estimates.** Without billing data, there is no grounding for egress projections. Instead, include only this note in the output:
 
-**Training & Documentation** — team AWS training, updated operational runbooks, and documentation for the new architecture. More significant if the team is new to AWS.
+Set `migration_cost_considerations` to:
+
+```json
+{
+  "categories": [],
+  "billing_data_available": false,
+  "note": "Data transfer cost estimates require GCP billing data. Re-run discovery with a GCP billing export to see GCP egress fee projections."
+}
+```
+
+In the user-facing summary, when billing data is missing, state: "GCP data transfer egress estimates require billing data. Provide a billing export and re-run discovery to see vendor egress projections."
 
 ---
 
@@ -157,7 +170,7 @@ Present the monthly and annual cost difference between GCP baseline and each AWS
 
 **Non-cost benefits to present:** operational efficiency, global reach, service breadth, enterprise integration, vendor diversification, scaling flexibility (auto-scaling, spot instances, savings plans).
 
-**Note:** One-time migration costs are customer-specific and excluded from ROI calculations. The customer should factor their own one-time cost estimates (from Part 4 categories) into their business case.
+**Note:** GCP data transfer egress fees (if estimated in Part 4) are **vendor** one-time charges excluded from recurring ROI calculations — not human migration costs.
 
 ---
 
@@ -195,15 +208,23 @@ Include migrate/stay decision factors:
 
 Read `shared/schema-estimate-infra.md` for the `estimation-infra.json` schema and validation checklist, then write `estimation-infra.json` to `$MIGRATION_DIR/`.
 
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `estimate.md`, require:
+
+- `estimation-infra.json` exists and passes `shared/schema-estimate-infra.md` validation.
+
+If this gate fails: STOP and output: "estimate-infra did not produce a valid `estimation-infra.json`; do not complete Phase 4."
+
 ## Present Summary
 
 After writing `estimation-infra.json`, present a concise summary to the user:
 
 1. **Pricing source and accuracy**: State whether prices came from cache or live API, and the accuracy range (±5-10% for infrastructure from cache/live, ±15-25% if cache is stale). Example: "Estimates based on cached AWS pricing (2026-03-07), accuracy ±5-10%."
 2. GCP baseline vs AWS projected (balanced tier) — one-line comparison
-3. Three-tier table: Premium / Balanced / Optimized with monthly totals
+3. Three-tier table: **Premium**, **Balanced**, **Optimized** with monthly totals. Under or beside each label, use the **short subtitles**: Premium — *Highest resilience / highest monthly estimate in this model*; Balanced — *Default scenario; compare GCP to this first*; Optimized — *Lower monthly estimate; reservations / Spot / storage trade-offs assumed*. Add a one-line **How to read**: three figures are **pricing scenarios** for the same architecture (high → mid → low); **not** three Terraform stacks. When Terraform is generated later, it aligns with **Balanced**.
 4. Per-service cost breakdown (balanced tier, 1 line per service)
-5. One-time cost categories the customer should budget for
+5. **If billing data available**: Estimated GCP data transfer egress fees. **If billing data NOT available**: "Data transfer cost estimates require GCP billing data."
 6. Monthly and annual savings (or increase) vs GCP per tier
 7. Top 2-3 optimization opportunities with savings amounts
 
@@ -214,9 +235,10 @@ Keep it under 25 lines. The user can ask for details or re-read `estimation-infr
 The Generate phase (`generate.md`) uses `estimation-infra.json` as follows:
 
 1. **`projected_costs.breakdown`** — Budget allocation per cluster migration phase
-2. **`migration_cost_considerations`** — Categories of one-time costs the customer should plan for
+2. **`migration_cost_considerations`** — Data transfer egress cost estimates (if billing data available)
 3. **`optimization_opportunities`** — Which optimizations to implement and when (some during initial migration, some post-migration)
 4. **`cost_comparison`** — Set cost monitoring targets and alerts for each migrated cluster
 5. **`recommendation.next_steps`** — Prerequisites for starting generation
+6. **Cost tier vs Terraform** — Generated **`terraform/`** implements **one** baseline aligned with the **Balanced** scenario; **Premium** and **Optimized** are **estimate-only** bands unless the user changes IaC. See `generate-artifacts-infra.md` (`terraform/README.md`, `migration_summary` output).
 
 The generated artifacts reference the cost estimates to set per-cluster cost monitoring thresholds and validate that actual AWS spend aligns with projections after each cluster migration.

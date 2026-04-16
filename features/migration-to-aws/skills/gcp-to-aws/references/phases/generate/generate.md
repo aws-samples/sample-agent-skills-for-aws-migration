@@ -14,8 +14,7 @@ Both stages must complete for the phase to succeed.
 ## Prerequisites
 
 1. Read `$MIGRATION_DIR/.phase-status.json`. If missing, invalid, or `phases.clarify` is not exactly `"completed"`: **STOP**. Output: "Phase 2 (Clarify) not completed or phase state is missing/invalid. Complete Clarify before Generate."
-2. **Dirty-state check**: If `dirty_state` is non-null and `dirty_state.phase` is `"generate"`, warn the user and offer resume options per `shared/artifact-validation.md` Section 2. Do not proceed until the user chooses.
-3. Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
+2. Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
 
 Check which estimation artifacts exist in `$MIGRATION_DIR/`:
 
@@ -128,9 +127,9 @@ AFTER generate-artifacts-docs.md completes:
 
 > Load `generate-artifacts-report.md`
 
-Produces: `migration-report.html`, `migration-report.pdf` (if a PDF converter is available)
+Produces: `migration-report.html`
 
-**Non-blocking:** If report generation fails, log a warning and continue to Phase Completion. Do not fail the phase. PDF conversion is also non-blocking — if no converter is found, the HTML report is sufficient.
+**Non-blocking:** If report generation fails, log a warning and continue to Phase Completion. Do not fail the phase.
 
 ## Phase Completion
 
@@ -147,13 +146,11 @@ Verify both stages are complete:
 3. **Documentation gate (always)**:
    - Require `MIGRATION_GUIDE.md` and `README.md`
 4. If any active route is missing expected outputs: STOP and output: "Generate route [name] missing required artifacts. Re-run the failed generator before completing Phase 5."
-5. **Content validation:** For each produced JSON artifact, apply the parse + non-empty + required-field checks from `shared/artifact-validation.md` Section 1. For directory artifacts, verify they are non-empty and contain minimum expected files. For Markdown artifacts, verify non-empty and no unresolved `[placeholder]` strings. If any check fails: STOP with the specified error message.
 
 After all gates pass, use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` — **in the same turn** as the summary below:
 
 - Set `phases.generate` to `"completed"`
 - Set `current_phase` to `"complete"`
-- Clear `dirty_state` (set to `null`)
 
 ## Summary
 
@@ -180,12 +177,13 @@ Phase 5 (Generate) complete.
 
 After the structured block, include:
 
-1. **Key timelines** — Highlight migration timeline from the generation plans
-2. **Key risks** — Highlight top risks from the generation plans
-3. **TODO markers** — Note any TODO markers in generated artifacts that require manual attention
-4. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
+1. **Plans generated** — List all `generation-*.json` files produced
+2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md). Include `migration-report.html` only if it exists.
+3. **Key timelines** — Highlight migration timeline from the generation plans
+4. **Key risks** — Highlight top risks from the generation plans
+5. **TODO markers** — Note any TODO markers in generated artifacts that require manual attention
+6. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
 
 Output to user:
-- If `migration-report.pdf` exists: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.pdf (HTML version also at $MIGRATION_DIR/migration-report.html)"
-- If `migration-report.html` exists but PDF is missing: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.html (PDF conversion skipped — install Chrome, wkhtmltopdf, or weasyprint for automatic PDF output)"
-- If `migration-report.html` is missing: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Markdown documentation is available at $MIGRATION_DIR/MIGRATION_GUIDE.md and $MIGRATION_DIR/README.md. (HTML/PDF report generation is optional and non-blocking.)"
+- If `migration-report.html` exists: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.html"
+- If `migration-report.html` is missing: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Markdown documentation is available at $MIGRATION_DIR/MIGRATION_GUIDE.md and $MIGRATION_DIR/README.md. (HTML report generation is optional and non-blocking.)"

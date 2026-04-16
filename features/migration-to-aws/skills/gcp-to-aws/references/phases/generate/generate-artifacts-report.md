@@ -11,9 +11,8 @@ Generate a single self-contained HTML report (`migration-report.html`) combining
 **Output:**
 
 - `migration-report.html` — Self-contained HTML report with executive summary and detailed appendix
-- `migration-report.pdf` — PDF version of the report (converted from HTML)
 
-**Non-blocking:** If report generation fails for any reason, log a warning and continue. Do NOT fail the Generate phase. The markdown documentation (`MIGRATION_GUIDE.md`, `README.md`) is the primary output. PDF conversion is also non-blocking — if no converter is available, the HTML report is sufficient.
+**Non-blocking:** If report generation fails for any reason, log a warning and continue. Do NOT fail the Generate phase. The markdown documentation (`MIGRATION_GUIDE.md`, `README.md`) is the primary output.
 
 ## Prerequisites
 
@@ -260,76 +259,17 @@ After generating the HTML file, verify:
 4. **Valid HTML**: Opening and closing tags match, no broken table structures
 5. **No placeholders**: No `[placeholder]` or `TODO` text in the report output
 
-## Step 5: Convert to PDF
+## Step 5: Open Report in Browser
 
-After writing the HTML file, convert it to PDF. Try converters in this order (first success wins):
+After writing the HTML file, open it in the user's default browser so they can view it immediately.
 
-### Converter priority
-
-1. **Google Chrome / Chromium (headless)** — most reliable, best CSS fidelity
-
-   macOS:
-   ```bash
-   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-     --headless --disable-gpu --no-sandbox --run-all-compositor-stages-before-draw \
-     --print-to-pdf="$MIGRATION_DIR/migration-report.pdf" \
-     "$MIGRATION_DIR/migration-report.html"
-   ```
-
-   Linux:
-   ```bash
-   google-chrome --headless --disable-gpu --no-sandbox \
-     --print-to-pdf="$MIGRATION_DIR/migration-report.pdf" \
-     "$MIGRATION_DIR/migration-report.html"
-   ```
-
-   Also check for `chromium-browser` or `chromium` if `google-chrome` is not found.
-
-2. **wkhtmltopdf** — lightweight alternative
-
-   ```bash
-   wkhtmltopdf --enable-local-file-access \
-     "$MIGRATION_DIR/migration-report.html" \
-     "$MIGRATION_DIR/migration-report.pdf"
-   ```
-
-3. **weasyprint** (Python) — good CSS support
-
-   ```bash
-   weasyprint "$MIGRATION_DIR/migration-report.html" \
-     "$MIGRATION_DIR/migration-report.pdf"
-   ```
-
-### Fallback
-
-If **all** converters fail or are not installed:
-
-- Log a warning: "PDF conversion skipped — no supported converter found (Chrome, wkhtmltopdf, or weasyprint). Install one of these tools, or open the HTML report in a browser and use Print > Save as PDF."
-- Set `pdf_generated: false` in the completion output.
-- **Do NOT fail the phase.** The HTML report is the primary deliverable; PDF is a convenience output.
-
-### Verification
-
-If a converter succeeded, verify `migration-report.pdf` exists and is > 0 bytes. If the file is empty or missing after the command exited successfully, treat it as a conversion failure and fall through to the next converter or the fallback.
-
-## Step 6: Open Report
-
-After writing the HTML (and optionally PDF), open the report for the user.
-
-If PDF was generated: open the PDF.
-- macOS: `open "$MIGRATION_DIR/migration-report.pdf"`
-- Linux: `xdg-open "$MIGRATION_DIR/migration-report.pdf"`
-
-If PDF was not generated: open the HTML.
-- macOS: `open "$MIGRATION_DIR/migration-report.html"`
-- Linux: `xdg-open "$MIGRATION_DIR/migration-report.html"`
+Run: `open "$MIGRATION_DIR/migration-report.html"` (macOS) or `xdg-open "$MIGRATION_DIR/migration-report.html"` (Linux).
 
 If the open command fails, fall back to presenting the full file path to the user:
 
 ```
-Migration report ready:
-  PDF:  file://$MIGRATION_DIR/migration-report.pdf
-  HTML: file://$MIGRATION_DIR/migration-report.html
+Migration report ready — open in your browser:
+file://$MIGRATION_DIR/migration-report.html
 ```
 
 ## Completion
@@ -340,7 +280,6 @@ Output:
 
 ```
 Migration report saved to $MIGRATION_DIR/migration-report.html
-PDF report: $MIGRATION_DIR/migration-report.pdf [or "skipped — no converter available"]
 
 Report sections:
 - Executive Summary: [services count] services, [cost comparison], [timeline]

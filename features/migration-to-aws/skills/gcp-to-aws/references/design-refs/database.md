@@ -9,7 +9,7 @@
 | GCP Service            | AWS        | Blocker                                                                                                    |
 | ---------------------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
 | Firestore              | DynamoDB   | ACID transactions spanning >100 items required → use RDS (DynamoDB limit: 100 items/transaction)           |
-| BigQuery               | Redshift   | OLTP-level latency (<100ms) required → use DynamoDB (point lookups) or Aurora (SQL OLTP); Redshift is OLAP |
+| BigQuery               | _(no auto-target)_ | **Plugin does not prescribe Athena/Redshift/Glue** — use `Deferred — specialist engagement` in design output; OLTP latency needs → Aurora or DynamoDB per workload review with specialists |
 | Cloud SQL (PostgreSQL) | RDS Aurora | PostGIS extension → supported (Aurora supports PostGIS)                                                    |
 
 ## Signals (Decision Criteria)
@@ -29,9 +29,12 @@
 
 ### BigQuery
 
-- **Data warehouse / OLAP analytics** → Redshift
-- **Ad-hoc SQL queries** → Athena (serverless SQL; cheaper for infrequent queries)
-- **ML models in warehouse** → Redshift ML (or SageMaker) vs BigQuery ML
+**Do not use this rubric to pick an AWS product.** For any `google_bigquery_*` resource, follow **`design-infra.md` → BigQuery specialist gate** only: set `aws_service` to **`Deferred — specialist engagement`**, `human_expertise_required: true`, and direct the customer to **their AWS account team and/or a data analytics migration partner**. Do **not** output Athena, Redshift, Glue, EMR, or similar as the automated mapping in `aws-design.json`.
+
+The sections below are **background for humans** after engagement — not for the agent to select automatically:
+
+- Warehousing, SQL analytics, BI, and ML-on-data choices require assessment (e.g. query patterns, data volume, SLAs, cost model).
+- **BigQuery ML** (`google_bigquery_ml_*`) uses the **same specialist gate** — no automated SageMaker/Redshift ML target from this plugin.
 
 ### Memorystore (Redis)
 
@@ -87,12 +90,8 @@ Apply in order:
 ### Example 3: BigQuery (analytics)
 
 - GCP: `google_bigquery_dataset` (location=us, schema=[large table])
-- Signals: Analytics warehouse, large queries
-- Criterion 1 (Eliminators): PASS
-- Criterion 2 (Operational Model): Redshift (managed data warehouse) or Athena (serverless SQL)
-- Criterion 3 (User Preference): If `design_constraints.gcp_monthly_spend` indicates cost sensitivity → Athena (pay per query, no idle cost)
-- → **AWS: Athena (Glue catalog, parquet format in S3)**
-- Confidence: `inferred`
+- **Agent output:** `aws_service`: **`Deferred — specialist engagement`**, `human_expertise_required`: **`true`**, `confidence`: **`inferred`**, `rubric_applied`: `["BigQuery specialist gate — no automated AWS service target"]`
+- **User-facing:** Engage **AWS account team** and/or **data analytics migration partner** before choosing AWS analytics architecture. **Do not** state Athena vs Redshift vs Glue as the plugin’s recommendation.
 
 ## Output Schema
 
@@ -113,6 +112,7 @@ Apply in order:
     "region": "us-east-1"
   },
   "confidence": "deterministic",
+  "human_expertise_required": false,
   "rationale": "1:1 mapping; Cloud SQL PostgreSQL → RDS Aurora PostgreSQL",
   "rubric_applied": [
     "Eliminators: PASS",

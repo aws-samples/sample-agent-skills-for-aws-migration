@@ -17,6 +17,12 @@ The parent `estimate.md` selects the pricing mode before loading this file.
 
 For typical migrations (Claude, Llama, Nova, Mistral, DeepSeek, Gemma, OpenAI gpt-oss, Gemini source pricing), ALL prices are in `pricing-cache.md`. Zero MCP calls needed.
 
+**Model lifecycle:** When building the model comparison table, check `references/shared/ai-model-lifecycle.md` and apply the 90-day exclusion rule:
+
+- **Excluded** (≤90 days to EOL): omit entirely from `model_comparison`, `recommended_model`, and `backup_model`.
+- **Legacy** (>90 days to EOL): include in `model_comparison` with ` (Legacy — EOL YYYY-MM-DD)` annotation. Do not select as `recommended_model` unless no Active alternative exists.
+- **Active**: no restrictions.
+
 ## Prerequisites
 
 Read from `$MIGRATION_DIR/`:
@@ -77,23 +83,22 @@ Using the model selected in the design phase, show:
 
 ---
 
-## Part 4: One-Time Migration Costs
+## Part 4: Human One-Time Migration Costs (Out of Scope)
 
-Beyond recurring Bedrock costs, the customer should budget for the following one-time cost categories. Actual amounts depend on codebase complexity, team experience, and integration patterns.
+**Do not** present human labor, contractors, professional services, or engineering effort as one-time migration **costs** or budget line items (no dollar figures, no "budget for people work" lists, no "one-time migration cost" categories for implementation).
 
-**Cost categories to plan for:**
+Populate `migration_cost_considerations.categories` as an **empty array** `[]`. Use `migration_cost_considerations.note` to state that human and professional-services one-time migration costs are intentionally excluded from this advisor.
 
-- **Code migration** — Updating SDK calls, API endpoints, authentication, and response parsing to target Bedrock
-- **Testing & validation** — Quality benchmarking against source provider, latency testing, prompt tuning
-- **Staging deployment** — Bedrock endpoint provisioning, IAM configuration, monitoring setup
-- **Production rollout** — Traffic migration, canary deployment, rollback procedures
+**Technical integration complexity** (for internal JSON and risk context only — not framed as money):
 
-**Complexity factors** that affect effort (from `ai-workload-profile.json`):
+From `ai-workload-profile.json`, record non-monetary factors in `migration_cost_considerations.complexity_factors[]` as short strings, for example:
 
-- `integration.pattern = "framework"` → Lower effort (swap provider in framework config)
-- `integration.pattern = "direct_sdk"` → Moderate effort (swap SDK calls and API patterns)
-- `integration.pattern = "rest_api"` → Higher effort (change endpoints, auth, and response parsing)
-- `summary.total_models_detected` > 3 → Additional effort for multi-model migration and testing
+- `integration.pattern = "framework"` → lower integration touch surface
+- `integration.pattern = "direct_sdk"` → moderate SDK and API pattern changes
+- `integration.pattern = "rest_api"` → higher endpoint, auth, and parsing changes
+- `summary.total_models_detected` > 3 → multi-model coordination
+
+Do **not** repeat these as "costs" in the user-facing summary.
 
 ---
 
@@ -108,7 +113,7 @@ Reference `aws-design-ai.json` → `honest_assessment`. If `"recommend_stay"`, p
 
 **Non-cost benefits to present:** model flexibility (30+ models), prompt caching (Claude, 90% savings), AWS ecosystem (Guardrails, Knowledge Bases, Agents), vendor diversification, multi-model strategy.
 
-**Note:** One-time migration costs are customer-specific and excluded from ROI calculations. The customer should factor their own one-time cost estimates (from Part 4 categories) into their business case.
+**Note:** Human/professional-services one-time migration costs are intentionally out of scope for this advisor and excluded from ROI calculations.
 
 ---
 
@@ -148,7 +153,7 @@ Write `estimation-ai.json` to `$MIGRATION_DIR/`.
 | `backup_model`                  | object | `model`, `monthly_cost`, `rationale`                                                                                |
 | `embeddings`                    | object | `model`, `monthly_cost`, `monthly_tokens`, `note` (if applicable)                                                   |
 | `cost_comparison`               | object | `current_gcp_monthly`, `projected_bedrock_monthly`, `monthly_difference`, `annual_difference`, `percent_change`     |
-| `migration_cost_considerations` | object | `categories[]`, `complexity_factors[]`, `note`                                                                      |
+| `migration_cost_considerations` | object | `categories[]` (always `[]`), `complexity_factors[]` (technical integration only), `note` (must state human/pro costs excluded) |
 | `roi_analysis`                  | object | `monthly_cost_delta`, `annual_cost_delta`, `justification`, `non_cost_benefits[]`                                   |
 | `optimization_opportunities`    | array  | `opportunity`, `potential_savings_monthly`, `implementation_effort`, `description`                                  |
 | `optimized_projection`          | object | `monthly_with_optimizations`, `vs_current`, `note`                                                                  |
@@ -158,11 +163,22 @@ All cost values are numbers, not strings. Output must be valid JSON.
 ## Validation Checklist
 
 - [ ] `model_comparison` includes ALL viable Bedrock models, not just recommended
+- [ ] Legacy models in `model_comparison` are annotated with EOL dates (per `shared/ai-model-lifecycle.md`)
+- [ ] `recommended_model` is an Active model (not Legacy) unless no Active alternative exists
 - [ ] Every model has `capabilities_match` checked against `ai_capabilities_required`
 - [ ] `recommended_model.rationale` references user's priority, preference, and volume
 - [ ] `roi_analysis` is honest — if migration increases cost, says so
 - [ ] `optimization_opportunities` only includes strategies relevant to user's workload
 - [ ] No compute, database, storage, or networking costs (those belong in `estimate-infra.md`)
+- [ ] `migration_cost_considerations.categories` is `[]` — no human one-time migration costs presented
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `estimate.md`, require:
+
+- `estimation-ai.json` exists and passes the Validation Checklist above.
+
+If this gate fails: STOP and output: "estimate-ai did not produce a valid `estimation-ai.json`; do not complete Phase 4."
 
 ## Present Summary
 
@@ -181,7 +197,7 @@ After writing `estimation-ai.json`, present under 25 lines:
 The Generate phase uses `estimation-ai.json`:
 
 1. **`recommended_model`** — Which Bedrock model to provision and test
-2. **`migration_cost_considerations`** — Categories of one-time costs the customer should plan for
+2. **`migration_cost_considerations`** — `complexity_factors[]` only for integration risk context; **never** present human one-time migration **costs** to the user (`categories` stays `[]`)
 3. **`optimization_opportunities`** — Which optimizations to implement and when
 4. **`cost_comparison`** — Cost monitoring targets and alerts in production
 5. **`model_comparison`** — Fallback options if recommended model doesn't meet quality bar

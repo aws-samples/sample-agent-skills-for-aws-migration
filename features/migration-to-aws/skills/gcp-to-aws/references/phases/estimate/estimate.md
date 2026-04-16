@@ -47,7 +47,8 @@ If cache is > 90 days old and MCP is unavailable:
 
 ## Step 1: Prerequisites
 
-Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
+1. Read `$MIGRATION_DIR/.phase-status.json`. If missing, invalid, or `phases.clarify` is not exactly `"completed"`: **STOP**. Output: "Phase 2 (Clarify) not completed or phase state is missing/invalid. Complete Clarify before Estimate."
+2. Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
 
 Check which design artifacts exist in `$MIGRATION_DIR/`:
 
@@ -90,7 +91,23 @@ Produces: `estimation-ai.json`
 
 ## Phase Completion
 
-After all applicable sub-estimates finish, use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.estimate` set to `"completed"` — **in the same turn** as the output message below.
+Before marking Estimate complete, enforce route output gates (fail closed):
+
+1. Determine which estimate routes ran:
+   - Infra route: `aws-design.json` exists
+   - Billing-only route: `aws-design-billing.json` exists AND `aws-design.json` does NOT exist
+   - AI route: `aws-design-ai.json` exists
+2. Require at least one route to be active. If none active: STOP.
+3. For each active route, require its expected artifact:
+   - Infra route -> `estimation-infra.json`
+   - Billing-only route -> `estimation-billing.json`
+   - AI route -> `estimation-ai.json`
+4. If any active route is missing its expected output: STOP and output: "Estimate route [name] did not produce required artifact(s). Re-run the failed sub-estimate before completing Phase 4."
+
+After all active route gates pass, use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` — **in the same turn** as the output message below:
+
+- Set `phases.estimate` to `"completed"`
+- Set `current_phase` to `"generate"`
 
 Output to user: "Cost estimation complete. Proceeding to Phase 5: Generate Migration Artifacts."
 

@@ -4,7 +4,8 @@
 
 ## Prerequisites
 
-Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
+1. Read `$MIGRATION_DIR/.phase-status.json`. If missing, invalid, or `phases.clarify` is not exactly `"completed"`: **STOP**. Output: "Phase 2 (Clarify) not completed or phase state is missing/invalid. Run `references/phases/clarify/clarify.md` until Clarify finishes and `.phase-status.json` shows `phases.clarify`: `completed`."
+2. Read `$MIGRATION_DIR/preferences.json`. If missing: **STOP**. Output: "Phase 2 (Clarify) not completed. Run Phase 2 first."
 
 Check which discovery artifacts exist in `$MIGRATION_DIR/`:
 
@@ -48,7 +49,23 @@ Produces: `aws-design-ai.json`
 
 ## Phase Completion
 
-After all applicable sub-designs finish, use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.design` set to `"completed"` — **in the same turn** as the output message below.
+Before marking Design complete, enforce route output gates (fail closed):
+
+1. Determine which design routes ran:
+   - IaC route: `gcp-resource-inventory.json` AND `gcp-resource-clusters.json` exist
+   - Billing-only route: `billing-profile.json` exists AND `gcp-resource-inventory.json` does NOT exist
+   - AI route: `ai-workload-profile.json` exists
+2. Require at least one route to be active. If none active: STOP.
+3. For each active route, require its expected artifact:
+   - IaC route -> `aws-design.json`
+   - Billing-only route -> `aws-design-billing.json`
+   - AI route -> `aws-design-ai.json`
+4. If any active route is missing its expected output: STOP and output: "Design route [name] did not produce required artifact(s). Re-run the failed sub-design before completing Phase 3."
+
+After all active route gates pass, use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json` — **in the same turn** as the output message below:
+
+- Set `phases.design` to `"completed"`
+- Set `current_phase` to `"estimate"`
 
 Output to user: "AWS Architecture designed. Proceeding to Phase 4: Estimate Costs."
 
@@ -57,7 +74,7 @@ Output to user: "AWS Architecture designed. Proceeding to Phase 4: Estimate Cost
 Sub-design files may reference rubrics in `design-refs/`:
 
 - `design-refs/index.md` — GCP type → rubric file lookup
-- `design-refs/fast-path.md` — Deterministic 1:1 GCP→AWS mappings
+- `design-refs/fast-path.md` — Direct (table) mappings vs rubric path; **User-facing vocabulary** for presenting `confidence` to users (**Standard pairing** / **Tailored to your setup** / **Estimated from billing only**)
 - `design-refs/compute.md` — Compute service rubric
 - `design-refs/database.md` — Database service rubric
 - `design-refs/storage.md` — Storage service rubric

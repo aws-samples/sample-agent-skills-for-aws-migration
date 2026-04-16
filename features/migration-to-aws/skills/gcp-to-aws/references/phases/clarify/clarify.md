@@ -2,6 +2,8 @@
 
 **Phase 2 of 6** — Ask adaptive questions before design begins, then interpret answers into ready-to-apply design constraints.
 
+> **HARD GATE — Clarify before Design:** Do not load `references/phases/design/design.md` (or any later phase) until this phase finishes **and** `$MIGRATION_DIR/.phase-status.json` records `phases.clarify` as `"completed"`. Writing `preferences.json` without updating phase status is a protocol violation. If the user asks to skip questions, use documented defaults and still complete this phase (including phase status).
+
 The output — `preferences.json` — is consumed directly by Design and Estimate without any further interpretation.
 
 Questions are organized into **six named categories (A–F)** with documented firing rules. Up to 22 questions across categories, depending on which discovery artifacts exist and which GCP services are detected. A standalone **AI-Only** flow exists for migrations that only move AI/LLM calls to Bedrock.
@@ -27,7 +29,7 @@ If `$MIGRATION_DIR/preferences.json` already exists:
 > A) Re-use these preferences and skip questions
 > B) Start fresh and re-answer all questions
 
-- If A: skip to Validation Checklist, proceed with existing file.
+- If A: Run Step 2 item 6 only (BigQuery detection) on current discovery artifacts. If `bigquery_present` is **true**, output the Step 4 **BigQuery / deferred analytics** advisory block once (even though questions are skipped), then skip to Validation Checklist with the existing `preferences.json`.
 - If B: continue to Step 1.
 
 ---
@@ -82,6 +84,7 @@ Before generating questions, scan the inventory to extract values that are alrea
 3. **Billing SKUs** — If `billing-profile.json` exists, check if any SKU reveals storage class, HA configuration, or other answerable questions.
 4. **Billing-only mode** — If `billing-profile.json` exists and `gcp-resource-inventory.json` does NOT exist, check `billing-profile.json → services[]` for Category B question matching.
 5. **AI framework detection** — If `ai-workload-profile.json` exists, check `integration.gateway_type` and `integration.frameworks` for auto-detection of Q14 answer.
+6. **BigQuery / analytics warehouse** — Set `bigquery_present` to **true** if **any** of: (a) a resource in `gcp-resource-inventory.json` has `gcp_type` (or equivalent type field) starting with `google_bigquery_`; (b) `billing-profile.json` lists a service/SKU that clearly indicates **BigQuery** (e.g., service name or SKU contains `BigQuery`). Otherwise `bigquery_present` is **false**.
 
 Record extracted values. Questions whose answers are fully determined by extraction will be skipped and the extracted value used directly with `chosen_by: "extracted"`.
 
@@ -162,6 +165,10 @@ Interpret → `right_sizing`: A → `true`, B → `false`. Default: B → `false
 
 ## Step 4: Present Questions
 
+**BigQuery / deferred analytics (mandatory callout):** If Step 2 set `bigquery_present` to **true**, output this block **once**, **before** any questions (same turn), then continue with the question flow:
+
+> **BigQuery / analytics warehouse:** Your discovery inputs include BigQuery. This skill **does not** select an AWS analytics or data-warehouse target (no Athena, Redshift, Glue, or EMR recommendation from the plugin). **Before** warehouse, data lake, SQL analytics, or BI cutover planning, engage your **AWS account team** and/or a **data analytics migration partner** to assess query patterns, data volumes, ETL/ELT, and downstream consumers. Design will mark these resources as **`Deferred — specialist engagement`**.
+
 Show all generated questions at once, grouped by section. Use a conversational tone with brief context explaining why each question matters. Show a progress indicator: **"Question N of M"** where M is the total number of questions being asked (after filtering).
 
 ```
@@ -196,8 +203,8 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 
 | Scenario                     | Key Answers                                  | Recommendation                                            |
 | ---------------------------- | -------------------------------------------- | --------------------------------------------------------- |
-| Early-stage credits          | Q3 < $5K                                     | AWS Activate Founders or Portfolio credits                |
-| Growth-stage credits         | Q3 ≥ $20K                                    | IW Migrate or MAP credits based on ARR                    |
+| Early-stage funding path     | Q3 = lower spend band                        | Entry-tier migration funding program review               |
+| Growth-stage funding path    | Q3 = higher spend band                       | Migration funding/support program review based on spend profile |
 | Must stay portable           | Q5 = Yes multi-cloud                         | EKS only, no ECS Fargate                                  |
 | Kubernetes-averse            | Q5 = No + Q8 = Frustrated                    | ECS Fargate strongly recommended                          |
 | WebSocket app                | Q9 = Yes                                     | ALB WebSocket config required                             |
@@ -208,16 +215,19 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 | Zero downtime required       | Q7 = No downtime                             | Blue/green + AWS DMS required                             |
 | HIPAA compliance             | Q2 = HIPAA                                   | BAA services only, specific regions                       |
 | FedRAMP required             | Q2 = FedRAMP                                 | GovCloud regions only                                     |
+| CCPA / CPRA                  | Q2 = G (CCPA / CPRA)                         | Consumer privacy, logging/retention, data-inventory posture; confirm regions with legal review |
 | Gateway-only AI              | Q14 = B only (LLM router/gateway)            | Config change only; skip SDK migration                    |
 | LangChain/LangGraph AI       | Q14 includes C                               | Provider swap via ChatBedrock; 1–3 days                   |
 | OpenAI Agents SDK            | Q14 includes E                               | Highest AI effort; Bedrock Agents; 2–4 weeks              |
 | Multi-agent + MCP            | Q14 = D + F                                  | Bedrock Agents to unify orchestration + MCP               |
-| Voice platform AI            | Q14 includes G                               | Check native Bedrock support; Nova Sonic if needed        |
+| Voice platform AI            | Q14 includes G                               | Check native Bedrock support; Nova 2 Sonic if needed      |
+| GPT-5.4 migration            | Q19 = GPT-5.4                                | Claude Sonnet 4.6 — near price parity; AWS consolidation  |
+| GPT-5.4 Mini/Nano migration  | Q19 = GPT-5.4 Mini or Nano                   | Nova Lite/Micro — 87-94% cheaper on Bedrock               |
 | GPT-4 Turbo migration        | Q19 = GPT-4 Turbo                            | Claude Sonnet 4.6 — 70% cheaper on input                  |
 | o-series migration           | Q19 = o-series                               | Claude Sonnet 4.6 with extended thinking                  |
 | High-volume cost-critical AI | Q18 = High + cost critical                   | Nova Micro or Haiku 4.5 + provisioned throughput          |
 | Reasoning/agent workload     | Q17 = Extended thinking                      | Claude Sonnet 4.6 extended thinking; Opus 4.6 for hardest |
-| Speech-to-speech AI          | Q17 = Real-time speech                       | Nova Sonic                                                |
+| Speech-to-speech AI          | Q17 = Real-time speech                       | Nova 2 Sonic                                              |
 | RAG workload                 | Q17 = RAG optimization                       | Bedrock Knowledge Bases + Titan Embeddings                |
 | Vision workload              | Q20 = Vision required                        | Claude Sonnet 4.6 (multimodal)                            |
 | Latency-critical AI          | Q21 = Critical                               | Haiku 4.5 or Nova Micro + streaming                       |
@@ -323,7 +333,7 @@ Apply the interpret rule for every answered question (defined in each category f
 | Q17 — Critical feature  | J (none)             | no additional override                            |
 | Q18 — Volume + cost     | A (low + quality)    | `ai_token_volume: "low"`                          |
 | Q19 — Current model     | _(auto-detect)_      | `ai_model_baseline` from code detection           |
-| Q20 — Vision            | A (text only)        | no constraint                                     |
+| Q20 — Input types       | A (text only)        | no constraint                                     |
 | Q21 — AI latency        | B (important)        | `ai_latency: "important"`                         |
 | Q22 — Task complexity   | B (moderate)         | `ai_complexity: "moderate"`                       |
 
@@ -333,6 +343,7 @@ Apply the interpret rule for every answered question (defined in each category f
 
 Before handing off to Design:
 
+- [ ] If `bigquery_present` was **true**, the Step 4 BigQuery specialist advisory was shown before questions — **or**, if Step 0 option A (reuse preferences), the same advisory was shown after BigQuery detection
 - [ ] `preferences.json` written to `$MIGRATION_DIR/`
 - [ ] `design_constraints.target_region` is populated with `value` and `chosen_by`
 - [ ] `design_constraints.availability` is populated (if Q6 was asked or defaulted)
