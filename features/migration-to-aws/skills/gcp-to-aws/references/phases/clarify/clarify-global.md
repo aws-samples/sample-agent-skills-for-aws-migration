@@ -97,20 +97,20 @@ Default: A — no constraint.
 
 > Your billing data shows ~$[total_monthly_spend]/month. Does this match your expectation?
 
-| Answer                 | Recommendation Impact                                                                                                        |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| < $1,000/month         | AWS Activate credits eligibility (~$5K–$25K); cost estimates use conservative ranges                                         |
-| $1,000–$5,000/month    | Migration funding review may apply; mid-range estimates                                                                       |
-| $5,000–$20,000/month   | Migration funding review may apply; reserved pricing recommendations included                                                 |
-| $20,000–$100,000/month | Migration funding and support program review may apply; savings commitment analysis included                                  |
-| > $100,000/month       | Enterprise migration program review may apply; dedicated migration support path may be available                              |
+| Answer                 | Recommendation Impact                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| < $1,000/month         | Entry-tier migration funding programs may apply; cost estimates use conservative ranges              |
+| $1,000–$5,000/month    | Migration funding review may apply; cost estimates use mid-range assumptions                          |
+| $5,000–$20,000/month   | Migration funding review may apply; reserved pricing options are evaluated in cost recommendations    |
+| $20,000–$100,000/month | Migration funding and support program review may apply; savings commitment options are evaluated      |
+| > $100,000/month       | Enterprise migration program review may apply; dedicated migration support path may be recommended    |
 
 Interpret:
 
 ```
-A -> gcp_monthly_spend: "<$1K" — AWS Activate credits eligibility (~$5K-$25K)
-B -> gcp_monthly_spend: "$1K-$5K" — migration funding review; mid-range cost assumptions
-C -> gcp_monthly_spend: "$5K-$20K" — migration funding review; reserved pricing recommendations
+A -> gcp_monthly_spend: "<$1K" — entry-tier funding review; conservative cost assumptions
+B -> gcp_monthly_spend: "$1K-$5K" — funding review; mid-range cost assumptions
+C -> gcp_monthly_spend: "$5K-$20K" — funding review; reserved pricing recommendations
 D -> gcp_monthly_spend: "$20K-$100K" — funding/support review; savings commitment analysis
 E -> gcp_monthly_spend: ">$100K" — enterprise program/support review
 F -> same as default (B)
