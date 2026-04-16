@@ -1,6 +1,6 @@
 # AWS Pricing Cache
 
-**Last updated:** 2026-04-03
+**Last updated:** 2026-04-16
 **Region:** us-east-1
 **Currency:** USD
 **Accuracy:** ±5-10% for infrastructure services (sourced from AWS Price List API), ±15-25% for AI models (sourced from public pricing pages)
@@ -317,7 +317,7 @@ Serverless inference: $0.0000200 per second per GB memory.
 
 ## Bedrock Models (On-Demand)
 
-**Anthropic Claude (Standard on-demand)** figures below match **US East (N. Virginia)** on [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) as of cache refresh. **Batch**, **prompt cache** (5m / 1h write + cache read), and **geo / in-region cross-region** rows on that page can differ; e.g. **US East (Ohio)** cross-region inference for Claude Sonnet 4.6 is listed at **$3.30 / $16.50** per 1M input/output (≈10% above N. Virginia). Long-context SKUs **do not** all use the same multiplier: **Sonnet 4.6** and **Opus 4.6** long-context modes share the same on-demand rates as the non–long-context rows on the standard table; **Sonnet 4.5** and **Sonnet 4** long-context rows are priced higher on that same table.
+**Anthropic Claude (Standard on-demand)** figures below match **US East (N. Virginia)** on [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) as of cache refresh. **Claude Opus 4.7** lists the same headline on-demand input/output as **Opus 4.6** on that page; confirm **batch** availability per model (Opus 4.7 batch was **not** listed on the global cross-region table when this row was added). **Batch**, **prompt cache** (5m / 1h write + cache read), and **geo / in-region cross-region** rows on that page can differ; e.g. **US East (Ohio)** cross-region inference for Claude Sonnet 4.6 is listed at **$3.30 / $16.50** per 1M input/output (≈10% above N. Virginia). Long-context SKUs **do not** all use the same multiplier: **Sonnet 4.6** and **Opus 4.6** long-context modes share the same on-demand rates as the non–long-context rows on the standard table; **Sonnet 4.5** and **Sonnet 4** long-context rows are priced higher on that same table.
 
 ### Multi-provider quick reference (per 1M tokens)
 
@@ -327,6 +327,7 @@ Serverless inference: $0.0000200 per second per GB memory.
 | Claude Sonnet 4.6 — Long Context | anthropic.claude-sonnet-4-6              | Anthropic | 3.00       | 15.00       | 200K+   | flagship  |
 | Claude Opus 4.6                  | anthropic.claude-opus-4-6-v1             | Anthropic | 5.00       | 25.00       | 200K    | premium   |
 | Claude Opus 4.6 — Long Context   | anthropic.claude-opus-4-6-v1             | Anthropic | 5.00       | 25.00       | 200K+   | premium   |
+| Claude Opus 4.7                  | anthropic.claude-opus-4-7                | Anthropic | 5.00       | 25.00       | 200K    | premium   |
 | Claude Opus 4.5                  | —                                        | Anthropic | 5.00       | 25.00       | 200K    | premium   |
 | Claude Sonnet 4.5                | —                                        | Anthropic | 3.00       | 15.00       | 200K    | flagship  |
 | Claude Sonnet 4.5 — Long Context | —                                        | Anthropic | 6.00       | 22.50       | 200K+   | flagship  |
@@ -363,6 +364,7 @@ Per 1M tokens unless noted. See [Bedrock pricing](https://aws.amazon.com/bedrock
 | Model                    | Batch in | Batch out | 5m cache write | 1h cache write | Cache read |
 | ------------------------ | -------- | --------- | ------------ | -------------- | ---------- |
 | Claude Sonnet 4.6 (+ LC) | 1.50     | 7.50      | 3.75         | 6.00           | 0.30       |
+| Claude Opus 4.7          | N/A      | N/A       | 6.25         | 10.00          | 0.50       |
 | Claude Opus 4.6 (+ LC)   | 2.50     | 12.50     | 6.25         | 10.00          | 0.50       |
 | Claude Opus 4.5          | 2.50     | 12.50     | 6.25         | 10.00          | 0.50       |
 | Claude Haiku 4.5         | 0.50     | 2.50      | 1.25         | 2.00           | 0.10       |

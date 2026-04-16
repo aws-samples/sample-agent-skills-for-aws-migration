@@ -39,7 +39,7 @@ Interpret → `ai_framework` array. Default: auto-detect, fallback `["direct"]`.
 
 | Answer   | Model Impact                                          |
 | -------- | ----------------------------------------------------- |
-| Quality  | Claude Sonnet 4.6 primary; Opus 4.6 for hardest tasks |
+| Quality  | Claude Sonnet 4.6 primary; Opus 4.7 / 4.6 for hardest tasks |
 | Speed    | Claude Haiku 4.5; also Nova Micro/Lite                |
 | Cost     | Claude Haiku 4.5 or Nova Micro                        |
 | Special  | Deferred to Q10                                       |
@@ -82,7 +82,7 @@ Establishes baseline Bedrock recommendation. Override hierarchy: Q10 special fea
 | GPT-4/4 Turbo  | Claude Sonnet 4.6 ($3/$15)        | Major savings (GPT-4T: $10/$30)    |
 | GPT-4o         | Claude Sonnet 4.6 ($3/$15)        | Modest savings on output           |
 | GPT-5/5.x      | Claude Sonnet 4.6 ($3/$15)        | Savings story is quality, not cost |
-| GPT-5 flagship | Claude Opus 4.6 ($5/$25)          | Cheaper than GPT-5 Pro ($15/$120)  |
+| GPT-5 flagship | Claude Opus 4.7 / 4.6 ($5/$25)          | Cheaper than GPT-5 Pro ($15/$120)  |
 | o-series       | Sonnet 4.6 with extended thinking | o1 $15/$60 → significant savings   |
 
 Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → Sonnet; GPT-4o + Q10=speech → Nova Sonic.
@@ -138,7 +138,7 @@ Present with concrete examples: Simple = classify/extract/summarize; Moderate = 
 | -------- | ------------------------------------------------------------------- |
 | Simple   | Haiku/Nova Micro sufficient; significant cost savings               |
 | Moderate | Sonnet 4.6 recommended; Haiku may suffice with prompt engineering   |
-| Complex  | Sonnet 4.6 required; extended thinking considered; Opus for hardest |
+| Complex  | Sonnet 4.6 required; extended thinking considered; Opus 4.7 / 4.6 for hardest |
 
 Interpret → `ai_complexity`. Default: B → `"moderate"`.
 

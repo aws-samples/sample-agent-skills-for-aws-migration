@@ -224,12 +224,12 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 | GPT-4 Turbo migration        | Q19 = GPT-4 Turbo                            | Claude Sonnet 4.6 — 70% cheaper on input                  |
 | o-series migration           | Q19 = o-series                               | Claude Sonnet 4.6 with extended thinking                  |
 | High-volume cost-critical AI | Q18 = High + cost critical                   | Nova Micro or Haiku 4.5 + provisioned throughput          |
-| Reasoning/agent workload     | Q17 = Extended thinking                      | Claude Sonnet 4.6 extended thinking; Opus 4.6 for hardest |
+| Reasoning/agent workload     | Q17 = Extended thinking                      | Claude Sonnet 4.6 extended thinking; Opus 4.7 / 4.6 for hardest |
 | Speech-to-speech AI          | Q17 = Real-time speech                       | Nova Sonic                                                |
 | RAG workload                 | Q17 = RAG optimization                       | Bedrock Knowledge Bases + Titan Embeddings                |
 | Vision workload              | Q20 = Vision required                        | Claude Sonnet 4.6 (multimodal)                            |
 | Latency-critical AI          | Q21 = Critical                               | Haiku 4.5 or Nova Micro + streaming                       |
-| Complex reasoning tasks      | Q22 = Complex                                | Claude Sonnet 4.6; Opus 4.6 for hardest                   |
+| Complex reasoning tasks      | Q22 = Complex                                | Claude Sonnet 4.6; Opus 4.7 / 4.6 for hardest                   |
 
 ---
 

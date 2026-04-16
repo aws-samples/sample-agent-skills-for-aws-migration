@@ -14,12 +14,12 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 
 - Gemini 3.1 Pro leads 13/16 Google-reported benchmarks and 6/10 on the Artificial Analysis Intelligence Index
 - ARC-AGI-2: 77.1% (2.5x jump over Gemini 3 Pro), SWE-Bench: 80.6% (tied with Opus 4.6 at 80.8%)
-- Costs $2/$12 per 1M tokens — less than half of Opus 4.6 ($5/$25), cheaper than Sonnet 4.6 ($3/$15)
+- Costs $2/$12 per 1M tokens — less than half of Opus 4.6 / 4.7 ($5/$25), cheaper than Sonnet 4.6 ($3/$15)
 - ~119 tokens/sec — faster than any Bedrock model at this quality tier
 
 **Where Bedrock still wins:**
 
-- Claude Sonnet/Opus 4.6 lead on real-world agentic tasks (GDPval evaluation) — the gap between benchmarks and production agent reliability is real
+- Claude Sonnet 4.6 / Opus 4.x lead on real-world agentic tasks (GDPval evaluation) — the gap between benchmarks and production agent reliability is real
 - Claude prompt caching (90% savings on repeated content) has no Gemini equivalent at Preview tier
 - Claude function calling remains best-in-class for complex multi-turn tool use
 - AWS ecosystem integration (Bedrock Agents, Knowledge Bases, Guardrails) has no Gemini equivalent
@@ -37,7 +37,8 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 | Model             | Best For                     | Complexity | Speed  | Context |
 | ----------------- | ---------------------------- | ---------- | ------ | ------- |
 | Claude Sonnet 4.6 | Agentic tasks, tool use      | High       | High   | 200K    |
-| Claude Opus 4.6   | Maximum reasoning            | High       | Medium | 200K    |
+| Claude Opus 4.7   | Latest flagship reasoning    | High       | Medium | 200K    |
+| Claude Opus 4.6   | Maximum reasoning (prior gen) | High       | Medium | 200K    |
 | Claude Haiku 4.5  | Simple + fast                | Medium     | High   | 200K    |
 | Llama 4 Maverick  | Cost-effective + multimodal  | Medium     | High   | 1M      |
 | Llama 4 Scout     | Ultra-long context, cheapest | Medium     | Medium | 10M     |
@@ -59,7 +60,7 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 | Gemini Model           | Price (in/out per 1M) | Best Bedrock Match | Bedrock Price  | Winner              |
 | ---------------------- | --------------------- | ------------------ | -------------- | ------------------- |
 | Gemini 3.1 Pro Preview | $2.00 / $12.00        | Claude Sonnet 4.6  | $3.00 / $15.00 | Gemini 24% cheaper  |
-| Gemini 3.1 Pro Preview | $2.00 / $12.00        | Claude Opus 4.6    | $5.00 / $25.00 | Gemini 54% cheaper  |
+| Gemini 3.1 Pro Preview | $2.00 / $12.00        | Claude Opus 4.7 / 4.6 | $5.00 / $25.00 | Gemini 54% cheaper  |
 | Gemini 3 Pro           | $0.50 / $3.00         | Llama 4 Maverick   | $0.24 / $0.97  | Bedrock 64% cheaper |
 | Gemini 3 Pro           | $0.50 / $3.00         | Llama 4 Scout      | $0.17 / $0.66  | Bedrock 75% cheaper |
 | Gemini 3 Pro           | $0.50 / $3.00         | Nova Pro           | $0.80 / $3.20  | Gemini 17% cheaper  |
@@ -96,7 +97,7 @@ Gemini 3.1 Pro Preview matches or beats Opus 4.6 on most reasoning benchmarks at
 
 - If user needs **general reasoning/coding quality** → Gemini 3.1 Pro is competitive or better. Migration case is weak unless driven by AWS consolidation.
 - If user needs **agentic reliability** (real-world multi-step tasks) → **Claude Sonnet 4.6** still leads on GDPval. This is the honest differentiator.
-- If user needs **maximum reasoning on hardest problems** → Claude Opus 4.6 ($5/$25) — tied with Gemini 3.1 Pro on SWE-Bench.
+- If user needs **maximum reasoning on hardest problems** → **Claude Opus 4.7** ($5/$25 headline on-demand, same tier as Opus 4.6) — use the latest [Claude on Bedrock](https://aws.amazon.com/bedrock/pricing/) model card for benchmark deltas vs Gemini; Opus 4.6 remains a same-price alternative where batch or regional availability matters.
 
 ### Speed-First
 
@@ -144,7 +145,7 @@ Gemini Flash → **Nova Micro** (<200ms, text-only, cheapest), **Haiku 4.5** (<4
 | Gemini Model                    | Monthly | Best Bedrock Match             | Monthly | Difference |
 | ------------------------------- | ------- | ------------------------------ | ------- | ---------- |
 | Gemini 3.1 Pro Preview ($2/$12) | $1,200  | Claude Sonnet 4.6 ($3/$15)     | $1,575  | +24%       |
-| Gemini 3.1 Pro Preview ($2/$12) | $1,200  | Claude Opus 4.6 ($5/$25)       | $2,625  | +54%       |
+| Gemini 3.1 Pro Preview ($2/$12) | $1,200  | Claude Opus 4.7 / 4.6 ($5/$25) | $2,625  | +54%       |
 | Gemini 3.1 Pro Preview ($2/$12) | $1,200  | Nova 2 Pro ($1.38/$11.00)      | $1,032  | -14%       |
 | Gemini 3 Pro ($0.50/$3.00)      | $300    | Llama 4 Maverick ($0.24/$0.97) | $109    | -64%       |
 | Gemini 3 Pro ($0.50/$3.00)      | $300    | Llama 4 Scout ($0.17/$0.66)    | $75     | -75%       |
