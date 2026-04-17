@@ -50,9 +50,11 @@ The skill follows the same phased workflow as the existing `gcp-to-aws` skill:
 | BI Engine | SQL Warehouse (Serverless) | Photon-accelerated |
 | IAM (Dataset-level) | Unity Catalog Privileges | Row/column-level security |
 
-### SQL Translation — Validated with SQLGlot
+### SQL Translation — Powered by Databricks Lakebridge
 
-The skill uses [SQLGlot](https://github.com/tobymao/sqlglot) (open-source) to programmatically translate BigQuery SQL to Databricks SQL. A working demo (`demo/bigquery_to_databricks_translator.py`) validates **7 out of 7 query patterns** at 100% success rate:
+The skill uses [Databricks Lakebridge](https://github.com/databrickslabs/lakebridge) (`databricks-labs-lakebridge`) — Databricks' own migration lifecycle toolkit — to programmatically translate BigQuery SQL to Databricks SQL. Lakebridge provides three phases: **Analyze** (complexity scoring), **Transpile** (batch conversion with live SQL Warehouse validation), and **Reconcile** (data comparison). For ad-hoc conversion, the **Databricks Assistant** `/migrate` command is available in the SQL Editor.
+
+A working demo (`demo/bigquery_to_databricks_translator.py`) validates **7 out of 7 query patterns** at 100% success rate:
 
 | Pattern | BigQuery Syntax | Databricks Translation |
 |---------|----------------|----------------------|

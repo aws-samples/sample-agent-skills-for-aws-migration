@@ -35,7 +35,7 @@ Point this plugin at your codebase, Terraform files, or GCP billing data. It run
 
 ## BigQuery-to-Databricks Migration Skill
 
-A new skill that fills the BigQuery "specialist gate" in the migration plugin with a complete Databricks Lakehouse migration path. Includes SQL translation (SQLGlot), data type/partitioning/ACL mapping, cost estimation, and Terraform generation.
+A new skill that fills the BigQuery "specialist gate" in the migration plugin with a complete Databricks Lakehouse migration path. Includes SQL translation powered by [Databricks Lakebridge](https://github.com/databrickslabs/lakebridge), data type/partitioning/ACL mapping, cost estimation, and Terraform generation.
 
 **[Read the Executive Summary](docs/bigquery-to-databricks-executive-summary.md)** | **[Reference Architecture & Migration Plan](docs/bigquery-to-databricks-reference-architecture.md)**
 

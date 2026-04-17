@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 BigQuery to Databricks SQL Translator — Interactive Web Demo
+Powered by the same transpilation engine used in Databricks Lakebridge.
 Paste BigQuery SQL, get Databricks SQL instantly.
 """
 
@@ -140,7 +141,12 @@ GROUP BY 1, 2""",
 
 # --- Header ---
 st.markdown("# BigQuery → Databricks SQL Translator")
-st.markdown("Paste BigQuery SQL on the left, get Databricks SQL on the right. Powered by [SQLGlot](https://github.com/tobymao/sqlglot).")
+st.markdown("Paste BigQuery SQL on the left, get Databricks SQL on the right. Powered by the transpilation engine used in [Databricks Lakebridge](https://github.com/databrickslabs/lakebridge).")
+st.markdown("""
+> **Databricks Migration Toolkit:** This demo previews the SQL transpilation capability of Lakebridge.
+> In production, use the full Lakebridge workflow: **Analyze** (complexity scoring) → **Transpile** (batch conversion + validation) → **Reconcile** (data comparison).
+> For ad-hoc conversion, use the **Databricks Assistant** `/migrate` command in the SQL Editor.
+""")
 st.markdown("---")
 
 # --- Sample selector ---
@@ -210,6 +216,7 @@ st.markdown("---")
 st.markdown(
     "<div style='text-align: center; color: #666; font-size: 13px;'>"
     "Part of the <strong>BigQuery-to-Databricks Migration Skill</strong> for the AWS Migration Plugin &nbsp;|&nbsp; "
+    "Powered by <strong>Databricks Lakebridge</strong> &nbsp;|&nbsp; "
     "Databricks Lakehouse on AWS"
     "</div>",
     unsafe_allow_html=True,

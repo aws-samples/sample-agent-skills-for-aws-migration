@@ -29,7 +29,7 @@ Unlike migrating to multiple disparate AWS services (Redshift for warehousing, A
 ### Limitations
 
 - Lakehouse Federation requires network connectivity between AWS and GCP during the parallel-run phase
-- SQLGlot handles the majority of BigQuery SQL syntax but some complex UDFs (especially JavaScript UDFs) may require manual conversion to Python UDFs
+- Databricks Lakebridge handles the majority of BigQuery SQL syntax but some complex UDFs (especially JavaScript UDFs) may require manual conversion to Python UDFs using the Databricks Assistant `/migrate` command
 - BigQuery's `GEOGRAPHY` type has no native equivalent — migrate as WKT strings and use H3 or Mosaic for geospatial operations
 - BigQuery's `TIME` type has no native Databricks equivalent — store as STRING
 - BigQuery BI Engine caching behavior differs from SQL Warehouse result caching — performance tuning may be needed post-migration
@@ -72,7 +72,7 @@ During migration, both BigQuery and Databricks run simultaneously. Lakehouse Fed
 
 ### SQL Translation Architecture
 
-BigQuery SQL is programmatically translated to Databricks SQL using SQLGlot:
+BigQuery SQL is programmatically translated to Databricks SQL using Databricks Lakebridge:
 
 ![SQL Translation Flow](diagrams/04-sql-translation-flow.png)
 
@@ -113,9 +113,14 @@ The following roles are typically required to complete a BigQuery-to-Databricks 
 - **Lakehouse Federation** — Federated query engine enabling `remote_query()` to BigQuery during parallel-run.
 - **MLflow** — ML lifecycle management. Replaces BigQuery ML for model training, tracking, and serving.
 
-### Migration Tools
+### Databricks Migration Tools
 
-- **SQLGlot** (open-source) — SQL transpiler for programmatic BigQuery → Databricks SQL translation. Handles dialect-specific syntax, functions, and DDL.
+- **Databricks Lakebridge** (`databricks-labs-lakebridge`) — Complete migration lifecycle toolkit. Three phases: **Analyze** (complexity scoring, workload assessment), **Transpile** (batch SQL conversion with validation against a live SQL Warehouse), **Reconcile** (data comparison with schema, row, and aggregate verification). BigQuery is a supported source dialect.
+- **Databricks Assistant** (`/migrate` command) — AI-powered SQL conversion built into the Databricks SQL Editor and Notebooks. Use for ad-hoc, interactive conversion of individual queries.
+- **SQL Migration Assistant** — Built into the Databricks SQL Editor for guided dialect conversion with AI suggestions.
+
+### Infrastructure & Transfer Tools
+
 - **Terraform** (Databricks provider) — Infrastructure-as-code for provisioning Databricks workspace, Unity Catalog, SQL Warehouses, and cluster policies.
 - **Google Cloud SDK** (`bq` CLI) — Used for BigQuery schema export, data export to GCS, and billing data extraction.
 
@@ -138,7 +143,7 @@ The following roles are typically required to complete a BigQuery-to-Databricks 
 | Task | Description | Skills Required |
 |------|-------------|-----------------|
 | Inventory BigQuery resources | Scan Terraform files for `google_bigquery_*` resources. Extract datasets, tables, views, routines, scheduled queries, ML models, and external connections. Document table schemas, partitioning strategies, clustering columns, and row counts. | Data Engineer |
-| Analyze SQL workloads | Parse BigQuery SQL scripts using SQLGlot (`read="bigquery"`). Identify BigQuery-specific syntax: `STRUCT`, `ARRAY`, `SAFE_DIVIDE`, `PARSE_DATE`, `FORMAT_TIMESTAMP`, `APPROX_COUNT_DISTINCT`, `QUALIFY`, `PIVOT/UNPIVOT`, JavaScript UDFs. Categorize queries by complexity (auto-translatable vs. manual review). | Data Engineer |
+| Analyze SQL workloads | Run Databricks Lakebridge Analyzer (`--source-tech bigquery`) to generate complexity reports with job scoring (low/medium/complex/very complex). Identifies BigQuery-specific syntax: `STRUCT`, `ARRAY`, `SAFE_DIVIDE`, `PARSE_DATE`, `FORMAT_TIMESTAMP`, `APPROX_COUNT_DISTINCT`, `QUALIFY`, `PIVOT/UNPIVOT`, JavaScript UDFs. Outputs Excel/JSON reports with component inventory and cross-system dependency mapping. | Data Engineer |
 | Extract billing data | Pull BigQuery billing export to analyze: on-demand query costs ($/TB scanned), flat-rate slot utilization, active vs. long-term storage costs, streaming insert volume, BigQuery ML usage, and BI Engine reservations. This data drives the cost comparison in Epic 3. | Data Engineer, Cloud Admin |
 | Assess data volume and transfer | Calculate total data volume (active + long-term storage) in TB. Estimate GCP egress costs for data transfer ($0.12/GB). Identify tables that can be migrated incrementally vs. full export. Flag any compliance or data residency constraints. | Data Engineer, Migration Lead |
 
@@ -162,7 +167,7 @@ The following roles are typically required to complete a BigQuery-to-Databricks 
 | Task | Description | Skills Required |
 |------|-------------|-----------------|
 | Map BigQuery namespace to Unity Catalog | Map BigQuery Projects → Databricks Catalogs, Datasets → Schemas, Tables → Delta Tables. Preserve naming conventions. Define managed vs. external table strategy. | Databricks Admin, Data Engineer |
-| Translate SQL workloads | Run SQLGlot transpilation (`read="bigquery"`, `write="databricks"`) on all discovered SQL. Validate translations against Databricks SQL syntax. Flag queries requiring manual review (JavaScript UDFs, complex GEOGRAPHY operations). | Data Engineer |
+| Translate SQL workloads | Run Databricks Lakebridge transpile (`--source-dialect bigquery`) on all discovered SQL. Lakebridge validates translations against a live SQL Warehouse automatically. Use Databricks Assistant `/migrate` for queries requiring manual refinement (JavaScript UDFs, complex GEOGRAPHY operations). | Data Engineer |
 | Design data migration pipeline | Select migration method per table based on size and update frequency. Design Auto Loader jobs for incremental ingestion. Configure Lakehouse Federation connection to BigQuery for parallel-run validation. | Data Engineer |
 | Map partitioning to Liquid Clustering | Convert BigQuery `PARTITION BY` + `CLUSTER BY` to Databricks Liquid Clustering (`CLUSTER BY`). Liquid Clustering unifies partitioning and clustering into automatic data layout optimization — no manual tuning required. | Data Engineer |
 | Map access controls | Translate BigQuery IAM roles to Unity Catalog privileges. Map dataset-level ACLs to schema-level grants. Convert authorized views to dynamic views with row filters. Map column-level security to column masks. | Databricks Admin |
@@ -233,7 +238,7 @@ One-Time Migration Cost:
 | Export BigQuery data to GCS | Export tables as Parquet or Avro to GCS. Use BigQuery Storage Read API for large tables. Partition exports for tables > 1 TB. Verify export completeness with row counts. | Data Engineer |
 | Transfer GCS to S3 | Use `gsutil rsync` or AWS DataSync to copy exported data from GCS to S3. Verify transfer integrity with checksums. For large datasets (> 10 TB), consider AWS Snowball or direct Spark BigQuery connector. | Data Engineer, Cloud Admin |
 | Ingest into Delta Lake | Run Auto Loader jobs to ingest Parquet/Avro from S3 into Delta tables in Unity Catalog. Apply schema mapping. Enable Liquid Clustering on appropriate columns. Verify row counts match BigQuery source. | Data Engineer |
-| Deploy translated SQL | Apply SQLGlot-translated DDL (views, stored procedures, UDFs). Run translated queries against migrated Delta tables. Compare results to BigQuery outputs for validation. | Data Engineer |
+| Deploy translated SQL | Apply Lakebridge-translated DDL (views, stored procedures, UDFs). Run translated queries against migrated Delta tables. Use Lakebridge Reconcile for automated data comparison (schema, row, and aggregate verification). | Data Engineer |
 | Set up parallel-run validation | Configure Lakehouse Federation connection to BigQuery. Create validation queries that compare Databricks results to BigQuery results using `remote_query()`. Run automated comparison on key metrics: row counts, checksums, aggregation results, sample data. | Data Engineer |
 | Migrate scheduled queries | Convert BigQuery scheduled queries to Databricks Workflows. Map `WRITE_APPEND` to `INSERT INTO`, `WRITE_TRUNCATE` to `INSERT OVERWRITE`. Configure cron triggers, retry policies, and notifications. | Data Engineer |
 | Migrate BigQuery ML models (if applicable) | Retrain models using MLflow. Log models to MLflow Model Registry. Deploy to Model Serving endpoints. Validate prediction accuracy against BigQuery ML baseline. | Data Scientist |
@@ -416,7 +421,7 @@ df = (spark.readStream
 - [MLflow documentation](https://docs.databricks.com/en/mlflow/index.html)
 
 ### Migration Tools
-- [SQLGlot — SQL transpiler](https://github.com/tobymao/sqlglot)
+- [Databricks Lakebridge — Migration Lifecycle Toolkit](https://github.com/databrickslabs/lakebridge) (Analyze → Transpile → Reconcile)
 - [Databricks Terraform provider](https://registry.terraform.io/providers/databricks/databricks/latest/docs)
 
 ### AWS Integration

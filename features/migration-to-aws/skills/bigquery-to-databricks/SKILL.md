@@ -9,7 +9,7 @@ description: "Migrate BigQuery workloads to Databricks on AWS. Triggers on: migr
 
 - **Lakehouse-first**: Migrate BigQuery workloads to the Databricks Lakehouse on AWS — Delta Lake for storage, Unity Catalog for governance, SQL Warehouses for BI/analytics, and MLflow for ML.
 - **Phased migration**: Support parallel-run via Lakehouse Federation (`remote_query()`) before hard cutover — no big-bang required.
-- **SQL fidelity**: Use SQLGlot for programmatic BigQuery SQL → Spark SQL / Databricks SQL translation with validation.
+- **SQL fidelity**: Use Databricks Lakebridge for programmatic BigQuery SQL → Databricks SQL translation with built-in validation and reconciliation.
 - **Dev sizing unless specified**: Default to serverless SQL Warehouse (small) for dev. Scale up on user direction.
 
 ---
@@ -49,7 +49,7 @@ Scan for BigQuery resources from available sources:
 - `google_bigquery_connection` → Extract external connections (Cloud SQL, etc.)
 
 ### From SQL Scripts
-- Parse BigQuery SQL dialect using SQLGlot (`read="bigquery"`)
+- Parse BigQuery SQL dialect using Databricks Lakebridge Analyzer (`--source-tech bigquery`)
 - Extract table references, function usage, DDL patterns
 - Identify BigQuery-specific syntax: `STRUCT`, `ARRAY`, `SAFE_DIVIDE`, `PARSE_DATE`, `FORMAT_TIMESTAMP`, `APPROX_COUNT_DISTINCT`, `QUALIFY`, `PIVOT/UNPIVOT`
 
@@ -108,21 +108,33 @@ Write to `$MIGRATION_DIR/bigquery-inventory.json`:
                     └─────────────────────────────────────┘
 ```
 
-### SQL Translation Rules (SQLGlot)
+### SQL Translation Rules (Databricks Lakebridge)
 
-```python
-import sqlglot
+Databricks Lakebridge (`databricks-labs-lakebridge`) provides a complete migration lifecycle:
 
-# Translate BigQuery SQL to Databricks SQL
-translated = sqlglot.transpile(
-    bigquery_sql,
-    read="bigquery",
-    write="databricks",
-    pretty=True
-)[0]
+```bash
+# 1. Analyze: Assess BigQuery SQL complexity
+databricks labs lakebridge analyze \
+  --source-directory /path/to/bigquery/sql \
+  --report-file complexity-report.xlsx \
+  --source-tech bigquery
+
+# 2. Transpile: Batch convert BigQuery SQL to Databricks SQL
+databricks labs lakebridge transpile \
+  --source-dialect bigquery \
+  --input-source /path/to/bigquery/sql \
+  --output-folder /path/to/databricks/sql \
+  --skip-validation false \
+  --catalog-name migrated \
+  --schema-name analytics
+
+# 3. Reconcile: Validate data post-migration
+databricks labs lakebridge reconcile
 ```
 
-Key transformations handled by SQLGlot:
+For ad-hoc conversion, use the **Databricks Assistant** `/migrate` command in the SQL Editor.
+
+Key transformations handled by Lakebridge:
 | BigQuery Syntax | Databricks SQL Equivalent |
 |----------------|--------------------------|
 | `SAFE_DIVIDE(a, b)` | `TRY_DIVIDE(a, b)` |

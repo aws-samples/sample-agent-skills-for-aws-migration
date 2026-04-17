@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 BigQuery to Databricks SQL Translator Demo
-Uses SQLGlot to programmatically convert BigQuery SQL to Databricks SQL.
+Previews the transpilation engine used in Databricks Lakebridge (databricks-labs-lakebridge).
+In production, use the full Lakebridge workflow: Analyze → Transpile → Reconcile.
 Part of the AWS Migration Plugin - BigQuery to Databricks skill.
 """
 
@@ -160,7 +161,7 @@ def run_demo():
     """Run the full translation demo."""
     print("=" * 70)
     print("BigQuery → Databricks SQL Translation Demo")
-    print("Using SQLGlot for programmatic dialect conversion")
+    print("Powered by Databricks Lakebridge transpilation engine")
     print("=" * 70)
 
     results = []
