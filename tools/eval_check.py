@@ -17,7 +17,7 @@ Exit codes:
 import argparse
 import glob as globmod
 import json
-import subprocess  # nosec B404 - subprocess used to run trusted handler scripts
+import subprocess  # nosec B404 # nosemgrep: python.lang.security.audit.subprocess-module - trusted handler scripts
 import sys
 from pathlib import Path
 
@@ -298,7 +298,7 @@ def check_custom(migration_dir: Path, check: dict, repo_root: Path) -> dict:
         return {"status": "skip", "details": f"Handler not found: {check['handler']}"}
 
     try:
-        result = subprocess.run(  # nosec B603 - handler_path is from trusted YAML config
+        result = subprocess.run(  # nosec B603 # nosemgrep: python.lang.security.audit.dangerous-subprocess-use - handler_path from trusted YAML config
             [sys.executable, str(handler_path), str(migration_dir)],
             capture_output=True,
             text=True,
