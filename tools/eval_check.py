@@ -17,7 +17,8 @@ Exit codes:
 import argparse
 import glob as globmod
 import json
-import subprocess  # nosec B404 # nosemgrep
+# nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit.dangerous-subprocess-use-audit
+import subprocess  # nosec B404
 import sys
 from pathlib import Path
 
@@ -298,7 +299,8 @@ def check_custom(migration_dir: Path, check: dict, repo_root: Path) -> dict:
         return {"status": "skip", "details": f"Handler not found: {check['handler']}"}
 
     try:
-        result = subprocess.run(  # nosec B603 # nosemgrep
+        # nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit.dangerous-subprocess-use-audit
+        result = subprocess.run(  # nosec B603
             [sys.executable, str(handler_path), str(migration_dir)],
             capture_output=True,
             text=True,
