@@ -10,11 +10,11 @@ For models with EOL dates after February 1, 2026, a **public extended access** p
 
 ## Lifecycle States (Not the Same Thing)
 
-| State | What it means | Usable? |
-| --- | --- | --- |
-| **Active** | Provider is actively maintaining the model. Full feature access. | Yes |
+| State      | What it means                                                                                                                                                                                                               | Usable?                |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| **Active** | Provider is actively maintaining the model. Full feature access.                                                                                                                                                            | Yes                    |
 | **Legacy** | Deprecated. Still works for existing users, but new Provisioned Throughput cannot be created, new customers cannot onboard, pricing may increase during public extended access, and the model is on a countdown to removal. | Yes, with restrictions |
-| **EOL** | Model is removed. All inference requests fail. | **No** |
+| **EOL**    | Model is removed. All inference requests fail.                                                                                                                                                                              | **No**                 |
 
 **Legacy does not mean unavailable** — it means the model still functions today but has a firm expiration date. EOL means unavailable.
 
@@ -52,20 +52,20 @@ On each run, compute `days_to_eol = EOL date − today` for every model in the L
 
 Check the [model lifecycle page](https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle.html) for the authoritative list. The table below captures models referenced elsewhere in this plugin. **Recompute the Status column on each run** using `days_to_eol = EOL date − today`.
 
-| Model | Model ID | EOL Date | Days to EOL | Status | Active Replacement |
-| --- | --- | --- | --- | --- | --- |
-| Claude 3.7 Sonnet | `anthropic.claude-3-7-sonnet-20250219-v1:0` | Apr 28, 2026 | 18 | **excluded** | Claude Sonnet 4.5 / 4.6 |
-| Claude Opus 4 | `anthropic.claude-opus-4-20250514-v1:0` | May 31, 2026 | 51 | **excluded** | Claude Opus 4.5 / 4.6 |
-| Claude 3.5 Haiku | `anthropic.claude-3-5-haiku-20241022-v1:0` | Jun 19, 2026 | 70 | **excluded** | Claude Haiku 4.5 |
-| Titan Image Generator v2 | `amazon.titan-image-generator-v2:0` | Jun 30, 2026 | 81 | **excluded** | Nova Canvas |
-| Llama 3.2 (all sizes) | `meta.llama3-2-*-instruct-v1:0` | Jul 7, 2026 | 88 | **excluded** | Llama 4 Scout / Maverick |
-| Llama 3.1 405B Instruct | `meta.llama3-1-405b-instruct-v1:0` | Jul 7, 2026 | 88 | **excluded** | Llama 4 Maverick |
-| Claude 3.5 Sonnet v2 | `anthropic.claude-3-5-sonnet-20241022-v2:0` | Jul 30, 2026 | 111 | legacy | Claude Sonnet 4.5 / 4.6 |
-| Command R / R+ | `cohere.command-r-v1:0` / `plus` | Aug 19, 2026 | 131 | legacy | — |
-| Nova Premier v1 | `amazon.nova-premier-v1:0` | Sep 14, 2026 | 157 | legacy | Nova 2 Pro (Preview) |
-| Nova Sonic v1 | `amazon.nova-sonic-v1:0` | Sep 14, 2026 | 157 | legacy | Nova 2 Sonic |
-| Nova Canvas v1 | `amazon.nova-canvas-v1:0` | Sep 30, 2026 | 173 | legacy | — |
-| Nova Reel v1 | `amazon.nova-reel-v1:0` | Sep 30, 2026 | 173 | legacy | — |
+| Model                    | Model ID                                    | EOL Date     | Days to EOL | Status       | Active Replacement       |
+| ------------------------ | ------------------------------------------- | ------------ | ----------- | ------------ | ------------------------ |
+| Claude 3.7 Sonnet        | `anthropic.claude-3-7-sonnet-20250219-v1:0` | Apr 28, 2026 | 18          | **excluded** | Claude Sonnet 4.5 / 4.6  |
+| Claude Opus 4            | `anthropic.claude-opus-4-20250514-v1:0`     | May 31, 2026 | 51          | **excluded** | Claude Opus 4.5 / 4.6    |
+| Claude 3.5 Haiku         | `anthropic.claude-3-5-haiku-20241022-v1:0`  | Jun 19, 2026 | 70          | **excluded** | Claude Haiku 4.5         |
+| Titan Image Generator v2 | `amazon.titan-image-generator-v2:0`         | Jun 30, 2026 | 81          | **excluded** | Nova Canvas              |
+| Llama 3.2 (all sizes)    | `meta.llama3-2-*-instruct-v1:0`             | Jul 7, 2026  | 88          | **excluded** | Llama 4 Scout / Maverick |
+| Llama 3.1 405B Instruct  | `meta.llama3-1-405b-instruct-v1:0`          | Jul 7, 2026  | 88          | **excluded** | Llama 4 Maverick         |
+| Claude 3.5 Sonnet v2     | `anthropic.claude-3-5-sonnet-20241022-v2:0` | Jul 30, 2026 | 111         | legacy       | Claude Sonnet 4.5 / 4.6  |
+| Command R / R+           | `cohere.command-r-v1:0` / `plus`            | Aug 19, 2026 | 131         | legacy       | —                        |
+| Nova Premier v1          | `amazon.nova-premier-v1:0`                  | Sep 14, 2026 | 157         | legacy       | Nova 2 Pro (Preview)     |
+| Nova Sonic v1            | `amazon.nova-sonic-v1:0`                    | Sep 14, 2026 | 157         | legacy       | Nova 2 Sonic             |
+| Nova Canvas v1           | `amazon.nova-canvas-v1:0`                   | Sep 30, 2026 | 173         | legacy       | —                        |
+| Nova Reel v1             | `amazon.nova-reel-v1:0`                     | Sep 30, 2026 | 173         | legacy       | —                        |
 
 **Status key:** `excluded` = ≤90 days to EOL, must not appear in any recommendation. `legacy` = >90 days to EOL, annotate but do not recommend as primary.
 
@@ -94,10 +94,10 @@ When building the model comparison table:
 
 The multi-provider quick reference table includes a `Status` column:
 
-| Status value | Meaning |
-| --- | --- |
-| `active` | No restrictions |
-| `legacy (EOL YYYY-MM-DD)` | Legacy, >90 days from EOL. Listed for reference, annotated. |
+| Status value                | Meaning                                                                                 |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| `active`                    | No restrictions                                                                         |
+| `legacy (EOL YYYY-MM-DD)`   | Legacy, >90 days from EOL. Listed for reference, annotated.                             |
 | `excluded (EOL YYYY-MM-DD)` | ≤90 days from EOL. Kept for existing users but must not be selected for new migrations. |
 
 When refreshing the cache, recompute `days_to_eol` and update the Status column from the [model lifecycle page](https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle.html).

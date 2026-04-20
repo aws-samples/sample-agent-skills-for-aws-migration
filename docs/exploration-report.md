@@ -52,6 +52,7 @@ sample-agent-skills-for-aws-migration/
 ### Activation
 
 The skill activates on trigger phrases in the YAML frontmatter (`SKILL.md:1-4`):
+
 > "migrate from GCP, GCP to AWS, move off Google Cloud, migrate Terraform to AWS, migrate Cloud SQL to RDS, migrate GKE to EKS, migrate Cloud Run to Fargate, Google Cloud migration"
 
 ### State Machine
@@ -67,24 +68,24 @@ discover -> clarify -> design -> estimate -> generate -> complete
 
 ### Phase-by-Phase Flow
 
-| Phase | Orchestrator File | Sub-files Loaded | Primary Outputs |
-|-------|------------------|------------------|-----------------|
-| **1. Discover** | `discover.md` | `discover-iac.md`, `discover-app-code.md`, `discover-billing.md` | `gcp-resource-inventory.json`, `gcp-resource-clusters.json`, `ai-workload-profile.json`, `billing-profile.json` |
-| **2. Clarify** | `clarify.md` | `clarify-global.md`, `clarify-compute.md`, `clarify-database.md`, `clarify-ai.md`, `clarify-ai-only.md` | `preferences.json` |
-| **3. Design** | `design.md` | `design-infra.md`, `design-billing.md`, `design-ai.md` + design-refs | `aws-design.json`, `aws-design-billing.json`, `aws-design-ai.json` |
-| **4. Estimate** | `estimate.md` | `estimate-infra.md`, `estimate-billing.md`, `estimate-ai.md` | `estimation-infra.json`, `estimation-billing.json`, `estimation-ai.json` |
-| **5. Generate** | `generate.md` | Stage 1: `generate-infra.md`, `generate-billing.md`, `generate-ai.md`; Stage 2: `generate-artifacts-*.md` (6 files) | `generation-*.json`, `terraform/`, `scripts/`, `ai-migration/`, `MIGRATION_GUIDE.md`, `README.md`, `migration-report.html` |
-| **6. Feedback** | `feedback.md` | `feedback-trace.md` | `feedback.json`, `trace.json` |
+| Phase           | Orchestrator File | Sub-files Loaded                                                                                                    | Primary Outputs                                                                                                            |
+| --------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **1. Discover** | `discover.md`     | `discover-iac.md`, `discover-app-code.md`, `discover-billing.md`                                                    | `gcp-resource-inventory.json`, `gcp-resource-clusters.json`, `ai-workload-profile.json`, `billing-profile.json`            |
+| **2. Clarify**  | `clarify.md`      | `clarify-global.md`, `clarify-compute.md`, `clarify-database.md`, `clarify-ai.md`, `clarify-ai-only.md`             | `preferences.json`                                                                                                         |
+| **3. Design**   | `design.md`       | `design-infra.md`, `design-billing.md`, `design-ai.md` + design-refs                                                | `aws-design.json`, `aws-design-billing.json`, `aws-design-ai.json`                                                         |
+| **4. Estimate** | `estimate.md`     | `estimate-infra.md`, `estimate-billing.md`, `estimate-ai.md`                                                        | `estimation-infra.json`, `estimation-billing.json`, `estimation-ai.json`                                                   |
+| **5. Generate** | `generate.md`     | Stage 1: `generate-infra.md`, `generate-billing.md`, `generate-ai.md`; Stage 2: `generate-artifacts-*.md` (6 files) | `generation-*.json`, `terraform/`, `scripts/`, `ai-migration/`, `MIGRATION_GUIDE.md`, `README.md`, `migration-report.html` |
+| **6. Feedback** | `feedback.md`     | `feedback-trace.md`                                                                                                 | `feedback.json`, `trace.json`                                                                                              |
 
 ### Routing Within Phases
 
 Phases 3-5 use conditional routing based on which discovery artifacts exist:
 
-| Route | Condition | Design | Estimate | Generate |
-|-------|-----------|--------|----------|----------|
-| **Infrastructure** | `gcp-resource-inventory.json` + `gcp-resource-clusters.json` exist | `design-infra.md` | `estimate-infra.md` | `generate-infra.md` + artifacts |
-| **Billing-only** | `billing-profile.json` exists AND NO inventory | `design-billing.md` | `estimate-billing.md` | `generate-billing.md` + billing artifacts |
-| **AI** | `ai-workload-profile.json` exists | `design-ai.md` | `estimate-ai.md` | `generate-ai.md` + AI artifacts |
+| Route              | Condition                                                          | Design              | Estimate              | Generate                                  |
+| ------------------ | ------------------------------------------------------------------ | ------------------- | --------------------- | ----------------------------------------- |
+| **Infrastructure** | `gcp-resource-inventory.json` + `gcp-resource-clusters.json` exist | `design-infra.md`   | `estimate-infra.md`   | `generate-infra.md` + artifacts           |
+| **Billing-only**   | `billing-profile.json` exists AND NO inventory                     | `design-billing.md` | `estimate-billing.md` | `generate-billing.md` + billing artifacts |
+| **AI**             | `ai-workload-profile.json` exists                                  | `design-ai.md`      | `estimate-ai.md`      | `generate-ai.md` + AI artifacts           |
 
 Infrastructure and billing-only are mutually exclusive. AI runs independently alongside either.
 
@@ -265,72 +266,72 @@ Multiple output files across Stage 1 (planning JSON) and Stage 2 (artifacts: Ter
 
 ### Cross-Cutting Rules (Apply to ALL Phases)
 
-| Rule | Source | Exact Quote |
-|------|--------|-------------|
-| Execute all steps in order | `SKILL.md:265` | "Execute ALL steps in order. Follow every numbered step in the reference file. **Do not skip, optimize, or deviate.**" |
-| Clarify is mandatory | `SKILL.md:60` | "Do not load `references/phases/design/design.md`...unless `$MIGRATION_DIR/.phase-status.json` exists and `phases.clarify` is exactly `"completed"`. A `preferences.json` file alone is **not** sufficient proof that Clarify ran." |
-| No human migration costs | `SKILL.md:12` | "Do not present human labor, professional services, or people-time work as dollar estimates or 'one-time migration cost' budget categories." |
-| Phase status never goes backward | `SKILL.md:102` | "Status values: `"pending"` -> `"in_progress"` -> `"completed"`. Never goes backward." |
-| At most one in_progress phase | `SKILL.md:76` | "Across core phases {discover, clarify, design, estimate, generate}, at most one phase may be `"in_progress"`. If >1, STOP." |
+| Rule                             | Source         | Exact Quote                                                                                                                                                                                                                         |
+| -------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Execute all steps in order       | `SKILL.md:265` | "Execute ALL steps in order. Follow every numbered step in the reference file. **Do not skip, optimize, or deviate.**"                                                                                                              |
+| Clarify is mandatory             | `SKILL.md:60`  | "Do not load `references/phases/design/design.md`...unless `$MIGRATION_DIR/.phase-status.json` exists and `phases.clarify` is exactly `"completed"`. A `preferences.json` file alone is **not** sufficient proof that Clarify ran." |
+| No human migration costs         | `SKILL.md:12`  | "Do not present human labor, professional services, or people-time work as dollar estimates or 'one-time migration cost' budget categories."                                                                                        |
+| Phase status never goes backward | `SKILL.md:102` | "Status values: `"pending"` -> `"in_progress"` -> `"completed"`. Never goes backward."                                                                                                                                              |
+| At most one in_progress phase    | `SKILL.md:76`  | "Across core phases {discover, clarify, design, estimate, generate}, at most one phase may be `"in_progress"`. If >1, STOP."                                                                                                        |
 
 ### Discover Phase Rules
 
-| Rule | Source | Exact Quote |
-|------|--------|-------------|
-| Scope boundary: GCP only | `discover.md:180-188` | "FORBIDDEN -- Do NOT include ANY of: AWS service names, recommendations, or equivalents; Migration strategies, phases, or timelines; Terraform generation for AWS; Cost estimates or comparisons; Effort estimates. **Your ONLY job: Inventory what exists in GCP. Nothing else.**" |
-| No forbidden output files | `discover.md:156-163` | "No other files must be created: No README.md, No discovery-summary.md, No EXECUTION_REPORT.txt, No discovery-log.md, No documentation or report files" |
-| Exclude auth SDKs | `discover-app-code.md:49-53` | "If any auth SDK import is detected: 1. Log...excluded from migration scope. 2. Do **not** infer a GCP resource or recommend an AWS replacement. 3. Do **not** include in the AI signal scan or any output artifact" |
-| AI confidence threshold | `discover-app-code.md:148-150` | "If overall AI confidence < 70%, **exit cleanly**. Do not generate `ai-workload-profile.json`." |
-| Critical field names | `discover-app-code.md:295-305` | "`model_id` (not model_name, name), `service` (not service_type, gcp_service), `detected_via` (not detection_method, source)..." |
-| False positive checklist | `discover-app-code.md:144-146` | "BigQuery alone is not AI...Vector database alone is not AI...Dead/commented-out code excluded" |
-| No billing file reading in IaC path | `discover.md:111` | "Do **not** Read the billing file with the Read tool. Do **not** load `discover-billing.md` or `schema-discover-billing.md`." (when Terraform present and billing used lightweight path) |
+| Rule                                | Source                         | Exact Quote                                                                                                                                                                                                                                                                         |
+| ----------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scope boundary: GCP only            | `discover.md:180-188`          | "FORBIDDEN -- Do NOT include ANY of: AWS service names, recommendations, or equivalents; Migration strategies, phases, or timelines; Terraform generation for AWS; Cost estimates or comparisons; Effort estimates. **Your ONLY job: Inventory what exists in GCP. Nothing else.**" |
+| No forbidden output files           | `discover.md:156-163`          | "No other files must be created: No README.md, No discovery-summary.md, No EXECUTION_REPORT.txt, No discovery-log.md, No documentation or report files"                                                                                                                             |
+| Exclude auth SDKs                   | `discover-app-code.md:49-53`   | "If any auth SDK import is detected: 1. Log...excluded from migration scope. 2. Do **not** infer a GCP resource or recommend an AWS replacement. 3. Do **not** include in the AI signal scan or any output artifact"                                                                |
+| AI confidence threshold             | `discover-app-code.md:148-150` | "If overall AI confidence < 70%, **exit cleanly**. Do not generate `ai-workload-profile.json`."                                                                                                                                                                                     |
+| Critical field names                | `discover-app-code.md:295-305` | "`model_id` (not model_name, name), `service` (not service_type, gcp_service), `detected_via` (not detection_method, source)..."                                                                                                                                                    |
+| False positive checklist            | `discover-app-code.md:144-146` | "BigQuery alone is not AI...Vector database alone is not AI...Dead/commented-out code excluded"                                                                                                                                                                                     |
+| No billing file reading in IaC path | `discover.md:111`              | "Do **not** Read the billing file with the Read tool. Do **not** load `discover-billing.md` or `schema-discover-billing.md`." (when Terraform present and billing used lightweight path)                                                                                            |
 
 ### Clarify Phase Rules
 
-| Rule | Source | Exact Quote |
-|------|--------|-------------|
-| Must read category files | `clarify.md:117-132` | "STOP. You MUST read each active category's file NOW...The exact question wording, answer options, context rationale, and interpretation rules exist ONLY in the category files...They are NOT in this file. The table above is a summary index only -- do NOT use it to fabricate questions." |
-| No null values in preferences | `clarify.md:302` | "Do not write null values." |
-| Scope boundary | `clarify.md:374-381` | "FORBIDDEN -- Do NOT include ANY of: Detailed AWS architecture or service configurations, Code migration examples or SDK snippets, Detailed cost calculations, Migration timelines or execution plans, Terraform generation. Your ONLY job: Understand what the user needs. Nothing else." |
+| Rule                          | Source               | Exact Quote                                                                                                                                                                                                                                                                                    |
+| ----------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Must read category files      | `clarify.md:117-132` | "STOP. You MUST read each active category's file NOW...The exact question wording, answer options, context rationale, and interpretation rules exist ONLY in the category files...They are NOT in this file. The table above is a summary index only -- do NOT use it to fabricate questions." |
+| No null values in preferences | `clarify.md:302`     | "Do not write null values."                                                                                                                                                                                                                                                                    |
+| Scope boundary                | `clarify.md:374-381` | "FORBIDDEN -- Do NOT include ANY of: Detailed AWS architecture or service configurations, Code migration examples or SDK snippets, Detailed cost calculations, Migration timelines or execution plans, Terraform generation. Your ONLY job: Understand what the user needs. Nothing else."     |
 
 ### Design Phase Rules
 
-| Rule | Source | Exact Quote |
-|------|--------|-------------|
-| BigQuery specialist gate | `design-infra.md:36-40` | "If `gcp_type` **starts with** `google_bigquery_`: Do not recommend specific AWS analytics/warehouse service (Athena, Redshift, Glue, EMR, Lake Formation). Set `aws_service` to exactly **`Deferred -- specialist engagement`**" |
-| No hardcoded AI model mapping | `design-ai.md:32` | "Do NOT use a hardcoded mapping -- the design-ref files contain tier-organized tables with pricing and competitive analysis." |
-| Auth providers excluded | `classification-rules.md:7-18` | "CRITICAL: Authentication Providers -- do NOT migrate. `google_identity_platform_*`, `google_firebase_auth_*` -- Keep existing auth provider" |
-| Never recommend App Runner | `compute.md:11-19` | "Prefer Fargate (default), Lambda (event-driven), or EKS (K8s required) -- do NOT use App Runner" |
-| One cluster per type | `clustering-algorithm.md:27-73` | "CRITICAL: Create ONE cluster per resource type with 2+ PRIMARY resources, NOT one cluster per resource" |
-| Only break inferred edges | `depth-calculation.md:49-60` | "ONLY break inferred edges (confidence < 1.0). If all edges in cycle are deterministic: do NOT break" |
-| Never plaintext secrets | `security.md:12-17` | "NEVER place cleartext secrets directly in generated Terraform variable defaults" |
-| Design scope boundary | `design.md:89-97` | "FORBIDDEN -- Do NOT include ANY of: Cost calculations or pricing estimates, Execution timelines or migration schedules, Terraform or IaC code generation...Your ONLY job: Map GCP resources to AWS services. Nothing else." |
+| Rule                          | Source                          | Exact Quote                                                                                                                                                                                                                       |
+| ----------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BigQuery specialist gate      | `design-infra.md:36-40`         | "If `gcp_type` **starts with** `google_bigquery_`: Do not recommend specific AWS analytics/warehouse service (Athena, Redshift, Glue, EMR, Lake Formation). Set `aws_service` to exactly **`Deferred -- specialist engagement`**" |
+| No hardcoded AI model mapping | `design-ai.md:32`               | "Do NOT use a hardcoded mapping -- the design-ref files contain tier-organized tables with pricing and competitive analysis."                                                                                                     |
+| Auth providers excluded       | `classification-rules.md:7-18`  | "CRITICAL: Authentication Providers -- do NOT migrate. `google_identity_platform_*`, `google_firebase_auth_*` -- Keep existing auth provider"                                                                                     |
+| Never recommend App Runner    | `compute.md:11-19`              | "Prefer Fargate (default), Lambda (event-driven), or EKS (K8s required) -- do NOT use App Runner"                                                                                                                                 |
+| One cluster per type          | `clustering-algorithm.md:27-73` | "CRITICAL: Create ONE cluster per resource type with 2+ PRIMARY resources, NOT one cluster per resource"                                                                                                                          |
+| Only break inferred edges     | `depth-calculation.md:49-60`    | "ONLY break inferred edges (confidence < 1.0). If all edges in cycle are deterministic: do NOT break"                                                                                                                             |
+| Never plaintext secrets       | `security.md:12-17`             | "NEVER place cleartext secrets directly in generated Terraform variable defaults"                                                                                                                                                 |
+| Design scope boundary         | `design.md:89-97`               | "FORBIDDEN -- Do NOT include ANY of: Cost calculations or pricing estimates, Execution timelines or migration schedules, Terraform or IaC code generation...Your ONLY job: Map GCP resources to AWS services. Nothing else."      |
 
 ### Estimate Phase Rules
 
-| Rule | Source | Exact Quote |
-|------|--------|-------------|
-| Pricing cache is primary | `estimate-infra.md:13` | "`shared/pricing-cache.md` (primary) -- Read once, set pricing_source: 'cached'" |
-| No unnecessary MCP calls | `estimate-infra.md:18` | "For typical migrations (Fargate, Aurora/RDS, Aurora Serverless v2, S3, ALB, NAT Gateway, Lambda, Secrets Manager, CloudWatch, ElastiCache, DynamoDB), ALL prices are in `pricing-cache.md`. Zero MCP calls needed." |
-| No MCP discovery calls | `estimate-infra.md:37` | "Do NOT call get_pricing_service_codes, get_pricing_service_attributes, or get_pricing_attribute_values -- go directly to get_pricing." |
-| Fargate pricing filter | `estimate-infra.md:57` | "Fargate: Use `productFamily=Compute`, NOT EC2-style filters (operatingSystem, tenancy, capacitystatus do not exist in AmazonECS)" |
-| Aurora has no Multi-AZ option | `estimate-infra.md:58` | "Aurora handles multi-AZ replication natively -- there is no 'Multi-AZ' pricing option for Aurora" |
-| BigQuery excluded from totals | `estimate-infra.md:85-89` | "Do not apply Athena, Redshift, Glue, or EMR rates...Exclude from numeric totals" |
-| Empty migration cost categories | `estimate-ai.md:90` | "Populate `migration_cost_considerations.categories` as an **empty array** `[]`" |
-| Model lifecycle 90-day exclusion | `ai-model-lifecycle.md:29` | "Models within 90 days of their EOL date must be excluded from all recommendation and comparison tables." |
-| Estimate scope boundary | `estimate.md:122-130` | "FORBIDDEN -- Do NOT include ANY of: Changes to architecture mappings from the Design phase, Execution timelines or migration schedules, Terraform or IaC code generation..." |
+| Rule                             | Source                     | Exact Quote                                                                                                                                                                                                          |
+| -------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pricing cache is primary         | `estimate-infra.md:13`     | "`shared/pricing-cache.md` (primary) -- Read once, set pricing_source: 'cached'"                                                                                                                                     |
+| No unnecessary MCP calls         | `estimate-infra.md:18`     | "For typical migrations (Fargate, Aurora/RDS, Aurora Serverless v2, S3, ALB, NAT Gateway, Lambda, Secrets Manager, CloudWatch, ElastiCache, DynamoDB), ALL prices are in `pricing-cache.md`. Zero MCP calls needed." |
+| No MCP discovery calls           | `estimate-infra.md:37`     | "Do NOT call get_pricing_service_codes, get_pricing_service_attributes, or get_pricing_attribute_values -- go directly to get_pricing."                                                                              |
+| Fargate pricing filter           | `estimate-infra.md:57`     | "Fargate: Use `productFamily=Compute`, NOT EC2-style filters (operatingSystem, tenancy, capacitystatus do not exist in AmazonECS)"                                                                                   |
+| Aurora has no Multi-AZ option    | `estimate-infra.md:58`     | "Aurora handles multi-AZ replication natively -- there is no 'Multi-AZ' pricing option for Aurora"                                                                                                                   |
+| BigQuery excluded from totals    | `estimate-infra.md:85-89`  | "Do not apply Athena, Redshift, Glue, or EMR rates...Exclude from numeric totals"                                                                                                                                    |
+| Empty migration cost categories  | `estimate-ai.md:90`        | "Populate `migration_cost_considerations.categories` as an **empty array** `[]`"                                                                                                                                     |
+| Model lifecycle 90-day exclusion | `ai-model-lifecycle.md:29` | "Models within 90 days of their EOL date must be excluded from all recommendation and comparison tables."                                                                                                            |
+| Estimate scope boundary          | `estimate.md:122-130`      | "FORBIDDEN -- Do NOT include ANY of: Changes to architecture mappings from the Design phase, Execution timelines or migration schedules, Terraform or IaC code generation..."                                        |
 
 ### Generate Phase Rules
 
-| Rule | Source | Exact Quote |
-|------|--------|-------------|
-| Two sequential stages | `generate.md:7` | "2 mandatory stages that run sequentially" |
-| Scripts default dry-run | `generate-artifacts-scripts.md:60-64` | "Default to **dry-run mode**. Requires `--execute` flag to make changes." |
-| No hardcoded credentials | `generate-artifacts-infra.md:147`, `generate-artifacts-ai.md:159` | "No hardcoded credentials in any file" |
-| No wildcard IAM | `generate-artifacts-infra.md:145` | "No wildcard IAM policies" |
-| Do not overwrite existing TF | `generate-artifacts-billing.md:30` | "**Do NOT overwrite** existing `main.tf` or `variables.tf`" |
-| Report is non-blocking | `generate-artifacts-report.md:15` | "**Non-blocking** -- if generation fails, log warning and continue" |
-| Terraform aligns to Balanced tier | `estimate-infra.md:232-244` | "Balanced tier is baseline for generated IaC" |
+| Rule                              | Source                                                            | Exact Quote                                                               |
+| --------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Two sequential stages             | `generate.md:7`                                                   | "2 mandatory stages that run sequentially"                                |
+| Scripts default dry-run           | `generate-artifacts-scripts.md:60-64`                             | "Default to **dry-run mode**. Requires `--execute` flag to make changes." |
+| No hardcoded credentials          | `generate-artifacts-infra.md:147`, `generate-artifacts-ai.md:159` | "No hardcoded credentials in any file"                                    |
+| No wildcard IAM                   | `generate-artifacts-infra.md:145`                                 | "No wildcard IAM policies"                                                |
+| Do not overwrite existing TF      | `generate-artifacts-billing.md:30`                                | "**Do NOT overwrite** existing `main.tf` or `variables.tf`"               |
+| Report is non-blocking            | `generate-artifacts-report.md:15`                                 | "**Non-blocking** -- if generation fails, log warning and continue"       |
+| Terraform aligns to Balanced tier | `estimate-infra.md:232-244`                                       | "Balanced tier is baseline for generated IaC"                             |
 
 ---
 
@@ -458,20 +459,20 @@ resource "google_secret_manager_secret_version" "db_url_v1" {
 
 ### Why This Fixture
 
-| Behavior Exercised | Plugin Code Path |
-|-------------------|-----------------|
-| Terraform discovery and resource classification | `discover-iac.md` full path (5 resources, <= 8 so simplified discovery) |
-| PRIMARY/SECONDARY classification | `classification-rules.md`: Cloud Run + Cloud SQL are PRIMARY; service account + secrets are SECONDARY |
-| Cluster formation | `clustering-algorithm.md`: networking cluster, compute cluster, database cluster |
-| Dependency depth calculation | `depth-calculation.md`: secrets depend on DB, Cloud Run depends on secrets and SA |
-| Fast-path deterministic mapping | `fast-path.md`: Cloud Run -> Fargate, Cloud SQL PostgreSQL -> Aurora PostgreSQL, Secret Manager -> Secrets Manager |
-| Clarify questions: Global + Compute + Database | `clarify-global.md` (Q1-Q7), `clarify-compute.md` (Q10-Q11 for Cloud Run), `clarify-database.md` (Q12-Q13) |
-| Infrastructure design with rubric | `design-infra.md` two-pass mapping |
-| Cost estimation with pricing cache | `estimate-infra.md`: Fargate, Aurora, Secrets Manager all in pricing cache |
-| Terraform generation | `generate-artifacts-infra.md`: vpc.tf, compute.tf, database.tf, security.tf |
-| Migration scripts | `generate-artifacts-scripts.md`: 01-validate, 02-migrate-data, 04-migrate-secrets, 05-validate |
-| No AI path triggered | No `ai-workload-profile.json` produced (no AI imports) |
-| No BigQuery specialist gate | No BigQuery resources |
+| Behavior Exercised                              | Plugin Code Path                                                                                                   |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Terraform discovery and resource classification | `discover-iac.md` full path (5 resources, <= 8 so simplified discovery)                                            |
+| PRIMARY/SECONDARY classification                | `classification-rules.md`: Cloud Run + Cloud SQL are PRIMARY; service account + secrets are SECONDARY              |
+| Cluster formation                               | `clustering-algorithm.md`: networking cluster, compute cluster, database cluster                                   |
+| Dependency depth calculation                    | `depth-calculation.md`: secrets depend on DB, Cloud Run depends on secrets and SA                                  |
+| Fast-path deterministic mapping                 | `fast-path.md`: Cloud Run -> Fargate, Cloud SQL PostgreSQL -> Aurora PostgreSQL, Secret Manager -> Secrets Manager |
+| Clarify questions: Global + Compute + Database  | `clarify-global.md` (Q1-Q7), `clarify-compute.md` (Q10-Q11 for Cloud Run), `clarify-database.md` (Q12-Q13)         |
+| Infrastructure design with rubric               | `design-infra.md` two-pass mapping                                                                                 |
+| Cost estimation with pricing cache              | `estimate-infra.md`: Fargate, Aurora, Secrets Manager all in pricing cache                                         |
+| Terraform generation                            | `generate-artifacts-infra.md`: vpc.tf, compute.tf, database.tf, security.tf                                        |
+| Migration scripts                               | `generate-artifacts-scripts.md`: 01-validate, 02-migrate-data, 04-migrate-secrets, 05-validate                     |
+| No AI path triggered                            | No `ai-workload-profile.json` produced (no AI imports)                                                             |
+| No BigQuery specialist gate                     | No BigQuery resources                                                                                              |
 
 This fixture is small enough to hand-verify outputs but exercises the main code paths through all 5 core phases.
 
@@ -483,96 +484,96 @@ This fixture is small enough to hand-verify outputs but exercises the main code 
 
 #### Phase Ordering and State Management
 
-| ID | Invariant | Source |
-|----|-----------|--------|
-| H1 | `.phase-status.json` exists after every phase completes | `SKILL.md:82-106` |
-| H2 | Phase statuses only progress forward (pending -> in_progress -> completed) | `SKILL.md:102` |
-| H3 | At most one core phase is `"in_progress"` at any time | `SKILL.md:76` |
-| H4 | `current_phase` is one of {discover, clarify, design, estimate, generate, complete} | `SKILL.md:74` |
-| H5 | No later phase is `"completed"` while an earlier phase is not | `SKILL.md:75` |
+| ID | Invariant                                                                           | Source            |
+| -- | ----------------------------------------------------------------------------------- | ----------------- |
+| H1 | `.phase-status.json` exists after every phase completes                             | `SKILL.md:82-106` |
+| H2 | Phase statuses only progress forward (pending -> in_progress -> completed)          | `SKILL.md:102`    |
+| H3 | At most one core phase is `"in_progress"` at any time                               | `SKILL.md:76`     |
+| H4 | `current_phase` is one of {discover, clarify, design, estimate, generate, complete} | `SKILL.md:74`     |
+| H5 | No later phase is `"completed"` while an earlier phase is not                       | `SKILL.md:75`     |
 
 #### Discover Phase
 
-| ID | Invariant | Source |
-|----|-----------|--------|
-| H6 | Discovery outputs contain zero AWS service names | `discover.md:180-188` |
-| H7 | No files created outside the allowed set (no README.md, discovery-summary.md, etc.) | `discover.md:156-163` |
-| H8 | Every resource in inventory has `address`, `type`, `name`, `classification` | `discover-iac.md:241-274` |
-| H9 | Every PRIMARY resource has `depth` and `tier` fields | `discover-iac.md:241-274` |
-| H10 | Every SECONDARY resource has `secondary_role` and `serves` fields | `discover-iac.md:241-274` |
-| H11 | Every resource has a `cluster_id` matching a cluster in `gcp-resource-clusters.json` | `discover-iac.md:241-274` |
-| H12 | No duplicate `address` values in inventory | `discover-iac.md:241-274` |
-| H13 | Cluster `creation_order` array is topologically sorted | `discover-iac.md:221-229` |
-| H14 | `ai-workload-profile.json` only produced if AI confidence >= 70% | `discover-app-code.md:148-150` |
-| H15 | `ai_source` is one of {"gemini", "openai", "both", "other"} | `discover-app-code.md:307-312` |
-| H16 | Auth SDK imports (Auth0, Firebase Auth, Clerk, etc.) excluded from all output artifacts | `discover-app-code.md:49-53` |
+| ID  | Invariant                                                                               | Source                         |
+| --- | --------------------------------------------------------------------------------------- | ------------------------------ |
+| H6  | Discovery outputs contain zero AWS service names                                        | `discover.md:180-188`          |
+| H7  | No files created outside the allowed set (no README.md, discovery-summary.md, etc.)     | `discover.md:156-163`          |
+| H8  | Every resource in inventory has `address`, `type`, `name`, `classification`             | `discover-iac.md:241-274`      |
+| H9  | Every PRIMARY resource has `depth` and `tier` fields                                    | `discover-iac.md:241-274`      |
+| H10 | Every SECONDARY resource has `secondary_role` and `serves` fields                       | `discover-iac.md:241-274`      |
+| H11 | Every resource has a `cluster_id` matching a cluster in `gcp-resource-clusters.json`    | `discover-iac.md:241-274`      |
+| H12 | No duplicate `address` values in inventory                                              | `discover-iac.md:241-274`      |
+| H13 | Cluster `creation_order` array is topologically sorted                                  | `discover-iac.md:221-229`      |
+| H14 | `ai-workload-profile.json` only produced if AI confidence >= 70%                        | `discover-app-code.md:148-150` |
+| H15 | `ai_source` is one of {"gemini", "openai", "both", "other"}                             | `discover-app-code.md:307-312` |
+| H16 | Auth SDK imports (Auth0, Firebase Auth, Clerk, etc.) excluded from all output artifacts | `discover-app-code.md:49-53`   |
 
 #### Clarify Phase
 
-| ID | Invariant | Source |
-|----|-----------|--------|
-| H17 | `preferences.json` exists after Clarify completes | `clarify.md:342-358` |
-| H18 | `design_constraints.target_region` is populated | `clarify.md:342-358` |
-| H19 | `design_constraints.availability` is populated | `clarify.md:342-358` |
-| H20 | No null values in `preferences.json` | `clarify.md:302` |
-| H21 | Every entry has `value` and `chosen_by` fields | `clarify.md:299-310` |
+| ID  | Invariant                                                         | Source               |
+| --- | ----------------------------------------------------------------- | -------------------- |
+| H17 | `preferences.json` exists after Clarify completes                 | `clarify.md:342-358` |
+| H18 | `design_constraints.target_region` is populated                   | `clarify.md:342-358` |
+| H19 | `design_constraints.availability` is populated                    | `clarify.md:342-358` |
+| H20 | No null values in `preferences.json`                              | `clarify.md:302`     |
+| H21 | Every entry has `value` and `chosen_by` fields                    | `clarify.md:299-310` |
 | H22 | `chosen_by` is one of {"user", "default", "extracted", "derived"} | `clarify.md:299-310` |
-| H23 | `ai_constraints` section present ONLY if AI workload detected | `clarify.md:342-358` |
-| H24 | `ai_framework` value is an array (not string) | `clarify.md:310-311` |
+| H23 | `ai_constraints` section present ONLY if AI workload detected     | `clarify.md:342-358` |
+| H24 | `ai_framework` value is an array (not string)                     | `clarify.md:310-311` |
 
 #### Design Phase
 
-| ID | Invariant | Source |
-|----|-----------|--------|
-| H25 | Every `google_bigquery_*` resource has `aws_service` exactly `"Deferred -- specialist engagement"` | `design-infra.md:164-165` |
-| H26 | Every `google_bigquery_*` resource has `human_expertise_required: true` | `design-infra.md:67` |
-| H27 | Every resource in `aws-design.json` has `human_expertise_required` (boolean) | `design-infra.md:164-165` |
+| ID  | Invariant                                                                                                | Source                                                 |
+| --- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| H25 | Every `google_bigquery_*` resource has `aws_service` exactly `"Deferred -- specialist engagement"`       | `design-infra.md:164-165`                              |
+| H26 | Every `google_bigquery_*` resource has `human_expertise_required: true`                                  | `design-infra.md:67`                                   |
+| H27 | Every resource in `aws-design.json` has `human_expertise_required` (boolean)                             | `design-infra.md:164-165`                              |
 | H28 | `confidence` values are only `"deterministic"` or `"inferred"` (infra) or `"billing_inferred"` (billing) | `design-infra.md:164-165`, `design-billing.md:162-172` |
-| H29 | `aws-design-billing.json` has `metadata.design_source` equal to `"billing_only"` | `design-billing.md:162-172` |
-| H30 | All `confidence` in billing design are `"billing_inferred"` | `design-billing.md:162-172` |
-| H31 | `aws-design-ai.json` `metadata.ai_source` matches input `summary.ai_source` | `design-ai.md:163-172` |
-| H32 | No Athena/Redshift/Glue/EMR recommended for BigQuery in any design output | `design-infra.md:38-39`, `design-billing.md:61` |
-| H33 | Auth providers (`google_identity_platform_*`, `google_firebase_auth_*`) excluded from design | `classification-rules.md:7-18` |
+| H29 | `aws-design-billing.json` has `metadata.design_source` equal to `"billing_only"`                         | `design-billing.md:162-172`                            |
+| H30 | All `confidence` in billing design are `"billing_inferred"`                                              | `design-billing.md:162-172`                            |
+| H31 | `aws-design-ai.json` `metadata.ai_source` matches input `summary.ai_source`                              | `design-ai.md:163-172`                                 |
+| H32 | No Athena/Redshift/Glue/EMR recommended for BigQuery in any design output                                | `design-infra.md:38-39`, `design-billing.md:61`        |
+| H33 | Auth providers (`google_identity_platform_*`, `google_firebase_auth_*`) excluded from design             | `classification-rules.md:7-18`                         |
 
 #### Estimate Phase
 
-| ID | Invariant | Source |
-|----|-----------|--------|
+| ID  | Invariant                                                                         | Source                                         |
+| --- | --------------------------------------------------------------------------------- | ---------------------------------------------- |
 | H34 | `migration_cost_considerations.categories` is always `[]` in all estimation files | `estimate-ai.md:90`, `estimate-billing.md:243` |
-| H35 | No human labor/professional services presented as dollar cost line items | `SKILL.md:12`, `estimate-ai.md:88` |
-| H36 | BigQuery excluded from numeric cost totals | `estimate-infra.md:85-89` |
-| H37 | `estimation-billing.json` has `recommendation.confidence` equal to `"low"` | `estimate-billing.md:239` |
-| H38 | `estimation-billing.json` has `accuracy_confidence` equal to `"+-30-40%"` | `estimate-billing.md:238` |
-| H39 | No Legacy models (within 90 days of EOL) as `recommended_model` | `ai-model-lifecycle.md:29` |
+| H35 | No human labor/professional services presented as dollar cost line items          | `SKILL.md:12`, `estimate-ai.md:88`             |
+| H36 | BigQuery excluded from numeric cost totals                                        | `estimate-infra.md:85-89`                      |
+| H37 | `estimation-billing.json` has `recommendation.confidence` equal to `"low"`        | `estimate-billing.md:239`                      |
+| H38 | `estimation-billing.json` has `accuracy_confidence` equal to `"+-30-40%"`         | `estimate-billing.md:238`                      |
+| H39 | No Legacy models (within 90 days of EOL) as `recommended_model`                   | `ai-model-lifecycle.md:29`                     |
 
 #### Generate Phase
 
-| ID | Invariant | Source |
-|----|-----------|--------|
-| H40 | All generated scripts default to dry-run mode | `generate-artifacts-scripts.md:60-64` |
-| H41 | No hardcoded credentials in any generated file | `generate-artifacts-infra.md:147`, `generate-artifacts-ai.md:159` |
-| H42 | No wildcard IAM policies in generated Terraform | `generate-artifacts-infra.md:145` |
-| H43 | No `0.0.0.0/0` ingress except ALB port 443 | `generate-artifacts-infra.md:153` |
-| H44 | No S3 bucket policy with `Principal = "*"` | `generate-artifacts-infra.md:152` |
-| H45 | Terraform `main.tf` begins with cost-tier comment block | `generate-artifacts-infra.md:158` |
-| H46 | `migration_summary` output includes `aligned_with_estimate_tier: "balanced"` | `generate-artifacts-infra.md:128-139` |
-| H47 | Complexity tier matches documented criteria: small (<=3 services, <$1k), medium (4-8, $1k-$10k), large (>=9 or >$10k) | `migration-complexity.md:20-52` |
-| H48 | Billing-only `generation-billing.json` has `confidence: "low"` | `generate-billing.md:320-337` |
+| ID  | Invariant                                                                                                             | Source                                                            |
+| --- | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| H40 | All generated scripts default to dry-run mode                                                                         | `generate-artifacts-scripts.md:60-64`                             |
+| H41 | No hardcoded credentials in any generated file                                                                        | `generate-artifacts-infra.md:147`, `generate-artifacts-ai.md:159` |
+| H42 | No wildcard IAM policies in generated Terraform                                                                       | `generate-artifacts-infra.md:145`                                 |
+| H43 | No `0.0.0.0/0` ingress except ALB port 443                                                                            | `generate-artifacts-infra.md:153`                                 |
+| H44 | No S3 bucket policy with `Principal = "*"`                                                                            | `generate-artifacts-infra.md:152`                                 |
+| H45 | Terraform `main.tf` begins with cost-tier comment block                                                               | `generate-artifacts-infra.md:158`                                 |
+| H46 | `migration_summary` output includes `aligned_with_estimate_tier: "balanced"`                                          | `generate-artifacts-infra.md:128-139`                             |
+| H47 | Complexity tier matches documented criteria: small (<=3 services, <$1k), medium (4-8, $1k-$10k), large (>=9 or >$10k) | `migration-complexity.md:20-52`                                   |
+| H48 | Billing-only `generation-billing.json` has `confidence: "low"`                                                        | `generate-billing.md:320-337`                                     |
 
 ### Soft Observations (Distributional, Vary Across Runs)
 
-| ID | Observation | Expected Range | Source |
-|----|-------------|---------------|--------|
-| S1 | Number of resources classified as PRIMARY | For the minimal fixture: 2 (Cloud Run + Cloud SQL) | `classification-rules.md:20-68` |
-| S2 | Number of clusters formed | For the minimal fixture: 2-4 (networking, compute, database, possibly security) | `clustering-algorithm.md` |
-| S3 | Cloud Run maps to Fargate (deterministic) | Should always be Fargate for simple Cloud Run | `fast-path.md:37-56` |
-| S4 | Cloud SQL PostgreSQL maps to Aurora PostgreSQL | Should always be Aurora PostgreSQL for simple PostgreSQL | `fast-path.md:37-56` |
-| S5 | Estimated monthly cost for minimal fixture | $50-$300/month at Balanced tier (dev sizing) | `pricing-cache.md` |
-| S6 | Migration timeline for minimal fixture | Small tier: 3-6 weeks (infra) or 2-4 weeks (billing) | `migration-complexity.md:54-71` |
-| S7 | Number of Terraform files generated | 4-8 files depending on resource grouping | `generate-artifacts-infra.md:25-39` |
-| S8 | Number of migration scripts generated | 3-5 scripts (always 01 + 05; conditionally 02, 03, 04) | `generate-artifacts-scripts.md:42-54` |
-| S9 | Rationale text is non-empty for every design mapping | Every `rationale` field should be non-empty string | `design-infra.md:164-165` |
-| S10 | `honest_assessment` for AI migrations varies based on pricing | Should be one of the 4 defined values | `design-ai.md:46-52` |
+| ID  | Observation                                                   | Expected Range                                                                  | Source                                |
+| --- | ------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------- |
+| S1  | Number of resources classified as PRIMARY                     | For the minimal fixture: 2 (Cloud Run + Cloud SQL)                              | `classification-rules.md:20-68`       |
+| S2  | Number of clusters formed                                     | For the minimal fixture: 2-4 (networking, compute, database, possibly security) | `clustering-algorithm.md`             |
+| S3  | Cloud Run maps to Fargate (deterministic)                     | Should always be Fargate for simple Cloud Run                                   | `fast-path.md:37-56`                  |
+| S4  | Cloud SQL PostgreSQL maps to Aurora PostgreSQL                | Should always be Aurora PostgreSQL for simple PostgreSQL                        | `fast-path.md:37-56`                  |
+| S5  | Estimated monthly cost for minimal fixture                    | $50-$300/month at Balanced tier (dev sizing)                                    | `pricing-cache.md`                    |
+| S6  | Migration timeline for minimal fixture                        | Small tier: 3-6 weeks (infra) or 2-4 weeks (billing)                            | `migration-complexity.md:54-71`       |
+| S7  | Number of Terraform files generated                           | 4-8 files depending on resource grouping                                        | `generate-artifacts-infra.md:25-39`   |
+| S8  | Number of migration scripts generated                         | 3-5 scripts (always 01 + 05; conditionally 02, 03, 04)                          | `generate-artifacts-scripts.md:42-54` |
+| S9  | Rationale text is non-empty for every design mapping          | Every `rationale` field should be non-empty string                              | `design-infra.md:164-165`             |
+| S10 | `honest_assessment` for AI migrations varies based on pricing | Should be one of the 4 defined values                                           | `design-ai.md:46-52`                  |
 
 ---
 
@@ -581,7 +582,7 @@ This fixture is small enough to hand-verify outputs but exercises the main code 
 1. **Clarify bypass robustness:** The pre-seeded `preferences.json` bypass (`clarify.md:25-32`) offers the user choice A/B. In automated testing, there's no mechanism to automatically select A. A harness would need to either:
    - Pre-seed preferences AND set `phases.clarify: "completed"` to skip entirely, OR
    - Find a way to auto-respond with "A"
-   It is unclear whether skipping Clarify entirely (via pre-set status) would cause downstream issues if phases validate that Clarify actually ran vs. just checking status.
+     It is unclear whether skipping Clarify entirely (via pre-set status) would cause downstream issues if phases validate that Clarify actually ran vs. just checking status.
 
 2. **Deterministic directory naming:** `$MIGRATION_DIR` uses `MMDD-HHMM` format. If a test pre-creates the directory, the migration ID must match the folder name. If the plugin creates it, the harness needs to discover the directory name post-run. There's no documented mechanism for setting a fixed migration ID.
 

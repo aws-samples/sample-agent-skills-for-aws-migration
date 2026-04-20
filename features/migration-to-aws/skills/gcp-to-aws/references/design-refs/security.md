@@ -4,9 +4,9 @@
 
 ## Deterministic mappings
 
-| GCP Service Type | AWS Service | Notes |
-| ---------------- | ----------- | ----- |
-| `google_secret_manager_secret` | Secrets Manager | Create one secret metadata resource. |
+| GCP Service Type                       | AWS Service     | Notes                                                                                      |
+| -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------ |
+| `google_secret_manager_secret`         | Secrets Manager | Create one secret metadata resource.                                                       |
 | `google_secret_manager_secret_version` | Secrets Manager | Represent current value as a secret version or migration TODO if plaintext is unavailable. |
 
 ## Secret migration rules

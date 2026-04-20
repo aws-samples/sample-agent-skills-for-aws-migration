@@ -6,11 +6,11 @@ How to validate the migration skill after making changes to prompt files.
 
 ## Quick Reference
 
-| What | Command |
-|------|---------|
-| Structural check (instant, no Claude) | `mise run eval:check` |
+| What                                  | Command                                                             |
+| ------------------------------------- | ------------------------------------------------------------------- |
+| Structural check (instant, no Claude) | `mise run eval:check`                                               |
 | Full evaluation (after migration run) | `python tools/eval_check.py --migration-dir <DIR> --fixture <NAME>` |
-| Guided evaluation (Claude assists) | Tell Claude: `Read tools/EVAL_SKILL.md and follow the instructions` |
+| Guided evaluation (Claude assists)    | Tell Claude: `Read tools/EVAL_SKILL.md and follow the instructions` |
 
 ---
 
@@ -52,13 +52,13 @@ exactly which file and line to check.
 
 Choose the fixture that best covers your change:
 
-| Fixture | Use when you changed... |
-|---------|------------------------|
-| `minimal-cloud-run-sql` | General prompt changes, state machine, phase ordering, generate phase |
+| Fixture                    | Use when you changed...                                                   |
+| -------------------------- | ------------------------------------------------------------------------- |
+| `minimal-cloud-run-sql`    | General prompt changes, state machine, phase ordering, generate phase     |
 | `bigquery-specialist-gate` | BigQuery handling, specialist gate, Clarify advisory, analytics exclusion |
-| `ai-workload-openai` | AI detection, model mapping, lifecycle rules, Category F questions |
-| `user-preferences` | Clarify question flow, preference schema, Design preference consumption |
-| `negative-services` | Classification rules, auth exclusion, forbidden service mappings |
+| `ai-workload-openai`       | AI detection, model mapping, lifecycle rules, Category F questions        |
+| `user-preferences`         | Clarify question flow, preference schema, Design preference consumption   |
+| `negative-services`        | Classification rules, auth exclusion, forbidden service mappings          |
 
 For broad changes, run `minimal-cloud-run-sql` first (it has the most invariants),
 then any fixture specific to your change area.
@@ -202,26 +202,26 @@ Invariants are defined in YAML files:
 
 Each invariant has:
 
-| Field | Purpose |
-|-------|---------|
-| `id` | Unique identifier (e.g., H25, BQ3, NEG1) |
-| `description` | What's being checked |
-| `source` | Which prompt file contains the rule (file:line) |
-| `check.type` | How it's checked (file_exists, content_absent, custom, etc.) |
+| Field         | Purpose                                                      |
+| ------------- | ------------------------------------------------------------ |
+| `id`          | Unique identifier (e.g., H25, BQ3, NEG1)                     |
+| `description` | What's being checked                                         |
+| `source`      | Which prompt file contains the rule (file:line)              |
+| `check.type`  | How it's checked (file_exists, content_absent, custom, etc.) |
 
 ### Check types
 
-| Type | What it does | Needs Python handler? |
-|------|-------------|----------------------|
-| `file_exists` | Assert a file exists in migration output | No |
-| `file_absent` | Assert a file does NOT exist | No |
-| `content_present` | Assert patterns exist in file(s) | No |
-| `content_absent` | Assert patterns do NOT exist in file(s) | No |
-| `json_path_value` | Assert a JSON field has a specific value | No |
-| `json_every` | Assert every item in a JSON array has required fields | No |
-| `uniqueness` | Assert all values at a path are unique | No |
-| `cross_file_join` | Assert values in one file match values in another | No |
-| `custom` | Delegate to a Python script in `tools/invariants/` | Yes |
+| Type              | What it does                                          | Needs Python handler? |
+| ----------------- | ----------------------------------------------------- | --------------------- |
+| `file_exists`     | Assert a file exists in migration output              | No                    |
+| `file_absent`     | Assert a file does NOT exist                          | No                    |
+| `content_present` | Assert patterns exist in file(s)                      | No                    |
+| `content_absent`  | Assert patterns do NOT exist in file(s)               | No                    |
+| `json_path_value` | Assert a JSON field has a specific value              | No                    |
+| `json_every`      | Assert every item in a JSON array has required fields | No                    |
+| `uniqueness`      | Assert all values at a path are unique                | No                    |
+| `cross_file_join` | Assert values in one file match values in another     | No                    |
+| `custom`          | Delegate to a Python script in `tools/invariants/`    | Yes                   |
 
 ### Custom handlers
 

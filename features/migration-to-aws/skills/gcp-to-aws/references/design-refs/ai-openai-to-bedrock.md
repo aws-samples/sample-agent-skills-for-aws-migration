@@ -27,12 +27,12 @@ Verify all pricing via AWS Pricing MCP or `references/shared/pricing-cache.md`. 
 
 Percentages below are blended savings using a 2:1 input-to-output token ratio. GPT-5.4 uses breakpoint pricing at 272K input tokens; rates below assume <272K context.
 
-| OpenAI Model  | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price   | Winner              |
-| ------------- | --------------------- | -------------------- | --------------- | ------------------- |
-| GPT-5.4       | $2.50 / $15.00        | Claude Sonnet 4.6    | $3.00 / $15.00  | OpenAI 5% cheaper   |
-| GPT-5.4 Mini  | $0.75 / $4.50         | Nova Lite            | $0.06 / $0.24   | Bedrock 94% cheaper |
-| GPT-5.4 Nano  | $0.20 / $1.25         | Nova Micro           | $0.035 / $0.14  | Bedrock 87% cheaper |
-| GPT-5.4 Pro   | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00  | Bedrock 94% cheaper |
+| OpenAI Model | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price  | Winner              |
+| ------------ | --------------------- | -------------------- | -------------- | ------------------- |
+| GPT-5.4      | $2.50 / $15.00        | Claude Sonnet 4.6    | $3.00 / $15.00 | OpenAI 5% cheaper   |
+| GPT-5.4 Mini | $0.75 / $4.50         | Nova Lite            | $0.06 / $0.24  | Bedrock 94% cheaper |
+| GPT-5.4 Nano | $0.20 / $1.25         | Nova Micro           | $0.035 / $0.14 | Bedrock 87% cheaper |
+| GPT-5.4 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 94% cheaper |
 
 ### Flagship (GPT-5/5.2 Series)
 
@@ -49,11 +49,11 @@ Percentages below are blended savings using a 2:1 input-to-output token ratio.
 
 > **Lifecycle note:** Nova Premier v1 is **Legacy** (EOL Sep 14, 2026). Nova 2 Pro (Preview) is the Active successor for reasoning-heavy workloads. Pricing differs — see `pricing-cache.md`.
 
-| OpenAI Model  | Price (in/out per 1M) | Best Bedrock Match       | Bedrock Price   | Winner              |
-| ------------- | --------------------- | ------------------------ | --------------- | ------------------- |
-| GPT-5.4 Pro   | $30.00 / $180.00      | Nova 2 Pro (Preview)     | $1.38 / $11.00  | Bedrock 94% cheaper |
-| GPT-5.2 Pro   | $21.00 / $168.00      | Nova 2 Pro (Preview)     | $1.38 / $11.00  | Bedrock 93% cheaper |
-| GPT-5 Pro     | $15.00 / $120.00      | Nova 2 Pro (Preview)     | $1.38 / $11.00  | Bedrock 90% cheaper |
+| OpenAI Model | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price  | Winner              |
+| ------------ | --------------------- | -------------------- | -------------- | ------------------- |
+| GPT-5.4 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 94% cheaper |
+| GPT-5.2 Pro  | $21.00 / $168.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 93% cheaper |
+| GPT-5 Pro    | $15.00 / $120.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 90% cheaper |
 
 ### GPT-4.1 Series
 
@@ -74,13 +74,13 @@ Percentages below are blended savings using a 2:1 input-to-output token ratio.
 
 > **Lifecycle note:** Nova Premier v1 is **Legacy** (EOL Sep 14, 2026). Table below uses Nova 2 Pro (Preview) as the Active replacement.
 
-| OpenAI Model                | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price   | Winner              |
-| --------------------------- | --------------------- | -------------------- | --------------- | ------------------- |
-| o1-pro                      | $150.00 / $600.00     | Nova 2 Pro (Preview) | $1.38 / $11.00  | Bedrock 98% cheaper |
-| o3-pro                      | $20.00 / $80.00       | Nova 2 Pro (Preview) | $1.38 / $11.00  | Bedrock 87% cheaper |
-| o1                          | $15.00 / $60.00       | Nova 2 Pro (Preview) | $1.38 / $11.00  | Bedrock 83% cheaper |
-| o3                          | $2.00 / $8.00         | DeepSeek-R1          | $1.35 / $5.40   | Bedrock 32% cheaper |
-| o4-mini / o3-mini / o1-mini | $1.10 / $4.40         | Claude Sonnet 4.6    | $3.00 / $15.00  | OpenAI 69% cheaper  |
+| OpenAI Model                | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price  | Winner              |
+| --------------------------- | --------------------- | -------------------- | -------------- | ------------------- |
+| o1-pro                      | $150.00 / $600.00     | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 98% cheaper |
+| o3-pro                      | $20.00 / $80.00       | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 87% cheaper |
+| o1                          | $15.00 / $60.00       | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 83% cheaper |
+| o3                          | $2.00 / $8.00         | DeepSeek-R1          | $1.35 / $5.40  | Bedrock 32% cheaper |
+| o4-mini / o3-mini / o1-mini | $1.10 / $4.40         | Claude Sonnet 4.6    | $3.00 / $15.00 | OpenAI 69% cheaper  |
 
 ### Legacy Models
 
@@ -131,18 +131,18 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 
 ## Feature Migration
 
-| OpenAI Feature       | Bedrock Equivalent                                        | Notes                               |
-| -------------------- | --------------------------------------------------------- | ----------------------------------- |
-| Function calling     | Claude tools (excellent, similar format)                  | Minimal changes                     |
-| Streaming            | All major models                                          | Verify gateway format               |
-| Vision (GPT-4V)      | Claude Sonnet/Haiku, Llama 4 Maverick                     | 70-95% cheaper                      |
-| Embeddings (ada-002) | Titan Embeddings ($0.02/1M, 1536 dims)                    | Must re-embed all docs              |
+| OpenAI Feature       | Bedrock Equivalent                                        | Notes                                                            |
+| -------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
+| Function calling     | Claude tools (excellent, similar format)                  | Minimal changes                                                  |
+| Streaming            | All major models                                          | Verify gateway format                                            |
+| Vision (GPT-4V)      | Claude Sonnet/Haiku, Llama 4 Maverick                     | 70-95% cheaper                                                   |
+| Embeddings (ada-002) | Titan Embeddings ($0.02/1M, 1536 dims)                    | Must re-embed all docs                                           |
 | DALL-E               | Nova Canvas ($0.04-$0.08/img)                             | Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
-| Whisper (STT)        | Amazon Transcribe ($0.024/min)                            | 4x more expensive but more features |
-| TTS                  | Amazon Polly                                              | Different pricing model             |
-| Assistants API       | Bedrock Agents (sessions, action groups, knowledge bases) | 2-4 week migration                  |
-| JSON mode            | Claude (excellent), Nova Pro (good)                       | Most models via prompt              |
-| Realtime API         | No equivalent                                             | Stay on OpenAI for this             |
+| Whisper (STT)        | Amazon Transcribe ($0.024/min)                            | 4x more expensive but more features                              |
+| TTS                  | Amazon Polly                                              | Different pricing model                                          |
+| Assistants API       | Bedrock Agents (sessions, action groups, knowledge bases) | 2-4 week migration                                               |
+| JSON mode            | Claude (excellent), Nova Pro (good)                       | Most models via prompt                                           |
+| Realtime API         | No equivalent                                             | Stay on OpenAI for this                                          |
 
 ---
 

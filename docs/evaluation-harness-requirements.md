@@ -96,13 +96,13 @@ Infrastructure and billing-only are mutually exclusive. AI runs alongside either
 
 The exploration report (Section 3) identifies 5 interactive checkpoints. The harness must bypass all of them for non-interactive execution:
 
-| Checkpoint | Location | Bypass Mechanism |
-|-----------|----------|-----------------|
-| Resume vs Fresh | `discover.md:17-22` | Pre-create single `.migration/[MMDD-HHMM]/` with `.phase-status.json` |
-| Multiple sessions | `SKILL.md:70-71` | Ensure only one directory under `.migration/` |
-| Clarify questions | `clarify.md:25-32` | Pre-seed `preferences.json` (plugin offers "Re-use" option A) |
-| Feedback offers | `SKILL.md:273-287` | Pre-set `phases.feedback: "completed"` in `.phase-status.json` |
-| GCP baseline cost | `estimate-infra.md:73` | Include `gcp_monthly_spend` in `preferences.json` |
+| Checkpoint        | Location               | Bypass Mechanism                                                      |
+| ----------------- | ---------------------- | --------------------------------------------------------------------- |
+| Resume vs Fresh   | `discover.md:17-22`    | Pre-create single `.migration/[MMDD-HHMM]/` with `.phase-status.json` |
+| Multiple sessions | `SKILL.md:70-71`       | Ensure only one directory under `.migration/`                         |
+| Clarify questions | `clarify.md:25-32`     | Pre-seed `preferences.json` (plugin offers "Re-use" option A)         |
+| Feedback offers   | `SKILL.md:273-287`     | Pre-set `phases.feedback: "completed"` in `.phase-status.json`        |
+| GCP baseline cost | `estimate-infra.md:73` | Include `gcp_monthly_spend` in `preferences.json`                     |
 
 **Gap identified in exploration report (Section 3, "Missing Seams"):** There is no `--non-interactive` flag. All bypasses depend on pre-seeding files. This is workable but fragile -- see open question 9.1.
 
@@ -153,12 +153,12 @@ The exploration report (Section 5) catalogs rules with exact quotes and source c
 
 These run on every PR, cost nothing, and complete in seconds. They validate prompt source files, not plugin output.
 
-| Check | What it does | Implementation |
-|-------|-------------|----------------|
-| **S1: Required-phrase presence** | Verifies that key directive phrases exist in their source files. If a contributor deletes a FORBIDDEN block or removes a CRITICAL instruction, this check fails. | Grep-based assertions against prompt markdown files. Each assertion specifies a file path and a required phrase (substring or regex). |
-| **S2: Schema cross-reference integrity** | Verifies that schema field names referenced in phase files match schema definitions. For example, if `design-infra.md` requires `human_expertise_required` on every resource, the schema file should define it. | Static analysis of markdown files. |
-| **S3: Phase-file reference integrity** | Verifies that every `Load references/phases/...` instruction in the orchestrator points to a file that actually exists. | Path resolution check against the file tree. |
-| **S4: Existing static checks** | All existing checks in `mise.toml` (`lint`, `fmt:check`, `lint:manifests`, `lint:cross-refs`, `security`) continue to run. The harness integrates with, not replaces, the existing build pipeline. | No change needed; `mise run build` already orchestrates these. |
+| Check                                    | What it does                                                                                                                                                                                                    | Implementation                                                                                                                        |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **S1: Required-phrase presence**         | Verifies that key directive phrases exist in their source files. If a contributor deletes a FORBIDDEN block or removes a CRITICAL instruction, this check fails.                                                | Grep-based assertions against prompt markdown files. Each assertion specifies a file path and a required phrase (substring or regex). |
+| **S2: Schema cross-reference integrity** | Verifies that schema field names referenced in phase files match schema definitions. For example, if `design-infra.md` requires `human_expertise_required` on every resource, the schema file should define it. | Static analysis of markdown files.                                                                                                    |
+| **S3: Phase-file reference integrity**   | Verifies that every `Load references/phases/...` instruction in the orchestrator points to a file that actually exists.                                                                                         | Path resolution check against the file tree.                                                                                          |
+| **S4: Existing static checks**           | All existing checks in `mise.toml` (`lint`, `fmt:check`, `lint:manifests`, `lint:cross-refs`, `security`) continue to run. The harness integrates with, not replaces, the existing build pipeline.              | No change needed; `mise run build` already orchestrates these.                                                                        |
 
 **Layer 1 implementation note:** These checks are deterministic and implemented as a Python script added to the `mise.toml` task pipeline. They run as part of `mise run build` alongside existing linters.
 
@@ -259,13 +259,13 @@ Based on the exploration report (Section 7). This is a minimal Terraform project
 
 ### 5.2 Resource inventory
 
-| Resource | Type | Classification | Why included |
-|----------|------|---------------|-------------|
-| `google_cloud_run_v2_service.api` | Compute | PRIMARY | Exercises fast-path deterministic mapping to Fargate (`fast-path.md:37-56`). Triggers Clarify Q10-Q11 for Cloud Run traffic patterns (`clarify-compute.md`). |
-| `google_sql_database_instance.db` | Database | PRIMARY | Exercises fast-path mapping to Aurora PostgreSQL (`fast-path.md:37-56`). Triggers Clarify Q12-Q13 for database configuration (`clarify-database.md`). |
-| `google_service_account.api_sa` | Identity | SECONDARY | Tests SECONDARY classification with `secondary_role: "identity"` (`classification-rules.md:70-115`). Maps to IAM Role (`fast-path.md:37-56`). |
-| `google_secret_manager_secret.db_url` | Security | SECONDARY | Tests secret handling and Secrets Manager mapping (`security.md:8-10`). Verifies estimate includes Secrets Manager line item (`estimate-infra.md:83`). |
-| `google_secret_manager_secret_version.db_url_v1` | Security | SECONDARY | Tests dependency depth -- depends on both the secret and the database instance (`depth-calculation.md`). |
+| Resource                                         | Type     | Classification | Why included                                                                                                                                                 |
+| ------------------------------------------------ | -------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `google_cloud_run_v2_service.api`                | Compute  | PRIMARY        | Exercises fast-path deterministic mapping to Fargate (`fast-path.md:37-56`). Triggers Clarify Q10-Q11 for Cloud Run traffic patterns (`clarify-compute.md`). |
+| `google_sql_database_instance.db`                | Database | PRIMARY        | Exercises fast-path mapping to Aurora PostgreSQL (`fast-path.md:37-56`). Triggers Clarify Q12-Q13 for database configuration (`clarify-database.md`).        |
+| `google_service_account.api_sa`                  | Identity | SECONDARY      | Tests SECONDARY classification with `secondary_role: "identity"` (`classification-rules.md:70-115`). Maps to IAM Role (`fast-path.md:37-56`).                |
+| `google_secret_manager_secret.db_url`            | Security | SECONDARY      | Tests secret handling and Secrets Manager mapping (`security.md:8-10`). Verifies estimate includes Secrets Manager line item (`estimate-infra.md:83`).       |
+| `google_secret_manager_secret_version.db_url_v1` | Security | SECONDARY      | Tests dependency depth -- depends on both the secret and the database instance (`depth-calculation.md`).                                                     |
 
 ### 5.3 Terraform source
 
@@ -304,7 +304,7 @@ The fixture directory includes these seed files to bypass interactive checkpoint
     "timestamp": "2026-01-01T00:00:00Z",
     "discovery_artifacts": ["gcp-resource-inventory.json"],
     "questions_asked": [],
-    "questions_defaulted": ["Q1","Q2","Q3","Q5","Q6","Q7","Q9","Q10","Q11","Q12","Q13"],
+    "questions_defaulted": ["Q1", "Q2", "Q3", "Q5", "Q6", "Q7", "Q9", "Q10", "Q11", "Q12", "Q13"],
     "questions_skipped_extracted": [],
     "questions_skipped_early_exit": [],
     "questions_skipped_not_applicable": [],
@@ -328,21 +328,21 @@ The fixture directory includes these seed files to bypass interactive checkpoint
 
 ### 5.5 What this fixture exercises
 
-| Plugin behavior | Exercised? | Notes |
-|----------------|-----------|-------|
-| Terraform discovery (simplified path) | Yes | 5 resources, <= 8 primaries -> simplified discovery (`discover-iac.md:75-76`) |
-| PRIMARY/SECONDARY classification | Yes | 2 PRIMARY (Cloud Run, Cloud SQL), 3 SECONDARY (SA, secret, secret version) |
-| Cluster formation | Yes | Should produce 2-4 clusters (`clustering-algorithm.md`) |
-| Dependency depth calculation | Yes | Secret version depends on secret and DB; Cloud Run depends on SA and secret |
-| Fast-path deterministic mapping | Yes | Cloud Run -> Fargate, Cloud SQL -> Aurora, Secrets -> Secrets Manager |
-| Infrastructure design | Yes | Full `design-infra.md` two-pass path |
-| Cost estimation with pricing cache | Yes | Fargate, Aurora, Secrets Manager all in `pricing-cache.md` -- zero MCP calls needed (`estimate-infra.md:18`) |
-| Terraform generation | Yes | Produces `terraform/` with compute, database, security files |
-| Migration scripts | Yes | 01-validate, 02-migrate-data, 04-migrate-secrets, 05-validate |
-| AI path | No | No AI imports in fixture |
-| Billing-only path | No | Terraform present, so infrastructure route activates |
-| BigQuery specialist gate | No | No BigQuery resources |
-| Full clustering (>8 primaries) | No | Simplified path only |
+| Plugin behavior                       | Exercised? | Notes                                                                                                        |
+| ------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| Terraform discovery (simplified path) | Yes        | 5 resources, <= 8 primaries -> simplified discovery (`discover-iac.md:75-76`)                                |
+| PRIMARY/SECONDARY classification      | Yes        | 2 PRIMARY (Cloud Run, Cloud SQL), 3 SECONDARY (SA, secret, secret version)                                   |
+| Cluster formation                     | Yes        | Should produce 2-4 clusters (`clustering-algorithm.md`)                                                      |
+| Dependency depth calculation          | Yes        | Secret version depends on secret and DB; Cloud Run depends on SA and secret                                  |
+| Fast-path deterministic mapping       | Yes        | Cloud Run -> Fargate, Cloud SQL -> Aurora, Secrets -> Secrets Manager                                        |
+| Infrastructure design                 | Yes        | Full `design-infra.md` two-pass path                                                                         |
+| Cost estimation with pricing cache    | Yes        | Fargate, Aurora, Secrets Manager all in `pricing-cache.md` -- zero MCP calls needed (`estimate-infra.md:18`) |
+| Terraform generation                  | Yes        | Produces `terraform/` with compute, database, security files                                                 |
+| Migration scripts                     | Yes        | 01-validate, 02-migrate-data, 04-migrate-secrets, 05-validate                                                |
+| AI path                               | No         | No AI imports in fixture                                                                                     |
+| Billing-only path                     | No         | Terraform present, so infrastructure route activates                                                         |
+| BigQuery specialist gate              | No         | No BigQuery resources                                                                                        |
+| Full clustering (>8 primaries)        | No         | Simplified path only                                                                                         |
 
 ### 5.6 What this fixture does NOT exercise
 
@@ -365,90 +365,90 @@ Each invariant cites the specific rule in the plugin source that justifies it. I
 
 #### Phase status management
 
-| ID | Invariant | Check | Source |
-|----|-----------|-------|--------|
-| H1 | `.phase-status.json` exists after run completes | File existence | `SKILL.md:82-106` |
-| H2 | All 5 core phases are `"completed"` after full run | `phases.discover == "completed"` AND same for clarify, design, estimate, generate | `SKILL.md:37-57` |
-| H4 | `current_phase` is `"complete"` after full run | String equality | `SKILL.md:48-49` |
-| H5 | No phase ordering violation -- no later phase completed before an earlier one | Ordered check across phase keys | `SKILL.md:75` |
+| ID | Invariant                                                                     | Check                                                                             | Source            |
+| -- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------- |
+| H1 | `.phase-status.json` exists after run completes                               | File existence                                                                    | `SKILL.md:82-106` |
+| H2 | All 5 core phases are `"completed"` after full run                            | `phases.discover == "completed"` AND same for clarify, design, estimate, generate | `SKILL.md:37-57`  |
+| H4 | `current_phase` is `"complete"` after full run                                | String equality                                                                   | `SKILL.md:48-49`  |
+| H5 | No phase ordering violation -- no later phase completed before an earlier one | Ordered check across phase keys                                                   | `SKILL.md:75`     |
 
 #### Discover phase outputs
 
-| ID | Invariant | Check | Source |
-|----|-----------|-------|--------|
-| H6 | `gcp-resource-inventory.json` contains zero AWS service names | Regex scan for `Fargate\|Aurora\|RDS\|Lambda\|ECS\|EKS\|S3\|DynamoDB\|Bedrock\|SageMaker\|Secrets Manager\|CloudWatch\|ALB\|NLB\|Route 53\|EC2` returns zero matches | `discover.md:180-188` |
-| H7 | No forbidden files exist in `$MIGRATION_DIR` | Check non-existence of `README.md`, `discovery-summary.md`, `EXECUTION_REPORT.txt`, `discovery-log.md` in `$MIGRATION_DIR` root (not in `terraform/` or `scripts/` subdirs which are Generate outputs) | `discover.md:156-163` |
-| H8 | Every resource has `address`, `type`, `name`, `classification` | JSONPath existence check on every element of `resources[]` | `discover-iac.md:241-274` |
-| H9 | Every PRIMARY resource has `depth` and `tier` | Filter `resources[]` where `classification == "PRIMARY"`, check `depth` and `tier` exist | `discover-iac.md:241-274` |
-| H10 | Every SECONDARY resource has `secondary_role` and `serves` | Filter `resources[]` where `classification == "SECONDARY"`, check fields exist | `discover-iac.md:241-274` |
-| H11 | Every resource `cluster_id` matches a cluster in `gcp-resource-clusters.json` | Cross-file join: collect all `cluster_id` values from inventory, verify each exists in clusters file | `discover-iac.md:241-274` |
-| H12 | No duplicate `address` values | Uniqueness check on `resources[].address` | `discover-iac.md:241-274` |
-| H14-neg | `ai-workload-profile.json` does NOT exist | File non-existence (fixture has no AI signals) | `discover-app-code.md:148-150` |
+| ID      | Invariant                                                                     | Check                                                                                                                                                                                                  | Source                         |
+| ------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
+| H6      | `gcp-resource-inventory.json` contains zero AWS service names                 | Regex scan for `Fargate\|Aurora\|RDS\|Lambda\|ECS\|EKS\|S3\|DynamoDB\|Bedrock\|SageMaker\|Secrets Manager\|CloudWatch\|ALB\|NLB\|Route 53\|EC2` returns zero matches                                   | `discover.md:180-188`          |
+| H7      | No forbidden files exist in `$MIGRATION_DIR`                                  | Check non-existence of `README.md`, `discovery-summary.md`, `EXECUTION_REPORT.txt`, `discovery-log.md` in `$MIGRATION_DIR` root (not in `terraform/` or `scripts/` subdirs which are Generate outputs) | `discover.md:156-163`          |
+| H8      | Every resource has `address`, `type`, `name`, `classification`                | JSONPath existence check on every element of `resources[]`                                                                                                                                             | `discover-iac.md:241-274`      |
+| H9      | Every PRIMARY resource has `depth` and `tier`                                 | Filter `resources[]` where `classification == "PRIMARY"`, check `depth` and `tier` exist                                                                                                               | `discover-iac.md:241-274`      |
+| H10     | Every SECONDARY resource has `secondary_role` and `serves`                    | Filter `resources[]` where `classification == "SECONDARY"`, check fields exist                                                                                                                         | `discover-iac.md:241-274`      |
+| H11     | Every resource `cluster_id` matches a cluster in `gcp-resource-clusters.json` | Cross-file join: collect all `cluster_id` values from inventory, verify each exists in clusters file                                                                                                   | `discover-iac.md:241-274`      |
+| H12     | No duplicate `address` values                                                 | Uniqueness check on `resources[].address`                                                                                                                                                              | `discover-iac.md:241-274`      |
+| H14-neg | `ai-workload-profile.json` does NOT exist                                     | File non-existence (fixture has no AI signals)                                                                                                                                                         | `discover-app-code.md:148-150` |
 
 #### Clarify phase outputs
 
-| ID | Invariant | Check | Source |
-|----|-----------|-------|--------|
-| H17 | `preferences.json` exists after Clarify | File existence | `clarify.md:342-358` |
-| H18 | `design_constraints.target_region` is populated | JSONPath `.design_constraints.target_region.value` is non-null, non-empty | `clarify.md:342-358` |
-| H19 | `design_constraints.availability` is populated | JSONPath `.design_constraints.availability.value` is non-null, non-empty | `clarify.md:342-358` |
-| H20 | No null values anywhere in `preferences.json` | Recursive null scan | `clarify.md:302` |
-| H21 | Every constraint entry has `value` and `chosen_by` | Structural check on every leaf object in `design_constraints` | `clarify.md:299-310` |
-| H22 | `chosen_by` values are in allowed set | Every `chosen_by` is one of `"user"`, `"default"`, `"extracted"`, `"derived"` | `clarify.md:299-310` |
-| H23-neg | `ai_constraints` section does NOT exist | Key non-existence (fixture has no AI workloads) | `clarify.md:342-358` |
+| ID      | Invariant                                          | Check                                                                         | Source               |
+| ------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------- |
+| H17     | `preferences.json` exists after Clarify            | File existence                                                                | `clarify.md:342-358` |
+| H18     | `design_constraints.target_region` is populated    | JSONPath `.design_constraints.target_region.value` is non-null, non-empty     | `clarify.md:342-358` |
+| H19     | `design_constraints.availability` is populated     | JSONPath `.design_constraints.availability.value` is non-null, non-empty      | `clarify.md:342-358` |
+| H20     | No null values anywhere in `preferences.json`      | Recursive null scan                                                           | `clarify.md:302`     |
+| H21     | Every constraint entry has `value` and `chosen_by` | Structural check on every leaf object in `design_constraints`                 | `clarify.md:299-310` |
+| H22     | `chosen_by` values are in allowed set              | Every `chosen_by` is one of `"user"`, `"default"`, `"extracted"`, `"derived"` | `clarify.md:299-310` |
+| H23-neg | `ai_constraints` section does NOT exist            | Key non-existence (fixture has no AI workloads)                               | `clarify.md:342-358` |
 
 #### Design phase outputs
 
-| ID | Invariant | Check | Source |
-|----|-----------|-------|--------|
-| D1 | `aws-design.json` exists | File existence | `design.md:21-27` |
-| D2 | `aws-design-billing.json` does NOT exist | File non-existence (infrastructure route, not billing-only) | `design.md:47` |
-| D3 | `clusters[]` array is non-empty | Length > 0 | `design-infra.md:158-170` |
-| D4 | Every cluster has `cluster_id`, `gcp_region`, `aws_region` | Field existence per cluster | `design-infra.md:115-156` |
-| D5 | Every resource has `human_expertise_required` (boolean) | Type check on every resource in every cluster | `design-infra.md:164-165` |
-| H28 | `confidence` values are only `"deterministic"` or `"inferred"` | Enum check on every resource | `design-infra.md:164-165` |
-| D6 | Every resource has non-empty `rationale` | String length > 0 for every `resources[].rationale` | `design-infra.md:164-165` |
-| D7 | No duplicate `gcp_address` across all clusters | Uniqueness check | `design-infra.md:164-165` |
+| ID  | Invariant                                                      | Check                                                       | Source                    |
+| --- | -------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------- |
+| D1  | `aws-design.json` exists                                       | File existence                                              | `design.md:21-27`         |
+| D2  | `aws-design-billing.json` does NOT exist                       | File non-existence (infrastructure route, not billing-only) | `design.md:47`            |
+| D3  | `clusters[]` array is non-empty                                | Length > 0                                                  | `design-infra.md:158-170` |
+| D4  | Every cluster has `cluster_id`, `gcp_region`, `aws_region`     | Field existence per cluster                                 | `design-infra.md:115-156` |
+| D5  | Every resource has `human_expertise_required` (boolean)        | Type check on every resource in every cluster               | `design-infra.md:164-165` |
+| H28 | `confidence` values are only `"deterministic"` or `"inferred"` | Enum check on every resource                                | `design-infra.md:164-165` |
+| D6  | Every resource has non-empty `rationale`                       | String length > 0 for every `resources[].rationale`         | `design-infra.md:164-165` |
+| D7  | No duplicate `gcp_address` across all clusters                 | Uniqueness check                                            | `design-infra.md:164-165` |
 
 #### Estimate phase outputs
 
-| ID | Invariant | Check | Source |
-|----|-----------|-------|--------|
-| E1 | `estimation-infra.json` exists | File existence | `estimate.md:94-105` |
-| E2 | `estimation-billing.json` does NOT exist | File non-existence (infrastructure route) | `estimate.md:89` |
-| H34 | `migration_cost_considerations.categories` is `[]` | JSONPath check, empty array | `estimate-ai.md:90`, `estimate-billing.md:243` |
-| E3 | Three cost tiers present (premium, balanced, optimized) | Key existence in cost breakdown | `schema-estimate-infra.md:7-19` |
+| ID  | Invariant                                               | Check                                     | Source                                         |
+| --- | ------------------------------------------------------- | ----------------------------------------- | ---------------------------------------------- |
+| E1  | `estimation-infra.json` exists                          | File existence                            | `estimate.md:94-105`                           |
+| E2  | `estimation-billing.json` does NOT exist                | File non-existence (infrastructure route) | `estimate.md:89`                               |
+| H34 | `migration_cost_considerations.categories` is `[]`      | JSONPath check, empty array               | `estimate-ai.md:90`, `estimate-billing.md:243` |
+| E3  | Three cost tiers present (premium, balanced, optimized) | Key existence in cost breakdown           | `schema-estimate-infra.md:7-19`                |
 
 #### Generate phase outputs
 
-| ID | Invariant | Check | Source |
-|----|-----------|-------|--------|
-| G1 | `terraform/` directory exists | Directory existence | `generate-artifacts-infra.md:25-39` |
-| G2 | `terraform/main.tf` exists | File existence | `generate-artifacts-infra.md:25-39` |
-| G3 | `terraform/variables.tf` exists | File existence | `generate-artifacts-infra.md:25-39` |
-| H41 | No hardcoded credentials in `terraform/` files | Regex scan for patterns: `AKIA[0-9A-Z]{16}`, `password\s*=\s*"[^"]{8,}"`, `secret_key\s*=\s*"` | `generate-artifacts-infra.md:147` |
-| H42 | No wildcard IAM policies | Regex scan `terraform/*.tf` for `"Action": "\*"` or `actions = \["\*"\]` | `generate-artifacts-infra.md:145` |
-| H43 | No unrestricted ingress | Regex scan for `0.0.0.0/0` in security group ingress rules; allow only if associated with ALB port 443 | `generate-artifacts-infra.md:153` |
-| H40 | Scripts default to dry-run | Every `.sh` file in `scripts/` contains `DRY_RUN=true` or equivalent | `generate-artifacts-scripts.md:60-64` |
-| G4 | `MIGRATION_GUIDE.md` exists | File existence | `generate-artifacts-docs.md:13` |
-| G5 | `README.md` exists in `$MIGRATION_DIR` | File existence | `generate-artifacts-docs.md:14` |
+| ID  | Invariant                                      | Check                                                                                                  | Source                                |
+| --- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------- |
+| G1  | `terraform/` directory exists                  | Directory existence                                                                                    | `generate-artifacts-infra.md:25-39`   |
+| G2  | `terraform/main.tf` exists                     | File existence                                                                                         | `generate-artifacts-infra.md:25-39`   |
+| G3  | `terraform/variables.tf` exists                | File existence                                                                                         | `generate-artifacts-infra.md:25-39`   |
+| H41 | No hardcoded credentials in `terraform/` files | Regex scan for patterns: `AKIA[0-9A-Z]{16}`, `password\s*=\s*"[^"]{8,}"`, `secret_key\s*=\s*"`         | `generate-artifacts-infra.md:147`     |
+| H42 | No wildcard IAM policies                       | Regex scan `terraform/*.tf` for `"Action": "\*"` or `actions = \["\*"\]`                               | `generate-artifacts-infra.md:145`     |
+| H43 | No unrestricted ingress                        | Regex scan for `0.0.0.0/0` in security group ingress rules; allow only if associated with ALB port 443 | `generate-artifacts-infra.md:153`     |
+| H40 | Scripts default to dry-run                     | Every `.sh` file in `scripts/` contains `DRY_RUN=true` or equivalent                                   | `generate-artifacts-scripts.md:60-64` |
+| G4  | `MIGRATION_GUIDE.md` exists                    | File existence                                                                                         | `generate-artifacts-docs.md:13`       |
+| G5  | `README.md` exists in `$MIGRATION_DIR`         | File existence                                                                                         | `generate-artifacts-docs.md:14`       |
 
 ### 6.2 Soft observations for `minimal-cloud-run-sql`
 
 These are recorded in the results artifact for human review but do not block merge.
 
-| ID | Observation | Expected range | Source |
-|----|-------------|---------------|--------|
-| S1 | Number of PRIMARY resources | 2 (Cloud Run + Cloud SQL) | `classification-rules.md:20-68` |
-| S2 | Number of SECONDARY resources | 3 (SA + secret + secret version) | `classification-rules.md:70-115` |
-| S3 | Number of clusters | 2-4 | `clustering-algorithm.md` |
-| S4 | Cloud Run maps to Fargate | `aws_service` contains "Fargate" | `fast-path.md:37-56` |
-| S5 | Cloud SQL maps to Aurora PostgreSQL | `aws_service` contains "Aurora" | `fast-path.md:37-56` |
-| S6 | Complexity tier is "small" | `complexity_tier == "small"` | `migration-complexity.md:20-52` |
-| S7 | Timeline is 3-6 weeks | `total_weeks` in 3-6 | `migration-complexity.md:54-71` |
-| S8 | Balanced-tier monthly cost | $50-$300 | `pricing-cache.md` |
-| S9 | Number of Terraform files | 4-8 | `generate-artifacts-infra.md:25-39` |
-| S10 | Number of migration scripts | 3-5 | `generate-artifacts-scripts.md:42-54` |
+| ID  | Observation                         | Expected range                   | Source                                |
+| --- | ----------------------------------- | -------------------------------- | ------------------------------------- |
+| S1  | Number of PRIMARY resources         | 2 (Cloud Run + Cloud SQL)        | `classification-rules.md:20-68`       |
+| S2  | Number of SECONDARY resources       | 3 (SA + secret + secret version) | `classification-rules.md:70-115`      |
+| S3  | Number of clusters                  | 2-4                              | `clustering-algorithm.md`             |
+| S4  | Cloud Run maps to Fargate           | `aws_service` contains "Fargate" | `fast-path.md:37-56`                  |
+| S5  | Cloud SQL maps to Aurora PostgreSQL | `aws_service` contains "Aurora"  | `fast-path.md:37-56`                  |
+| S6  | Complexity tier is "small"          | `complexity_tier == "small"`     | `migration-complexity.md:20-52`       |
+| S7  | Timeline is 3-6 weeks               | `total_weeks` in 3-6             | `migration-complexity.md:54-71`       |
+| S8  | Balanced-tier monthly cost          | $50-$300                         | `pricing-cache.md`                    |
+| S9  | Number of Terraform files           | 4-8                              | `generate-artifacts-infra.md:25-39`   |
+| S10 | Number of migration scripts         | 3-5                              | `generate-artifacts-scripts.md:42-54` |
 
 **Note on S4 and S5:** The exploration report (Section 8) lists these as "soft" because they "vary across runs." However, the fast-path mapping table (`fast-path.md:37-56`) is deterministic for these resource types with no conditions. I recommend these be promoted to hard invariants for the `minimal-cloud-run-sql` fixture specifically. This is a design decision -- see open question 9.7.
 
@@ -578,6 +578,7 @@ The checker script produces structured failure data. The eval skill then present
 ```
 
 **Eval skill presentation to contributor (natural language):**
+
 > Your change caused invariant H6 to fail. The Discover phase output contains the AWS service name "Fargate" in the resource inventory (`gcp-resource-inventory.json` at `$.resources[2].name`). This violates the scope boundary rule at `discover.md:180-188` -- the Discover phase must not mention AWS services. Check your changes to `references/phases/discover/discover.md` for scope boundary violations.
 
 The eval skill reads the structured failures and explains them conversationally, including: what broke, where the violation was found, which rule it violates (with source citation), and where to look for a fix. This is critical because contributors are prompt authors, not developers -- they need plain-English guidance, not JSONPath expressions.
@@ -743,15 +744,15 @@ The artifact validation job is added to `.github/workflows/build.yml` alongside 
 
 These are measurable outcomes for evaluating whether the harness is working.
 
-| Criterion | Metric | Target | Measurement |
-|-----------|--------|--------|-------------|
-| **Regression detection** | At least one real prompt regression caught by the harness before merge | >= 1 within 3 months of deployment | Track via PR history |
-| **False positive rate** | Percentage of hard invariant failures that are harness bugs, not plugin regressions | < 10% of total failures over first 3 months | Manual classification of failures |
-| **Contributor eval time** | Wall-clock time for `mise run eval:run` with one fixture | < 5 minutes | Recorded in results artifact `duration_seconds` |
-| **Contributor eval cost** | Claude API cost per full fixture evaluation | < $1.00 per run | Estimated from token usage |
-| **CI validation time** | Wall-clock time for artifact validation job | < 30 seconds | CI job duration |
-| **Invariant coverage** | Percentage of exploration-report H-invariants with executable assertions | >= 60% (29 of 48) for `minimal-cloud-run-sql` scoped invariants by end of v0.1 | Count of implemented invariants vs. Section 6 list |
-| **Adoption** | Percentage of PRs modifying prompt files that include eval results | >= 80% within 2 months of deployment | Git history analysis |
+| Criterion                 | Metric                                                                              | Target                                                                         | Measurement                                        |
+| ------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------- |
+| **Regression detection**  | At least one real prompt regression caught by the harness before merge              | >= 1 within 3 months of deployment                                             | Track via PR history                               |
+| **False positive rate**   | Percentage of hard invariant failures that are harness bugs, not plugin regressions | < 10% of total failures over first 3 months                                    | Manual classification of failures                  |
+| **Contributor eval time** | Wall-clock time for `mise run eval:run` with one fixture                            | < 5 minutes                                                                    | Recorded in results artifact `duration_seconds`    |
+| **Contributor eval cost** | Claude API cost per full fixture evaluation                                         | < $1.00 per run                                                                | Estimated from token usage                         |
+| **CI validation time**    | Wall-clock time for artifact validation job                                         | < 30 seconds                                                                   | CI job duration                                    |
+| **Invariant coverage**    | Percentage of exploration-report H-invariants with executable assertions            | >= 60% (29 of 48) for `minimal-cloud-run-sql` scoped invariants by end of v0.1 | Count of implemented invariants vs. Section 6 list |
+| **Adoption**              | Percentage of PRs modifying prompt files that include eval results                  | >= 80% within 2 months of deployment                                           | Git history analysis                               |
 
 ---
 
@@ -833,23 +834,23 @@ This is a sketch, not a commitment. The principle is: ship something small and b
 
 ## Appendix A: Glossary
 
-| Term | Definition |
-|------|-----------|
-| **Fixture** | A hand-crafted input directory (Terraform files + seed files) designed to exercise specific plugin behaviors. Located under `tests/fixtures/`. |
-| **Hard invariant** | A boolean assertion that must hold on every correct run. Failure blocks merge. Identified by `H` prefix (e.g., H6). |
-| **Soft observation** | A property recorded for human review with an expected range. Does not block merge. Identified by `S` prefix (e.g., S1). |
-| **Phase** | One of the 6 sequential stages of the plugin: Discover, Clarify, Design, Estimate, Generate, Feedback. |
-| **Route** | A conditional execution path within phases 3-5: Infrastructure, Billing-only, or AI. Determined by which discovery artifacts exist. |
-| **`$MIGRATION_DIR`** | The run-specific output directory: `.migration/[MMDD-HHMM]/`. |
-| **PRIMARY resource** | A GCP Terraform resource classified as a standalone workload (compute, database, storage). Creates or joins clusters. |
-| **SECONDARY resource** | A GCP Terraform resource that supports a PRIMARY (identity, access control, configuration, encryption). Attached to clusters via `serves` relationships. |
-| **Fast-path mapping** | A deterministic 1:1 GCP-to-AWS service mapping from `fast-path.md`. Produces `confidence: "deterministic"`. |
-| **Rubric-based mapping** | A 6-criteria evaluation for resources not in the fast-path. Produces `confidence: "inferred"`. |
-| **BigQuery specialist gate** | The rule that BigQuery resources must map to `"Deferred -- specialist engagement"`, never to specific AWS analytics services. |
-| **Pricing cache** | `references/shared/pricing-cache.md` -- cached AWS pricing data used as the primary source for cost estimation, avoiding MCP API calls. |
-| **Results artifact** | `.eval-results.json` -- the JSON file produced by the runner and committed to the PR. Validated by CI. |
-| **Layer 1** | Structural checks: fast, deterministic, no Claude calls. Runs on every PR. |
-| **Layer 2** | Fixture evaluation: contributor-run behavioral tests. Results artifact validated by CI. |
+| Term                         | Definition                                                                                                                                               |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Fixture**                  | A hand-crafted input directory (Terraform files + seed files) designed to exercise specific plugin behaviors. Located under `tests/fixtures/`.           |
+| **Hard invariant**           | A boolean assertion that must hold on every correct run. Failure blocks merge. Identified by `H` prefix (e.g., H6).                                      |
+| **Soft observation**         | A property recorded for human review with an expected range. Does not block merge. Identified by `S` prefix (e.g., S1).                                  |
+| **Phase**                    | One of the 6 sequential stages of the plugin: Discover, Clarify, Design, Estimate, Generate, Feedback.                                                   |
+| **Route**                    | A conditional execution path within phases 3-5: Infrastructure, Billing-only, or AI. Determined by which discovery artifacts exist.                      |
+| **`$MIGRATION_DIR`**         | The run-specific output directory: `.migration/[MMDD-HHMM]/`.                                                                                            |
+| **PRIMARY resource**         | A GCP Terraform resource classified as a standalone workload (compute, database, storage). Creates or joins clusters.                                    |
+| **SECONDARY resource**       | A GCP Terraform resource that supports a PRIMARY (identity, access control, configuration, encryption). Attached to clusters via `serves` relationships. |
+| **Fast-path mapping**        | A deterministic 1:1 GCP-to-AWS service mapping from `fast-path.md`. Produces `confidence: "deterministic"`.                                              |
+| **Rubric-based mapping**     | A 6-criteria evaluation for resources not in the fast-path. Produces `confidence: "inferred"`.                                                           |
+| **BigQuery specialist gate** | The rule that BigQuery resources must map to `"Deferred -- specialist engagement"`, never to specific AWS analytics services.                            |
+| **Pricing cache**            | `references/shared/pricing-cache.md` -- cached AWS pricing data used as the primary source for cost estimation, avoiding MCP API calls.                  |
+| **Results artifact**         | `.eval-results.json` -- the JSON file produced by the runner and committed to the PR. Validated by CI.                                                   |
+| **Layer 1**                  | Structural checks: fast, deterministic, no Claude calls. Runs on every PR.                                                                               |
+| **Layer 2**                  | Fixture evaluation: contributor-run behavioral tests. Results artifact validated by CI.                                                                  |
 
 ---
 
@@ -857,29 +858,29 @@ This is a sketch, not a commitment. The principle is: ship something small and b
 
 Key plugin files relevant to the harness, with roles. Paths are relative to `features/migration-to-aws/skills/gcp-to-aws/`.
 
-| File | Role | Harness relevance |
-|------|------|-------------------|
-| `SKILL.md` | Orchestrator, state machine, phase routing | Layer 1: required-phrase checks. Layer 2: phase status invariants (H1-H5). |
-| `references/phases/discover/discover.md` | Discover orchestrator | Layer 1: FORBIDDEN block presence. Layer 2: scope boundary (H6), forbidden files (H7). |
-| `references/phases/discover/discover-iac.md` | Terraform discovery | Layer 2: resource field invariants (H8-H12), cluster structure (H11, H13). |
-| `references/phases/discover/discover-app-code.md` | App code / AI detection | Layer 2: AI confidence threshold (H14), field names (H15), auth exclusion (H16). |
-| `references/phases/discover/discover-billing.md` | Billing data discovery | Layer 2: billing-only fixture invariants. |
-| `references/phases/clarify/clarify.md` | Clarify orchestrator | Layer 1: FORBIDDEN block. Layer 2: preferences invariants (H17-H24). |
-| `references/phases/design/design.md` | Design orchestrator | Layer 1: FORBIDDEN block. Layer 2: route validation. |
-| `references/phases/design/design-infra.md` | Infrastructure design | Layer 2: BigQuery gate (H25-H26, H32), design invariants (D1-D7, H28). |
-| `references/phases/design/design-billing.md` | Billing-only design | Layer 2: billing confidence (H29-H30). |
-| `references/phases/design/design-ai.md` | AI workload design | Layer 2: AI invariants (H31). |
-| `references/phases/estimate/estimate.md` | Estimate orchestrator | Layer 1: FORBIDDEN block. Layer 2: route validation. |
-| `references/phases/estimate/estimate-infra.md` | Infrastructure costing | Layer 2: cost tier structure (E3), BigQuery exclusion (H36). |
-| `references/phases/estimate/estimate-ai.md` | AI costing | Layer 2: empty migration cost categories (H34). |
-| `references/phases/estimate/estimate-billing.md` | Billing-only costing | Layer 2: low confidence (H37-H38). |
-| `references/phases/generate/generate.md` | Generate orchestrator | Layer 2: output existence checks (G1-G5). |
-| `references/phases/generate/generate-artifacts-infra.md` | Terraform generation | Layer 2: security invariants (H41-H43), cost tier alignment (H46). |
-| `references/phases/generate/generate-artifacts-scripts.md` | Script generation | Layer 2: dry-run default (H40). |
-| `references/design-refs/fast-path.md` | Deterministic mappings | Layer 2: mapping correctness (S4-S5, potentially promoted to hard). |
-| `references/design-refs/compute.md` | Compute rubric | Layer 2: App Runner prohibition (future fixture). |
-| `references/clustering/terraform/classification-rules.md` | Resource classification | Layer 2: PRIMARY/SECONDARY counts (S1-S2), auth exclusion (H33). |
-| `references/clustering/terraform/clustering-algorithm.md` | Cluster formation | Layer 2: cluster count (S3). |
-| `references/shared/schema-phase-status.md` | Phase status schema | Layer 2: status validation (H1-H5). |
-| `references/shared/pricing-cache.md` | Cached pricing | Layer 2: estimate range validation (S8). |
-| `references/shared/migration-complexity.md` | Complexity tiers | Layer 2: tier classification (H47, S6-S7). |
+| File                                                       | Role                                       | Harness relevance                                                                      |
+| ---------------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `SKILL.md`                                                 | Orchestrator, state machine, phase routing | Layer 1: required-phrase checks. Layer 2: phase status invariants (H1-H5).             |
+| `references/phases/discover/discover.md`                   | Discover orchestrator                      | Layer 1: FORBIDDEN block presence. Layer 2: scope boundary (H6), forbidden files (H7). |
+| `references/phases/discover/discover-iac.md`               | Terraform discovery                        | Layer 2: resource field invariants (H8-H12), cluster structure (H11, H13).             |
+| `references/phases/discover/discover-app-code.md`          | App code / AI detection                    | Layer 2: AI confidence threshold (H14), field names (H15), auth exclusion (H16).       |
+| `references/phases/discover/discover-billing.md`           | Billing data discovery                     | Layer 2: billing-only fixture invariants.                                              |
+| `references/phases/clarify/clarify.md`                     | Clarify orchestrator                       | Layer 1: FORBIDDEN block. Layer 2: preferences invariants (H17-H24).                   |
+| `references/phases/design/design.md`                       | Design orchestrator                        | Layer 1: FORBIDDEN block. Layer 2: route validation.                                   |
+| `references/phases/design/design-infra.md`                 | Infrastructure design                      | Layer 2: BigQuery gate (H25-H26, H32), design invariants (D1-D7, H28).                 |
+| `references/phases/design/design-billing.md`               | Billing-only design                        | Layer 2: billing confidence (H29-H30).                                                 |
+| `references/phases/design/design-ai.md`                    | AI workload design                         | Layer 2: AI invariants (H31).                                                          |
+| `references/phases/estimate/estimate.md`                   | Estimate orchestrator                      | Layer 1: FORBIDDEN block. Layer 2: route validation.                                   |
+| `references/phases/estimate/estimate-infra.md`             | Infrastructure costing                     | Layer 2: cost tier structure (E3), BigQuery exclusion (H36).                           |
+| `references/phases/estimate/estimate-ai.md`                | AI costing                                 | Layer 2: empty migration cost categories (H34).                                        |
+| `references/phases/estimate/estimate-billing.md`           | Billing-only costing                       | Layer 2: low confidence (H37-H38).                                                     |
+| `references/phases/generate/generate.md`                   | Generate orchestrator                      | Layer 2: output existence checks (G1-G5).                                              |
+| `references/phases/generate/generate-artifacts-infra.md`   | Terraform generation                       | Layer 2: security invariants (H41-H43), cost tier alignment (H46).                     |
+| `references/phases/generate/generate-artifacts-scripts.md` | Script generation                          | Layer 2: dry-run default (H40).                                                        |
+| `references/design-refs/fast-path.md`                      | Deterministic mappings                     | Layer 2: mapping correctness (S4-S5, potentially promoted to hard).                    |
+| `references/design-refs/compute.md`                        | Compute rubric                             | Layer 2: App Runner prohibition (future fixture).                                      |
+| `references/clustering/terraform/classification-rules.md`  | Resource classification                    | Layer 2: PRIMARY/SECONDARY counts (S1-S2), auth exclusion (H33).                       |
+| `references/clustering/terraform/clustering-algorithm.md`  | Cluster formation                          | Layer 2: cluster count (S3).                                                           |
+| `references/shared/schema-phase-status.md`                 | Phase status schema                        | Layer 2: status validation (H1-H5).                                                    |
+| `references/shared/pricing-cache.md`                       | Cached pricing                             | Layer 2: estimate range validation (S8).                                               |
+| `references/shared/migration-complexity.md`                | Complexity tiers                           | Layer 2: tier classification (H47, S6-S7).                                             |

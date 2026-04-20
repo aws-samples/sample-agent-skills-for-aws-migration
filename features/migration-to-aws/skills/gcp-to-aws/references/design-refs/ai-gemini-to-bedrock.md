@@ -36,21 +36,21 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 
 ## Bedrock Model Portfolio
 
-| Model             | Best For                     | Complexity | Speed  | Context |
-| ----------------- | ---------------------------- | ---------- | ------ | ------- |
-| Claude Sonnet 4.6 | Agentic tasks, tool use      | High       | High   | 200K    |
-| Claude Opus 4.6   | Maximum reasoning            | High       | Medium | 200K    |
-| Claude Haiku 4.5  | Simple + fast                | Medium     | High   | 200K    |
-| Llama 4 Maverick  | Cost-effective + multimodal  | Medium     | High   | 1M      |
-| Llama 4 Scout     | Ultra-long context, cheapest | Medium     | Medium | 10M     |
-| Nova 2 Pro        | AWS flagship, multimodal     | High       | High   | 1M      |
-| Nova 2 Lite       | AWS mid-tier, long context   | Medium     | High   | 1M      |
-| Nova Pro          | AWS balanced                 | Medium     | High   | 300K    |
-| Nova Lite         | AWS fast + cheapest          | Medium     | High   | 300K    |
-| Nova Micro        | AWS fastest, text-only       | Low        | High   | 128K    |
-| Nova Premier      | Complex reasoning — **Legacy** (EOL Sep 14, 2026) prefer Nova 2 Pro | High | Medium | 1M |
-| DeepSeek-R1       | Chain-of-thought reasoning   | High       | Medium | 128K    |
-| Mistral Large 3   | EU/Multilingual              | High       | Medium | 256K    |
+| Model             | Best For                                                            | Complexity | Speed  | Context |
+| ----------------- | ------------------------------------------------------------------- | ---------- | ------ | ------- |
+| Claude Sonnet 4.6 | Agentic tasks, tool use                                             | High       | High   | 200K    |
+| Claude Opus 4.6   | Maximum reasoning                                                   | High       | Medium | 200K    |
+| Claude Haiku 4.5  | Simple + fast                                                       | Medium     | High   | 200K    |
+| Llama 4 Maverick  | Cost-effective + multimodal                                         | Medium     | High   | 1M      |
+| Llama 4 Scout     | Ultra-long context, cheapest                                        | Medium     | Medium | 10M     |
+| Nova 2 Pro        | AWS flagship, multimodal                                            | High       | High   | 1M      |
+| Nova 2 Lite       | AWS mid-tier, long context                                          | Medium     | High   | 1M      |
+| Nova Pro          | AWS balanced                                                        | Medium     | High   | 300K    |
+| Nova Lite         | AWS fast + cheapest                                                 | Medium     | High   | 300K    |
+| Nova Micro        | AWS fastest, text-only                                              | Low        | High   | 128K    |
+| Nova Premier      | Complex reasoning — **Legacy** (EOL Sep 14, 2026) prefer Nova 2 Pro | High       | Medium | 1M      |
+| DeepSeek-R1       | Chain-of-thought reasoning                                          | High       | Medium | 128K    |
+| Mistral Large 3   | EU/Multilingual                                                     | High       | Medium | 256K    |
 
 ---
 
@@ -80,11 +80,11 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 
 ### Legacy/Specialized
 
-| Gemini Model            | Price (in/out per 1M) | Best Bedrock Match    | Bedrock Price    | Winner                             |
-| ----------------------- | --------------------- | --------------------- | ---------------- | ---------------------------------- |
-| text-bison / chat-bison | Legacy                | Llama 4 Scout         | $0.17 / $0.66    | Bedrock (better quality + cheaper) |
-| text-embedding-004      | $0.025 / N/A          | Titan Embeddings V2   | $0.02 / N/A      | Bedrock 20% cheaper                |
-| imagen-*                | Varies                | Nova Canvas           | $0.04-$0.08/img  | Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
+| Gemini Model            | Price (in/out per 1M) | Best Bedrock Match  | Bedrock Price   | Winner                                                           |
+| ----------------------- | --------------------- | ------------------- | --------------- | ---------------------------------------------------------------- |
+| text-bison / chat-bison | Legacy                | Llama 4 Scout       | $0.17 / $0.66   | Bedrock (better quality + cheaper)                               |
+| text-embedding-004      | $0.025 / N/A          | Titan Embeddings V2 | $0.02 / N/A     | Bedrock 20% cheaper                                              |
+| imagen-*                | Varies                | Nova Canvas         | $0.04-$0.08/img | Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
 
 _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual savings depend on your input/output ratio._
 
@@ -169,12 +169,12 @@ Not available on other Bedrock models. This is a significant Claude advantage fo
 
 ## Feature Migration Notes
 
-| Gemini Feature         | Bedrock Equivalent                                          | Notes                          |
-| ---------------------- | ----------------------------------------------------------- | ------------------------------ |
-| Function calling       | Claude tools (excellent), Mistral (good)                    | Minimal changes                |
-| Structured output/JSON | Claude (excellent), Nova Pro (good)                         | Most models via prompt         |
-| Streaming              | All major models                                            | Same SSE pattern               |
-| Vision                 | Claude Sonnet/Haiku, Llama 4 Maverick                       | Multimodal parity              |
-| Context caching        | Claude prompt caching                                       | 90% savings on cached portions |
+| Gemini Feature         | Bedrock Equivalent                                            | Notes                                     |
+| ---------------------- | ------------------------------------------------------------- | ----------------------------------------- |
+| Function calling       | Claude tools (excellent), Mistral (good)                      | Minimal changes                           |
+| Structured output/JSON | Claude (excellent), Nova Pro (good)                           | Most models via prompt                    |
+| Streaming              | All major models                                              | Same SSE pattern                          |
+| Vision                 | Claude Sonnet/Haiku, Llama 4 Maverick                         | Multimodal parity                         |
+| Context caching        | Claude prompt caching                                         | 90% savings on cached portions            |
 | Audio/video input      | Nova 2 Sonic (speech), Transcribe/Rekognition (preprocessing) | Nova Sonic v1 is Legacy; use Nova 2 Sonic |
-| Embeddings             | Amazon Titan Embeddings ($0.02/1M, 1536 dims)               | Must re-embed all docs         |
+| Embeddings             | Amazon Titan Embeddings ($0.02/1M, 1536 dims)                 | Must re-embed all docs                    |

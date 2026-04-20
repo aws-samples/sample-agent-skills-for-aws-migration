@@ -8,11 +8,11 @@ Schema for `estimation-infra.json`, produced by `estimate-infra.md`.
 
 The fields **`aws_monthly_premium`**, **`aws_monthly_balanced`**, **`aws_monthly_optimized`** (under `projected_costs`) and **`option_a_premium`**, **`option_b_balanced`**, **`option_c_optimized`** (under `cost_comparison`) are **three pricing scenarios** for the **same** GCP->AWS mapping in `aws-design.json`. They are **not** three alternative Terraform roots.
 
-| Tier key      | User-facing label | Subtitle (use in reports / MIGRATION_GUIDE)                                                                 |
-| ------------- | ----------------- | ----------------------------------------------------------------------------------------------------------- |
-| **`premium`** | Premium           | *Highest resilience / highest monthly estimate in this model*                                                 |
-| **`balanced`** | Balanced | *Default scenario; compare GCP to this first* |
-| **`optimized`** | Optimized       | *Lower monthly estimate; reservations / Spot / storage trade-offs assumed*                                 |
+| Tier key        | User-facing label | Subtitle (use in reports / MIGRATION_GUIDE)                                |
+| --------------- | ----------------- | -------------------------------------------------------------------------- |
+| **`premium`**   | Premium           | _Highest resilience / highest monthly estimate in this model_              |
+| **`balanced`**  | Balanced          | _Default scenario; compare GCP to this first_                              |
+| **`optimized`** | Optimized         | _Lower monthly estimate; reservations / Spot / storage trade-offs assumed_ |
 
 **How to read:** Scenario order is **highest -> middle -> lowest** monthly AWS estimate for the modeled architecture. **Balanced** is the **primary** comparison row vs the GCP baseline. **Premium** and **Optimized** are **bounds** (HA vs cost-optimization skew).
 

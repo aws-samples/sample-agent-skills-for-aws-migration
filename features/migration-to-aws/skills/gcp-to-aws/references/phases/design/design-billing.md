@@ -50,20 +50,20 @@ For each billing service, attempt lookup in order:
 
 Look up `gcp_service_type` in the table below. These are default mappings for common GCP services when no configuration data is available. The IaC path uses the full rubric in category files and may select a different AWS target based on actual configuration.
 
-| `gcp_service_type`               | Billing Name         | Default AWS Target | Alternatives (chosen by IaC path)              |
-| -------------------------------- | -------------------- | ------------------ | ---------------------------------------------- |
-| `google_cloud_run_service`       | Cloud Run            | Fargate            | Lambda, EC2                                    |
-| `google_cloudfunctions_function` | Cloud Functions      | Lambda             | Fargate                                        |
-| `google_compute_instance`        | Compute Engine       | EC2                | Fargate, ASG                                   |
-| `google_container_cluster`       | GKE                  | EKS                | ECS, Fargate                                   |
-| `google_app_engine_application`  | App Engine           | Fargate            | Amplify, Lambda                                |
-| `google_firestore_database`      | Firestore            | DynamoDB           | —                                              |
+| `gcp_service_type`               | Billing Name         | Default AWS Target                     | Alternatives (chosen by IaC path)                                                                                                                                         |
+| -------------------------------- | -------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `google_cloud_run_service`       | Cloud Run            | Fargate                                | Lambda, EC2                                                                                                                                                               |
+| `google_cloudfunctions_function` | Cloud Functions      | Lambda                                 | Fargate                                                                                                                                                                   |
+| `google_compute_instance`        | Compute Engine       | EC2                                    | Fargate, ASG                                                                                                                                                              |
+| `google_container_cluster`       | GKE                  | EKS                                    | ECS, Fargate                                                                                                                                                              |
+| `google_app_engine_application`  | App Engine           | Fargate                                | Amplify, Lambda                                                                                                                                                           |
+| `google_firestore_database`      | Firestore            | DynamoDB                               | —                                                                                                                                                                         |
 | `google_bigquery_dataset`        | BigQuery             | **`Deferred — specialist engagement`** | **No** Athena/Redshift/Glue in automated output. **`human_expertise_required: true`**. User must engage **AWS account team** and/or **data analytics migration partner**. |
-| `google_compute_forwarding_rule` | Cloud Load Balancing | ALB                | NLB                                            |
-| `google_compute_backend_service` | Cloud Load Balancing | ALB Target Groups  | NLB                                            |
-| `google_pubsub_topic`            | Pub/Sub              | SNS                | SQS, SNS FIFO                                  |
-| `google_pubsub_subscription`     | Pub/Sub              | SQS                | SNS Subscription                               |
-| `google_cloud_tasks_queue`       | Cloud Tasks          | SQS                | EventBridge                                    |
+| `google_compute_forwarding_rule` | Cloud Load Balancing | ALB                                    | NLB                                                                                                                                                                       |
+| `google_compute_backend_service` | Cloud Load Balancing | ALB Target Groups                      | NLB                                                                                                                                                                       |
+| `google_pubsub_topic`            | Pub/Sub              | SNS                                    | SQS, SNS FIFO                                                                                                                                                             |
+| `google_pubsub_subscription`     | Pub/Sub              | SQS                                    | SNS Subscription                                                                                                                                                          |
+| `google_cloud_tasks_queue`       | Cloud Tasks          | SQS                                    | EventBridge                                                                                                                                                               |
 
 If found: assign the Default AWS Target. Set rationale to: "Billing heuristic: [GCP service] → [AWS service]. Provide Terraform files for configuration-aware mapping." **Exception:** For BigQuery, use: "Billing indicates BigQuery spend — **no automated AWS analytics target**; engage AWS account team / data analytics migration partner (`Deferred — specialist engagement`)."
 

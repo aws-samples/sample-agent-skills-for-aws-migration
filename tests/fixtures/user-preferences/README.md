@@ -8,12 +8,12 @@ Same as minimal-cloud-run-sql (Cloud Run + Cloud SQL) but with user-overridden p
 
 ## Pre-seeded preferences
 
-| Constraint | Value | chosen_by |
-|-----------|-------|-----------|
-| `target_region` | `us-west-2` | **user** |
-| `availability` | `single-az` | **user** |
-| `cutover_strategy` | `blue-green` | **user** |
-| All others | defaults | default |
+| Constraint         | Value        | chosen_by |
+| ------------------ | ------------ | --------- |
+| `target_region`    | `us-west-2`  | **user**  |
+| `availability`     | `single-az`  | **user**  |
+| `cutover_strategy` | `blue-green` | **user**  |
+| All others         | defaults     | default   |
 
 ## Key invariants tested
 

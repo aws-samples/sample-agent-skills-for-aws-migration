@@ -74,20 +74,20 @@ Establishes baseline Bedrock recommendation. Override hierarchy: Q10 special fea
 
 > A) Gemini Flash | B) Gemini Pro | C) GPT-3.5 Turbo | D) GPT-4/4 Turbo | E) GPT-4o | F) GPT-5.4/Mini/Nano | G) GPT-5/5.x (older) | H) o-series | I) Other/Multiple | J) Don't know
 
-| Source          | Baseline Recommendation           | Pricing Context                    |
-| --------------- | --------------------------------- | ---------------------------------- |
-| Gemini Flash    | Claude Haiku 4.5 ($1/$5)          | Strong savings                     |
-| Gemini Pro      | Claude Sonnet 4.6 ($3/$15)        | Comparable tier                    |
-| GPT-3.5 Turbo   | Claude Haiku 4.5 ($1/$5)          | Faster and cheaper                 |
-| GPT-4/4 Turbo   | Claude Sonnet 4.6 ($3/$15)        | Major savings (GPT-4T: $10/$30)    |
-| GPT-4o          | Claude Sonnet 4.6 ($3/$15)        | Modest savings on output           |
-| GPT-5.4         | Claude Sonnet 4.6 ($3/$15)        | ~5% cheaper on OpenAI; near parity |
-| GPT-5.4 Mini    | Nova Lite ($0.06/$0.24)           | 94% cheaper on Bedrock             |
-| GPT-5.4 Nano    | Nova Micro ($0.035/$0.14)         | 87% cheaper on Bedrock             |
-| GPT-5.4 Pro     | Nova 2 Pro ($1.38/$11)            | 94% cheaper on Bedrock             |
-| GPT-5/5.x       | Claude Sonnet 4.6 ($3/$15)        | Savings story is quality, not cost |
-| GPT-5 flagship  | Claude Opus 4.6 ($5/$25)          | Cheaper than GPT-5 Pro ($15/$120)  |
-| o-series        | Sonnet 4.6 with extended thinking | o1 $15/$60 → significant savings   |
+| Source         | Baseline Recommendation           | Pricing Context                    |
+| -------------- | --------------------------------- | ---------------------------------- |
+| Gemini Flash   | Claude Haiku 4.5 ($1/$5)          | Strong savings                     |
+| Gemini Pro     | Claude Sonnet 4.6 ($3/$15)        | Comparable tier                    |
+| GPT-3.5 Turbo  | Claude Haiku 4.5 ($1/$5)          | Faster and cheaper                 |
+| GPT-4/4 Turbo  | Claude Sonnet 4.6 ($3/$15)        | Major savings (GPT-4T: $10/$30)    |
+| GPT-4o         | Claude Sonnet 4.6 ($3/$15)        | Modest savings on output           |
+| GPT-5.4        | Claude Sonnet 4.6 ($3/$15)        | ~5% cheaper on OpenAI; near parity |
+| GPT-5.4 Mini   | Nova Lite ($0.06/$0.24)           | 94% cheaper on Bedrock             |
+| GPT-5.4 Nano   | Nova Micro ($0.035/$0.14)         | 87% cheaper on Bedrock             |
+| GPT-5.4 Pro    | Nova 2 Pro ($1.38/$11)            | 94% cheaper on Bedrock             |
+| GPT-5/5.x      | Claude Sonnet 4.6 ($3/$15)        | Savings story is quality, not cost |
+| GPT-5 flagship | Claude Opus 4.6 ($5/$25)          | Cheaper than GPT-5 Pro ($15/$120)  |
+| o-series       | Sonnet 4.6 with extended thinking | o1 $15/$60 → significant savings   |
 
 Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → Sonnet; GPT-4o + Q10=speech → Nova 2 Sonic.
 
@@ -97,10 +97,10 @@ Interpret → `ai_model_baseline`. Default: auto-detect, fallback Q2 priority-ba
 
 > A) Text only | B) Vision required | C) Audio/Video inputs
 
-| Answer      | Impact                                                                                   |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| Text only   | Full model catalog                                                                       |
-| Vision      | Claude Sonnet or Haiku (both support multimodal vision); Nova Micro excluded (text-only) |
+| Answer      | Impact                                                                                                          |
+| ----------- | --------------------------------------------------------------------------------------------------------------- |
+| Text only   | Full model catalog                                                                                              |
+| Vision      | Claude Sonnet or Haiku (both support multimodal vision); Nova Micro excluded (text-only)                        |
 | Audio/Video | Nova 2 Sonic (audio); Nova Reel v1 for video (Legacy — EOL Sep 30, 2026); Claude excluded for audio/video input |
 
 Interpret → `ai_vision`. Default: A → no constraint.

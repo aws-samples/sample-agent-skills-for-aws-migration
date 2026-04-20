@@ -105,13 +105,13 @@ git add .eval-results.json
 Pick the fixture that covers your change area. For broad changes, run
 `minimal-cloud-run-sql` first, then any fixture specific to your change.
 
-| Fixture | Use when you changed... | Invariants |
-|---------|------------------------|------------|
-| `minimal-cloud-run-sql` | General prompt changes, state machine, phase ordering, generate phase | 26 |
-| `bigquery-specialist-gate` | BigQuery handling, specialist gate, analytics exclusion | 9 |
-| `ai-workload-openai` | AI detection, model mapping, lifecycle rules, Category F questions | 11 |
-| `user-preferences` | Clarify question flow, preference schema, Design preference consumption | 10 |
-| `negative-services` | Classification rules, auth exclusion, forbidden service mappings | 8 |
+| Fixture                    | Use when you changed...                                                 | Invariants |
+| -------------------------- | ----------------------------------------------------------------------- | ---------- |
+| `minimal-cloud-run-sql`    | General prompt changes, state machine, phase ordering, generate phase   | 26         |
+| `bigquery-specialist-gate` | BigQuery handling, specialist gate, analytics exclusion                 | 9          |
+| `ai-workload-openai`       | AI detection, model mapping, lifecycle rules, Category F questions      | 11         |
+| `user-preferences`         | Clarify question flow, preference schema, Design preference consumption | 10         |
+| `negative-services`        | Classification rules, auth exclusion, forbidden service mappings        | 8          |
 
 See [docs/evaluation-guide.md](docs/evaluation-guide.md) for the full workflow
 and how to add new invariants.

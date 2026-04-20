@@ -4,11 +4,11 @@ Tests AI workload detection and model mapping for OpenAI SDK usage hosted on GCP
 
 ## Resources
 
-| Type | Classification | Purpose |
-|------|---------------|---------|
-| `google_cloud_run_v2_service.chatbot` | PRIMARY | Hosts the AI chatbot app |
-| `google_secret_manager_secret.openai_key` | SECONDARY | OpenAI API key |
-| `google_service_account.chatbot_sa` | SECONDARY | Service account |
+| Type                                      | Classification | Purpose                  |
+| ----------------------------------------- | -------------- | ------------------------ |
+| `google_cloud_run_v2_service.chatbot`     | PRIMARY        | Hosts the AI chatbot app |
+| `google_secret_manager_secret.openai_key` | SECONDARY      | OpenAI API key           |
+| `google_service_account.chatbot_sa`       | SECONDARY      | Service account          |
 
 ## App code
 

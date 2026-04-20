@@ -83,8 +83,8 @@ For small projects, skip the full clustering pipeline. Instead:
    Excluded Resources list in `classification-rules.md` (Priority 0). These include:
    - `google_identity_platform_*` — Auth provider (keep existing, do not migrate)
    - `google_firebase_auth_*` — Auth provider (keep existing, do not migrate)
-   Log each excluded resource: "Auth provider detected — excluded from migration scope. Keep your existing auth solution."
-   Do NOT include excluded resources in `gcp-resource-inventory.json` or any cluster.
+     Log each excluded resource: "Auth provider detected — excluded from migration scope. Keep your existing auth solution."
+     Do NOT include excluded resources in `gcp-resource-inventory.json` or any cluster.
 
 1. **Classify resources** using only Priority 1 hardcoded rules from the PRIMARY types list above.
    - Resources matching the list → PRIMARY

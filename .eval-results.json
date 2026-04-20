@@ -14,15 +14,23 @@
       "duration_seconds": null,
       "phases_completed": ["discover", "clarify", "design", "estimate", "generate"],
       "hard_invariants": [
-        {"id": "H1", "description": ".phase-status.json exists after run completes", "status": "pass"},
-        {"id": "H7", "description": "gcp-resource-inventory.json exists after run completes", "status": "pass"},
-        {"id": "NEG1", "description": "Auth resources (google_identity_platform_*) excluded from inventory", "status": "pass"},
-        {"id": "NEG2", "description": "No Cognito in Design output", "status": "pass"},
-        {"id": "NEG3", "description": "No Lightsail in Design output", "status": "pass"},
-        {"id": "NEG4", "description": "No Elastic Beanstalk in Design output", "status": "pass"},
-        {"id": "NEG5", "description": "Every google_bigquery_* maps to Deferred -- specialist engagement", "status": "pass"},
-        {"id": "NEG6", "description": "No Redshift, Athena, Glue, or EMR for BigQuery resources", "status": "pass"},
-        {"id": "H41", "description": "No hardcoded credentials in any generated file", "status": "pass"}
+        { "id": "H1", "description": ".phase-status.json exists after run completes", "status": "pass" },
+        { "id": "H7", "description": "gcp-resource-inventory.json exists after run completes", "status": "pass" },
+        {
+          "id": "NEG1",
+          "description": "Auth resources (google_identity_platform_*) excluded from inventory",
+          "status": "pass"
+        },
+        { "id": "NEG2", "description": "No Cognito in Design output", "status": "pass" },
+        { "id": "NEG3", "description": "No Lightsail in Design output", "status": "pass" },
+        { "id": "NEG4", "description": "No Elastic Beanstalk in Design output", "status": "pass" },
+        {
+          "id": "NEG5",
+          "description": "Every google_bigquery_* maps to Deferred -- specialist engagement",
+          "status": "pass"
+        },
+        { "id": "NEG6", "description": "No Redshift, Athena, Glue, or EMR for BigQuery resources", "status": "pass" },
+        { "id": "H41", "description": "No hardcoded credentials in any generated file", "status": "pass" }
       ],
       "soft_observations": [],
       "output_files_hash": "sha256:f24ccc51b005fa4765d2fa1b08add78b2bf3a45460c15ec47943e09a1d876c51"

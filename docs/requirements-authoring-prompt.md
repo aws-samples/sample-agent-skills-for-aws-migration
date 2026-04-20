@@ -139,9 +139,9 @@ A sketch of how the harness gets built incrementally. Not a commitment, just a p
 
 **Distinguish facts from decisions from opinions.**
 
-- A *fact* is something the exploration report directly establishes (cite it)
-- A *decision* is something the problem statement already settled (cite the decision)
-- An *opinion* is a judgment you're making — flag these explicitly ("I recommend X because Y"), and put genuinely open opinions in Section 9 rather than embedded in other sections
+- A _fact_ is something the exploration report directly establishes (cite it)
+- A _decision_ is something the problem statement already settled (cite the decision)
+- An _opinion_ is a judgment you're making — flag these explicitly ("I recommend X because Y"), and put genuinely open opinions in Section 9 rather than embedded in other sections
 
 **Conservatism over cleverness.** The first version of the harness will be small and obvious. Resist the urge to propose sophisticated mechanisms. If you find yourself designing a baseline-update DSL or a fixture-auto-selection algorithm, stop — put it in Section 9 as an open question.
 

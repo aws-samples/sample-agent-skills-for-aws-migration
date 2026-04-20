@@ -51,13 +51,13 @@ evaluation harness catches regressions before they reach users.
 
 2. **Pick the right test fixture** for your change area:
 
-   | Fixture | Use when you changed... |
-   |---------|------------------------|
-   | `minimal-cloud-run-sql` | General prompt changes, state machine, phase ordering, generate phase |
-   | `bigquery-specialist-gate` | BigQuery handling, specialist gate, analytics exclusion |
-   | `ai-workload-openai` | AI detection, model mapping, lifecycle rules, Category F questions |
-   | `user-preferences` | Clarify question flow, preference schema, Design preference consumption |
-   | `negative-services` | Classification rules, auth exclusion, forbidden service mappings |
+   | Fixture                    | Use when you changed...                                                 |
+   | -------------------------- | ----------------------------------------------------------------------- |
+   | `minimal-cloud-run-sql`    | General prompt changes, state machine, phase ordering, generate phase   |
+   | `bigquery-specialist-gate` | BigQuery handling, specialist gate, analytics exclusion                 |
+   | `ai-workload-openai`       | AI detection, model mapping, lifecycle rules, Category F questions      |
+   | `user-preferences`         | Clarify question flow, preference schema, Design preference consumption |
+   | `negative-services`        | Classification rules, auth exclusion, forbidden service mappings        |
 
    For broad changes, run `minimal-cloud-run-sql` first (most invariants),
    then any fixture specific to your change.

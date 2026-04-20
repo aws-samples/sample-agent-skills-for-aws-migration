@@ -6,16 +6,16 @@ Shared classification loaded by `generate-billing.md` and `generate-infra.md` to
 
 Collect these values from prior-phase artifacts before classifying:
 
-| Input                | Source Artifact                                             | Key                                               |
-| -------------------- | ----------------------------------------------------------- | -------------------------------------------------- |
-| Service count        | `aws-design-billing.json` or `aws-design.json`             | `metadata.total_services`                          |
-| Monthly spend        | `billing-profile.json` or `estimation-infra.json`          | `summary.total_monthly_spend` or `current_costs.gcp_monthly` |
-| Has databases        | Design artifact `services[]`                               | `aws_service` in {RDS, Aurora, DynamoDB, ElastiCache, DocumentDB, MemoryDB, OpenSearch} |
-| Has stateful storage | Design artifact `services[]`                               | `aws_service` in {EFS, FSx, S3} with replication or versioning hints in `sku_hints` |
-| Has AI workloads     | `estimation-ai.json` exists                                | File presence                                      |
-| Availability         | `preferences.json`                                         | `design_constraints.availability`                  |
-| Compliance           | `preferences.json`                                         | `design_constraints.compliance`                    |
-| Multi-region         | Design artifact `services[]`                               | More than one distinct `aws_config.region` value   |
+| Input                | Source Artifact                                   | Key                                                                                     |
+| -------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Service count        | `aws-design-billing.json` or `aws-design.json`    | `metadata.total_services`                                                               |
+| Monthly spend        | `billing-profile.json` or `estimation-infra.json` | `summary.total_monthly_spend` or `current_costs.gcp_monthly`                            |
+| Has databases        | Design artifact `services[]`                      | `aws_service` in {RDS, Aurora, DynamoDB, ElastiCache, DocumentDB, MemoryDB, OpenSearch} |
+| Has stateful storage | Design artifact `services[]`                      | `aws_service` in {EFS, FSx, S3} with replication or versioning hints in `sku_hints`     |
+| Has AI workloads     | `estimation-ai.json` exists                       | File presence                                                                           |
+| Availability         | `preferences.json`                                | `design_constraints.availability`                                                       |
+| Compliance           | `preferences.json`                                | `design_constraints.compliance`                                                         |
+| Multi-region         | Design artifact `services[]`                      | More than one distinct `aws_config.region` value                                        |
 
 ## Tier Definitions
 
@@ -55,19 +55,19 @@ NOT Large, NOT Medium. Equivalently, ALL of:
 
 ### Billing-Only Path
 
-| Tier   | Weeks | Effort Hours | Approach                    |
-| ------ | ----- | ------------ | --------------------------- |
-| Small  | 2-4   | 40-80        | `compressed`                |
-| Medium | 6-10  | 160-400      | `standard_with_discovery`   |
+| Tier   | Weeks | Effort Hours | Approach                      |
+| ------ | ----- | ------------ | ----------------------------- |
+| Small  | 2-4   | 40-80        | `compressed`                  |
+| Medium | 6-10  | 160-400      | `standard_with_discovery`     |
 | Large  | 12-18 | 480-720      | `conservative_with_discovery` |
 
 ### Infrastructure Path
 
-| Tier   | Weeks | Effort Hours | Approach                     |
-| ------ | ----- | ------------ | ---------------------------- |
-| Small  | 3-6   | 80-160       | `compressed`                 |
-| Medium | 8-12  | 240-480      | `phased_cluster_migration`   |
-| Large  | 12-16 | 400-640      | `phased_cluster_migration`   |
+| Tier   | Weeks | Effort Hours | Approach                   |
+| ------ | ----- | ------------ | -------------------------- |
+| Small  | 3-6   | 80-160       | `compressed`               |
+| Medium | 8-12  | 240-480      | `phased_cluster_migration` |
+| Large  | 12-16 | 400-640      | `phased_cluster_migration` |
 
 ## Stage Templates
 
@@ -175,15 +175,15 @@ Extended infrastructure deployment. Extra time for complex dependency graphs, mu
 
 Risk probabilities should be adjusted based on complexity tier:
 
-| Risk Category                    | Small       | Medium      | Large       |
-| -------------------------------- | ----------- | ----------- | ----------- |
-| Incorrect service sizing         | low         | medium      | high        |
-| Missing dependencies             | low         | medium      | high        |
-| Data migration complexity        | n/a (no DB) | medium      | high        |
-| Cost overrun                     | low         | medium      | high        |
-| Performance regression           | low         | medium      | medium      |
-| Timeline overrun                 | low         | medium      | high        |
-| Unmapped services block progress | low         | medium      | medium      |
+| Risk Category                    | Small       | Medium | Large  |
+| -------------------------------- | ----------- | ------ | ------ |
+| Incorrect service sizing         | low         | medium | high   |
+| Missing dependencies             | low         | medium | high   |
+| Data migration complexity        | n/a (no DB) | medium | high   |
+| Cost overrun                     | low         | medium | high   |
+| Performance regression           | low         | medium | medium |
+| Timeline overrun                 | low         | medium | high   |
+| Unmapped services block progress | low         | medium | medium |
 
 ## Success Criteria Scaling by Tier
 
@@ -202,14 +202,14 @@ Tighter thresholds for simpler migrations (fewer unknowns, less variance).
 
 ### Infrastructure Path
 
-| Criteria                    | Small                        | Medium                       | Large                        |
-| --------------------------- | ---------------------------- | ---------------------------- | ---------------------------- |
-| Performance within baseline | Within 10% of GCP            | Within 10% of GCP            | Within 10% of GCP            |
-| Monitoring stability        | 24-hour watch period         | 24-hour watch period         | 48-hour watch period         |
-| Post-migration stability    | 14-day observation           | 30-day observation           | 30-day observation           |
-| Cost variance               | Within 10% of mid estimate   | Within 15% of mid estimate   | Within 15% of mid estimate   |
-| Data integrity              | 100%                         | 100%                         | 100%                         |
-| Service availability        | 99.9%                        | 99.9%                        | 99.9%                        |
+| Criteria                    | Small                      | Medium                     | Large                      |
+| --------------------------- | -------------------------- | -------------------------- | -------------------------- |
+| Performance within baseline | Within 10% of GCP          | Within 10% of GCP          | Within 10% of GCP          |
+| Monitoring stability        | 24-hour watch period       | 24-hour watch period       | 48-hour watch period       |
+| Post-migration stability    | 14-day observation         | 30-day observation         | 30-day observation         |
+| Cost variance               | Within 10% of mid estimate | Within 15% of mid estimate | Within 15% of mid estimate |
+| Data integrity              | 100%                       | 100%                       | 100%                       |
+| Service availability        | 99.9%                      | 99.9%                      | 99.9%                      |
 
 ## Output
 

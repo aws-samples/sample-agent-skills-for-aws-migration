@@ -4,13 +4,13 @@ A minimal GCP Terraform project with 5 resources (2 PRIMARY, 3 SECONDARY) that e
 
 ## Resources
 
-| Resource | Classification | Rationale |
-|----------|---------------|-----------|
-| `google_cloud_run_v2_service.api` | PRIMARY (compute) | Tests fast-path mapping to Fargate |
-| `google_sql_database_instance.db` | PRIMARY (database) | Tests fast-path mapping to Aurora PostgreSQL |
-| `google_service_account.api_sa` | SECONDARY (identity) | Tests identity classification and cluster attachment |
-| `google_secret_manager_secret.db_url` | SECONDARY (configuration) | Tests secret mapping to Secrets Manager |
-| `google_secret_manager_secret_version.db_url_v1` | SECONDARY (configuration) | Tests version resource grouping |
+| Resource                                         | Classification            | Rationale                                            |
+| ------------------------------------------------ | ------------------------- | ---------------------------------------------------- |
+| `google_cloud_run_v2_service.api`                | PRIMARY (compute)         | Tests fast-path mapping to Fargate                   |
+| `google_sql_database_instance.db`                | PRIMARY (database)        | Tests fast-path mapping to Aurora PostgreSQL         |
+| `google_service_account.api_sa`                  | SECONDARY (identity)      | Tests identity classification and cluster attachment |
+| `google_secret_manager_secret.db_url`            | SECONDARY (configuration) | Tests secret mapping to Secrets Manager              |
+| `google_secret_manager_secret_version.db_url_v1` | SECONDARY (configuration) | Tests version resource grouping                      |
 
 ## Pre-seeded Files
 

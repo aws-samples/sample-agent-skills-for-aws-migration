@@ -53,14 +53,14 @@ Default: A — single region, closest AWS region to GCP region in inventory.
 >
 > _(Multiple selections allowed)_
 
-| Answer            | Recommendation Impact                                                                                                                      |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| None              | Full service catalog available, any region                                                                                                 |
-| SOC 2 / ISO 27001 | CloudTrail, Config, Security Hub enabled by default; encryption at rest required                                                           |
-| PCI DSS           | Dedicated VPC with strict segmentation, WAF required, no shared tenancy for cardholder data, specific RDS encryption config                |
-| HIPAA             | BAA-eligible services only, encryption in transit and at rest mandatory, specific logging requirements, us-east-1/us-west-2 preferred      |
-| FedRAMP           | GovCloud regions required (us-gov-east-1, us-gov-west-1), GovCloud-specific service endpoints, limited service catalog                     |
-| GDPR              | EU regions required (eu-west-1, eu-central-1), data residency constraints, no cross-region replication outside EU without explicit consent |
+| Answer            | Recommendation Impact                                                                                                                                                                                                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| None              | Full service catalog available, any region                                                                                                                                                                                                                                                  |
+| SOC 2 / ISO 27001 | CloudTrail, Config, Security Hub enabled by default; encryption at rest required                                                                                                                                                                                                            |
+| PCI DSS           | Dedicated VPC with strict segmentation, WAF required, no shared tenancy for cardholder data, specific RDS encryption config                                                                                                                                                                 |
+| HIPAA             | BAA-eligible services only, encryption in transit and at rest mandatory, specific logging requirements, us-east-1/us-west-2 preferred                                                                                                                                                       |
+| FedRAMP           | GovCloud regions required (us-gov-east-1, us-gov-west-1), GovCloud-specific service endpoints, limited service catalog                                                                                                                                                                      |
+| GDPR              | EU regions required (eu-west-1, eu-central-1), data residency constraints, no cross-region replication outside EU without explicit consent                                                                                                                                                  |
 | CCPA / CPRA       | Consumer privacy posture: data inventory, access/deletion workflows, opt-out of sale/sharing where applicable, retention minimization, encryption and audit logging (CloudTrail); prefer documenting data flows and subprocessors — confirm target regions with legal/compliance (often US) |
 
 Interpret:
@@ -97,13 +97,13 @@ Default: A — no constraint.
 
 > Your billing data shows ~$[total_monthly_spend]/month. Does this match your expectation?
 
-| Answer                 | Recommendation Impact                                                                                 |
-| ---------------------- | ----------------------------------------------------------------------------------------------------- |
-| < $1,000/month         | Entry-tier migration funding programs may apply; cost estimates use conservative ranges              |
-| $1,000–$5,000/month    | Migration funding review may apply; cost estimates use mid-range assumptions                          |
-| $5,000–$20,000/month   | Migration funding review may apply; reserved pricing options are evaluated in cost recommendations    |
-| $20,000–$100,000/month | Migration funding and support program review may apply; savings commitment options are evaluated      |
-| > $100,000/month       | Enterprise migration program review may apply; dedicated migration support path may be recommended    |
+| Answer                 | Recommendation Impact                                                                              |
+| ---------------------- | -------------------------------------------------------------------------------------------------- |
+| < $1,000/month         | Entry-tier migration funding programs may apply; cost estimates use conservative ranges            |
+| $1,000–$5,000/month    | Migration funding review may apply; cost estimates use mid-range assumptions                       |
+| $5,000–$20,000/month   | Migration funding review may apply; reserved pricing options are evaluated in cost recommendations |
+| $20,000–$100,000/month | Migration funding and support program review may apply; savings commitment options are evaluated   |
+| > $100,000/month       | Enterprise migration program review may apply; dedicated migration support path may be recommended |
 
 Interpret:
 

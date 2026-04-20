@@ -4,13 +4,13 @@ Tests the BigQuery specialist gate — the rule that `google_bigquery_*` resourc
 
 ## Resources
 
-| Type | Classification | Purpose |
-|------|---------------|---------|
-| `google_bigquery_dataset.analytics` | PRIMARY | BigQuery dataset — triggers specialist gate |
-| `google_bigquery_table.events` | SECONDARY | Partitioned table |
-| `google_bigquery_table.aggregates` | SECONDARY | View |
-| `google_cloud_run_v2_service.ingest_api` | PRIMARY | Non-BigQuery resource — should get normal mapping |
-| `google_service_account.ingest_sa` | SECONDARY | Service account |
+| Type                                     | Classification | Purpose                                           |
+| ---------------------------------------- | -------------- | ------------------------------------------------- |
+| `google_bigquery_dataset.analytics`      | PRIMARY        | BigQuery dataset — triggers specialist gate       |
+| `google_bigquery_table.events`           | SECONDARY      | Partitioned table                                 |
+| `google_bigquery_table.aggregates`       | SECONDARY      | View                                              |
+| `google_cloud_run_v2_service.ingest_api` | PRIMARY        | Non-BigQuery resource — should get normal mapping |
+| `google_service_account.ingest_sa`       | SECONDARY      | Service account                                   |
 
 ## Key invariants tested
 
