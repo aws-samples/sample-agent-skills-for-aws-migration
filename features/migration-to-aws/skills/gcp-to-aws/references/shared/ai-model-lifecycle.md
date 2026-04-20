@@ -87,7 +87,7 @@ After selecting a Bedrock model for each workload:
 When building the model comparison table:
 
 - **Exclusion zone models**: omit entirely from `model_comparison`. Do not include in `recommended_model` or `backup_model`.
-- **Legacy (>90 days)**: include with ` (Legacy — EOL YYYY-MM-DD)` annotation. Never use as `recommended_model` if an Active alternative exists.
+- **Legacy (>90 days)**: include with `(Legacy — EOL YYYY-MM-DD)` annotation. Never use as `recommended_model` if an Active alternative exists.
 - **Active**: no restrictions.
 
 ### Pricing Cache (`pricing-cache.md`)

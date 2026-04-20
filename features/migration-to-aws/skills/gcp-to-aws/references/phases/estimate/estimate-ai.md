@@ -20,7 +20,7 @@ For typical migrations (Claude, Llama, Nova, Mistral, DeepSeek, Gemma, OpenAI gp
 **Model lifecycle:** When building the model comparison table, check `references/shared/ai-model-lifecycle.md` and apply the 90-day exclusion rule:
 
 - **Excluded** (≤90 days to EOL): omit entirely from `model_comparison`, `recommended_model`, and `backup_model`.
-- **Legacy** (>90 days to EOL): include in `model_comparison` with ` (Legacy — EOL YYYY-MM-DD)` annotation. Do not select as `recommended_model` unless no Active alternative exists.
+- **Legacy** (>90 days to EOL): include in `model_comparison` with `(Legacy — EOL YYYY-MM-DD)` annotation. Do not select as `recommended_model` unless no Active alternative exists.
 - **Active**: no restrictions.
 
 ## Prerequisites

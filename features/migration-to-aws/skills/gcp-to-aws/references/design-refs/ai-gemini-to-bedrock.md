@@ -48,7 +48,7 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 | Nova Pro          | AWS balanced                 | Medium     | High   | 300K    |
 | Nova Lite         | AWS fast + cheapest          | Medium     | High   | 300K    |
 | Nova Micro        | AWS fastest, text-only       | Low        | High   | 128K    |
-| Nova Premier      | Complex reasoning            | High       | Medium | 1M      | **Legacy** (EOL Sep 14, 2026) — prefer Nova 2 Pro |
+| Nova Premier      | Complex reasoning — **Legacy** (EOL Sep 14, 2026) prefer Nova 2 Pro | High | Medium | 1M |
 | DeepSeek-R1       | Chain-of-thought reasoning   | High       | Medium | 128K    |
 | Mistral Large 3   | EU/Multilingual              | High       | Medium | 256K    |
 

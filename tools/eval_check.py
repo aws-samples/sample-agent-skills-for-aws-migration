@@ -17,7 +17,7 @@ Exit codes:
 import argparse
 import glob as globmod
 import json
-import subprocess
+import subprocess  # nosec B404 - subprocess used to run trusted handler scripts
 import sys
 from pathlib import Path
 
@@ -37,7 +37,7 @@ def load_invariants(fixture_name: str) -> dict:
     # Try fixture-specific invariants first
     fixture_invariants = repo_root / "tests" / "fixtures" / fixture_name / "invariants.yml"
     if fixture_invariants.exists():
-        with open(fixture_invariants) as f:
+        with open(fixture_invariants, encoding="utf-8") as f:
             data = yaml.safe_load(f)
         return data
 
@@ -47,7 +47,7 @@ def load_invariants(fixture_name: str) -> dict:
         print(f"Error: No invariants found for fixture '{fixture_name}'", file=sys.stderr)
         sys.exit(2)
 
-    with open(invariants_path) as f:
+    with open(invariants_path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
     if data.get("fixture") != fixture_name:
@@ -298,7 +298,7 @@ def check_custom(migration_dir: Path, check: dict, repo_root: Path) -> dict:
         return {"status": "skip", "details": f"Handler not found: {check['handler']}"}
 
     try:
-        result = subprocess.run(
+        result = subprocess.run(  # nosec B603 - handler_path is from trusted YAML config
             [sys.executable, str(handler_path), str(migration_dir)],
             capture_output=True,
             text=True,

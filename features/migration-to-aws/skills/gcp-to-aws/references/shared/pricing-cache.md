@@ -577,7 +577,7 @@ Per 1M tokens. **Nova 2 Omni** and **Nova 2 Pro** are **Preview**. Image column 
 
 #### US East (Ohio) — Nova 2 Lite by tier (text + image + video)
 
-**Global cross-region inference**
+##### Global cross-region inference
 
 | Tier     | Input $/1M | Output $/1M |
 | -------- | ---------- | ----------- |
@@ -586,7 +586,7 @@ Per 1M tokens. **Nova 2 Omni** and **Nova 2 Pro** are **Preview**. Image column 
 | Flex     | 0.15       | 1.25        |
 | Batch    | 0.15       | 1.25        |
 
-**Geo cross-region inference and in-region**
+##### Geo cross-region inference and in-region
 
 | Tier     | Input $/1M | Output $/1M |
 | -------- | ---------- | ----------- |

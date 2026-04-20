@@ -67,6 +67,7 @@ Parse the checker's JSON output. Present results to the user in this format:
 > All hard invariants passed (N/N). Migration output looks good.
 >
 > Soft observations:
+>
 > - S1: Number of PRIMARY resources — expected 2, got [actual]
 > - S3: Cloud Run mapping — expected Fargate, got [actual]
 
@@ -185,7 +186,8 @@ After writing the artifact:
 > Evaluation complete. `.eval-results.json` written to repo root.
 >
 > Next steps:
-> ```
+>
+> ```text
 > git add .eval-results.json
 > git commit -m "eval: add results for [fixture]"
 > ```

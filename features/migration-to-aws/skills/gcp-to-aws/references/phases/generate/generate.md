@@ -185,5 +185,6 @@ After the structured block, include:
 6. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
 
 Output to user:
+
 - If `migration-report.html` exists: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Your migration report is ready at $MIGRATION_DIR/migration-report.html"
 - If `migration-report.html` is missing: "Migration artifact generation complete. All phases of the GCP-to-AWS migration analysis are complete. Markdown documentation is available at $MIGRATION_DIR/MIGRATION_GUIDE.md and $MIGRATION_DIR/README.md. (HTML report generation is optional and non-blocking.)"

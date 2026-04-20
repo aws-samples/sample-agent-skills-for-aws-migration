@@ -257,20 +257,20 @@ Add an entry to the fixture's `invariants.yml`:
 
 1. Add the YAML entry pointing to a handler:
 
-```yaml
-- id: H50
-  description: "New check description"
-  source: "prompt-file.md:line"
-  check:
-    type: custom
-    handler: "tools/invariants/h50_new_check.py"
-```
+   ```yaml
+   - id: H50
+     description: "New check description"
+     source: "prompt-file.md:line"
+     check:
+       type: custom
+       handler: "tools/invariants/h50_new_check.py"
+   ```
 
-2. Create `tools/invariants/h50_new_check.py` following the pattern of
+1. Create `tools/invariants/h50_new_check.py` following the pattern of
    existing handlers. Include the docstring with invariant description,
    skill file reference, and examples.
 
-3. Run the evaluation to verify your new invariant passes on existing output.
+1. Run the evaluation to verify your new invariant passes on existing output.
 
 ---
 
@@ -287,6 +287,7 @@ pip install pyyaml
 ### "No invariants found for fixture"
 
 The fixture name doesn't match any `invariants.yml`. Check:
+
 - `tests/fixtures/<name>/invariants.yml` exists, OR
 - `tests/invariants.yml` has `fixture: <name>` at the top
 
