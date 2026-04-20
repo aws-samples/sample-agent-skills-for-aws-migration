@@ -16,11 +16,12 @@ Exit codes:
 
 import argparse
 import glob as globmod
+import io
 import json
-# nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit.dangerous-subprocess-use-audit
-import subprocess  # nosec B404
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 import yaml
 
@@ -293,24 +294,25 @@ def check_cross_file_join(migration_dir: Path, check: dict) -> dict:
 
 
 def check_custom(migration_dir: Path, check: dict, repo_root: Path) -> dict:
-    """Delegate to a custom Python handler script."""
+    """Delegate to a custom Python handler script.
+
+    Runs the handler in-process by importing it with runpy and capturing stdout.
+    Each handler expects sys.argv[1] to be the migration directory and prints
+    JSON to stdout: {"status": "pass"} or {"status": "fail", "details": "..."}.
+    """
     handler_path = repo_root / check["handler"]
     if not handler_path.exists():
         return {"status": "skip", "details": f"Handler not found: {check['handler']}"}
 
     try:
-        # nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit.dangerous-subprocess-use-audit
-        result = subprocess.run(  # nosec B603
-            [sys.executable, str(handler_path), str(migration_dir)],
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-        # Handler should output JSON: {"status": "pass"} or {"status": "fail", "details": "..."}
-        output = json.loads(result.stdout)
+        import runpy
+
+        captured = io.StringIO()
+        fake_argv = [str(handler_path), str(migration_dir)]
+        with patch.object(sys, "argv", fake_argv), redirect_stdout(captured):
+            runpy.run_path(str(handler_path), run_name="__main__")
+        output = json.loads(captured.getvalue())
         return output
-    except subprocess.TimeoutExpired:
-        return {"status": "fail", "details": "Handler timed out"}
     except (json.JSONDecodeError, Exception) as e:
         return {"status": "fail", "details": f"Handler error: {e}"}
 
