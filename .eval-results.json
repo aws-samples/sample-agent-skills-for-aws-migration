@@ -1,0 +1,38 @@
+{
+  "schema_version": "1",
+  "metadata": {
+    "commit_sha": "5bb4bdb23a01eb222099d5a56c5dab0f8230a9bb",
+    "timestamp": "2026-04-20T03:06:00Z",
+    "runner_version": "0.1.0",
+    "prompt_files_hash": "sha256:9b9cee0bc96ee9bbfc99ed7f20b5d355f959040c6e22ab474bbcca44d6d7ca47",
+    "fixture_files_hash": "sha256:af145028e7f1b2b5c4f32cf6e8bd1fd286da542f6ef2d5584ae3d3d061e42a2e"
+  },
+  "fixtures": [
+    {
+      "name": "negative-services",
+      "status": "pass",
+      "duration_seconds": null,
+      "phases_completed": ["discover", "clarify", "design", "estimate", "generate"],
+      "hard_invariants": [
+        {"id": "H1", "description": ".phase-status.json exists after run completes", "status": "pass"},
+        {"id": "H7", "description": "gcp-resource-inventory.json exists after run completes", "status": "pass"},
+        {"id": "NEG1", "description": "Auth resources (google_identity_platform_*) excluded from inventory", "status": "pass"},
+        {"id": "NEG2", "description": "No Cognito in Design output", "status": "pass"},
+        {"id": "NEG3", "description": "No Lightsail in Design output", "status": "pass"},
+        {"id": "NEG4", "description": "No Elastic Beanstalk in Design output", "status": "pass"},
+        {"id": "NEG5", "description": "Every google_bigquery_* maps to Deferred -- specialist engagement", "status": "pass"},
+        {"id": "NEG6", "description": "No Redshift, Athena, Glue, or EMR for BigQuery resources", "status": "pass"},
+        {"id": "H41", "description": "No hardcoded credentials in any generated file", "status": "pass"}
+      ],
+      "soft_observations": [],
+      "output_files_hash": "sha256:f24ccc51b005fa4765d2fa1b08add78b2bf3a45460c15ec47943e09a1d876c51"
+    }
+  ],
+  "summary": {
+    "total_fixtures": 1,
+    "passed": 1,
+    "failed": 0,
+    "hard_invariant_failures": 0,
+    "error": null
+  }
+}

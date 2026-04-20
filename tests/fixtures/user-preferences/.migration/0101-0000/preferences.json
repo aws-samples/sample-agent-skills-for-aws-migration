@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "migration_type": "full",
+    "timestamp": "2026-01-01T00:00:00Z",
+    "discovery_artifacts": ["gcp-resource-inventory.json", "gcp-resource-clusters.json"],
+    "questions_asked": ["Q1", "Q3", "Q5"],
+    "questions_defaulted": ["Q2", "Q6", "Q7", "Q9", "Q10", "Q11", "Q12", "Q13"],
+    "questions_skipped_extracted": [],
+    "questions_skipped_early_exit": [],
+    "questions_skipped_not_applicable": ["Q4", "Q8", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22"],
+    "category_e_enabled": false,
+    "inventory_clarifications": {}
+  },
+  "design_constraints": {
+    "target_region": {"value": "us-west-2", "chosen_by": "user"},
+    "gcp_monthly_spend": {"value": "$1K-$5K", "chosen_by": "default"},
+    "availability": {"value": "single-az", "chosen_by": "user"},
+    "cutover_strategy": {"value": "blue-green", "chosen_by": "user"},
+    "cloud_run_traffic_pattern": {"value": "constant-24-7", "chosen_by": "default"},
+    "cloud_run_monthly_spend": {"value": "$100-$500", "chosen_by": "default"},
+    "database_traffic": {"value": "steady", "chosen_by": "default"},
+    "db_io_workload": {"value": "medium", "chosen_by": "default"}
+  }
+}

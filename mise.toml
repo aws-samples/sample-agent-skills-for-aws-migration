@@ -56,7 +56,21 @@ run = [
 
 [tasks.validate]
 description = "Run all validation checks"
-run = "echo 'All validations passed'"
+run = [
+    { task = "eval:check" },
+]
+
+# =============
+# EVALUATION
+# =============
+
+[tasks."eval:check"]
+description = "Layer 1: Structural phrase checks (no Claude API calls)"
+run = "python tools/eval_check_phrases.py"
+
+[tasks."eval:validate"]
+description = "Run checker script against migration output (no Claude API calls)"
+run = "python tools/eval_check.py --migration-dir $MIGRATION_DIR --fixture ${FIXTURE:-minimal-cloud-run-sql}"
 
 # =========
 # SECURITY
