@@ -5,8 +5,8 @@ Lightweight orchestrator that delegates to domain-specific discoverers. Each sub
 
 ## Sub-Discovery Files
 
-- **discover-iac.md** → `gcp-resource-inventory.json` + `gcp-resource-clusters.json` (if Terraform found)
-- **discover-app-code.md** → `ai-workload-profile.json` (if source code with AI signals found)
+- **discover-iac.md** → `gcp-resource-inventory.json` + `gcp-resource-clusters.json` (if Terraform found); may also write `ai-workload-profile.json` when **Vertex-strong** (see `discover-iac.md` Step 7d)
+- **discover-app-code.md** → `ai-workload-profile.json` when AI confidence ≥ 70% (may **merge** with an existing `iac_vertex` profile)
 - **discover-billing.md** → `billing-profile.json` (if billing data found)
 
 Multiple artifacts can be produced in a single run — they are not mutually exclusive.
@@ -119,14 +119,17 @@ After all loaded sub-discoveries complete, check what artifacts were produced in
 1. Check for output files:
    - `gcp-resource-inventory.json` — IaC discovery succeeded
    - `gcp-resource-clusters.json` — IaC discovery produced clusters
-   - `ai-workload-profile.json` — App code discovery detected AI workloads
+   - `ai-workload-profile.json` — App code discovery (confidence ≥ 70%) and/or IaC Vertex-strong inference (`discover-iac.md` Step 7d)
    - `billing-profile.json` — Billing data parsed
 2. **If NO artifacts were produced** (sub-discoveries ran but produced no output): STOP and output: "Discovery ran but produced no artifacts. Check that your input files contain valid GCP resources and try again."
-3. **Route output gate (fail closed):** For each triggered sub-discovery route, require at least one expected artifact before completion:
+3. **Route output gate (fail closed):** For each triggered sub-discovery route, require the expected artifact(s) before completion:
    - If `discover-iac.md` ran -> require `gcp-resource-inventory.json` and `gcp-resource-clusters.json`
-   - If `discover-app-code.md` ran -> require `ai-workload-profile.json`
+   - If `discover-app-code.md` ran:
+     - If its Step 4 exit gate applied (overall AI confidence **below** 70%) **and** no `ai-workload-profile.json` exists -> **allow completion** (app-code route may produce no AI profile).
+     - If Step 4 exit applied with confidence below 70% **but** `ai-workload-profile.json` exists with `metadata.profile_source` = `"iac_vertex"` -> **allow completion** (IaC-inferred profile retained).
+     - If execution continued to Steps 5–8 (confidence **≥** 70%) -> **require** `ai-workload-profile.json`.
    - If full `discover-billing.md` ran OR lightweight billing extraction ran -> require `billing-profile.json`
-   - If any triggered route is missing its expected artifact(s): STOP and output: "Discover route [name] did not produce required artifacts. Resolve the sub-discovery failure before completing Phase 1."
+   - If any triggered route is missing its required artifact(s): STOP and output: "Discover route [name] did not produce required artifacts. Resolve the sub-discovery failure before completing Phase 1."
 
 ## Step 3: Update Phase Status
 
@@ -150,7 +153,7 @@ Format: "Discover phase complete. [artifact summaries joined by space] Next requ
 
 1. `gcp-resource-inventory.json` — from discover-iac.md
 2. `gcp-resource-clusters.json` — from discover-iac.md
-3. `ai-workload-profile.json` — from discover-app-code.md
+3. `ai-workload-profile.json` — from discover-app-code.md (confidence ≥ 70%, optionally merged) and/or discover-iac.md Step 7d (Vertex-strong IaC only)
 4. `billing-profile.json` — from discover-billing.md
 
 **No other files must be created:**

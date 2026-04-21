@@ -18,6 +18,8 @@ Read `$MIGRATION_DIR/ai-workload-profile.json`:
 
 Read `$MIGRATION_DIR/preferences.json` → `ai_constraints` (if present). If absent: use defaults (prefer managed Bedrock, no latency constraint, no budget cap).
 
+**IaC-only / empty models guard:** If `models[]` is empty, or `summary.inferred_from_iac` is `true` with no code-derived model IDs, do **not** invent source model names. Use `summary.ai_source`, `infrastructure[]`, and `ai_constraints` to propose a **representative** Bedrock direction from the design-ref tables; label per-model source mapping as **pending validation** until clarified. If `integration.pattern` is `unknown`, treat migration effort as **TBD** pending framework answers from Clarify.
+
 **Load source-specific design reference based on `ai_source`:**
 
 - `"gemini"` → load `references/design-refs/ai-gemini-to-bedrock.md`
@@ -32,6 +34,8 @@ Read `$MIGRATION_DIR/preferences.json` → `ai_constraints` (if present). If abs
 For each model in `models[]`, select the best-fit Bedrock model using the loaded design reference mapping tables. Do NOT use a hardcoded mapping — the design-ref files contain tier-organized tables with pricing and competitive analysis.
 
 Treat model mapping as compatibility-guided, not 1:1 parity. Before cutover, require validation of prompts, tool-calling behavior, and eval metrics for the selected Bedrock model.
+
+**If `models[]` is empty:** Skip per-model rows; output a short **placeholder strategy** (one representative Bedrock model family per `ai_source` rubric) and dependency on Clarify answers — do not fabricate `models[]` entries.
 
 **Apply user preference overrides from `ai_constraints`:**
 
