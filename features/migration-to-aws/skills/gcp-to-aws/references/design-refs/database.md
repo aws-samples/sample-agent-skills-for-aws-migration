@@ -6,11 +6,11 @@
 
 ## Eliminators (Hard Blockers)
 
-| GCP Service            | AWS        | Blocker                                                                                                    |
-| ---------------------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
-| Firestore              | DynamoDB   | ACID transactions spanning >100 items required → use RDS (DynamoDB limit: 100 items/transaction)           |
+| GCP Service            | AWS                | Blocker                                                                                                                                                                                    |
+| ---------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Firestore              | DynamoDB           | ACID transactions spanning >100 items required → use RDS (DynamoDB limit: 100 items/transaction)                                                                                           |
 | BigQuery               | _(no auto-target)_ | **Plugin does not prescribe Athena/Redshift/Glue** — use `Deferred — specialist engagement` in design output; OLTP latency needs → Aurora or DynamoDB per workload review with specialists |
-| Cloud SQL (PostgreSQL) | RDS Aurora | PostGIS extension → supported (Aurora supports PostGIS)                                                    |
+| Cloud SQL (PostgreSQL) | RDS Aurora         | PostGIS extension → supported (Aurora supports PostGIS)                                                                                                                                    |
 
 ## Signals (Decision Criteria)
 

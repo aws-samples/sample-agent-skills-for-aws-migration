@@ -25,17 +25,17 @@ If any REQUIRED file is missing: **STOP**. Output: "Missing required artifact: [
 
 Generate `$MIGRATION_DIR/terraform/` with only the files needed for domains that have resources in `aws-design.json`:
 
-| File            | Domain     | Contains                                         |
-| --------------- | ---------- | ------------------------------------------------ |
-| `main.tf`       | core       | Provider config, backend, data sources           |
-| `variables.tf`  | core       | All input variables with types and defaults      |
-| `outputs.tf`    | core       | Resource outputs and migration summary           |
-| `vpc.tf`        | networking | VPC, subnets, NAT, security groups, route tables |
-| `security.tf`   | security   | IAM roles, policies, KMS keys, Secrets Manager   |
-| `storage.tf`    | storage    | S3 buckets, EFS, backup vaults                   |
-| `database.tf`   | database   | RDS/Aurora instances, parameter groups           |
-| `compute.tf`    | compute    | Fargate/ECS, Lambda, EC2                         |
-| `monitoring.tf` | monitoring | CloudWatch dashboards, alarms, log groups        |
+| File            | Domain     | Contains                                                   |
+| --------------- | ---------- | ---------------------------------------------------------- |
+| `main.tf`       | core       | Provider config, backend, data sources                     |
+| `variables.tf`  | core       | All input variables with types and defaults                |
+| `outputs.tf`    | core       | Resource outputs and migration summary                     |
+| `vpc.tf`        | networking | VPC, subnets, NAT, security groups, route tables           |
+| `security.tf`   | security   | IAM roles, policies, KMS keys, Secrets Manager             |
+| `storage.tf`    | storage    | S3 buckets, EFS, backup vaults                             |
+| `database.tf`   | database   | RDS/Aurora instances, parameter groups                     |
+| `compute.tf`    | compute    | Fargate/ECS, Lambda, EC2                                   |
+| `monitoring.tf` | monitoring | CloudWatch dashboards, alarms, log groups                  |
 | `README.md`     | core       | Cost tiers vs this Terraform (one stack; Balanced-aligned) |
 
 ## Step 0: Plan Generation Scope
@@ -98,27 +98,27 @@ For each domain with resources in the generation manifest:
 
 **Domain-specific rules:**
 
-| Domain     | Key Rules                                                                                                                     |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Networking | At least 2 AZs; public + private subnets; NAT gateway for private subnet internet; internet-facing ALB must terminate TLS on 443 and HTTP 80 must redirect to HTTPS |
-| Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda; Secrets Manager resources with no plaintext defaults |
+| Domain     | Key Rules                                                                                                                                                                              |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Networking | At least 2 AZs; public + private subnets; NAT gateway for private subnet internet; internet-facing ALB must terminate TLS on 443 and HTTP 80 must redirect to HTTPS                    |
+| Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda; Secrets Manager resources with no plaintext defaults                                       |
 | Storage    | Versioning enabled; SSE-S3 or SSE-KMS encryption; block public access by default; lifecycle policies; if public content is required use CloudFront/OAC instead of public bucket policy |
-| Database   | Private subnets; subnet group + parameter group + security group; backups; encryption                                         |
-| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling                                       |
-| Monitoring | Log groups per service; dashboard with key metrics; alarms from `generation-infra.json` success_metrics; 30-day log retention |
+| Database   | Private subnets; subnet group + parameter group + security group; backups; encryption                                                                                                  |
+| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling                                                                                                |
+| Monitoring | Log groups per service; dashboard with key metrics; alarms from `generation-infra.json` success_metrics; 30-day log retention                                                          |
 
 ## Step 4: Generate outputs.tf
 
 Output identifiers for key resources (VPC ID, database endpoint, ECS cluster name, etc.) plus a **`migration_summary` output** (object) including at minimum:
 
-| Key | Type / example | Purpose |
-| --- | -------------- | ------- |
-| `aws_region` | string | From `var.aws_region` |
-| `environment` | string | From `var.environment` |
-| `migration_id` | string | From `var.migration_id` |
-| `service_count` | number | Count of primary logical services / resources represented |
-| `aligned_with_estimate_tier` | string | Always **`"balanced"`** for this advisor — generated IaC matches the **Balanced** scenario in `estimation-infra.json` |
-| `cost_scenarios_modeled_in_terraform` | string | e.g. **`"design_baseline_only"`** — only one stack generated; Premium/Optimized exist as **pricing** scenarios in estimates, not as additional Terraform trees |
+| Key                                   | Type / example | Purpose                                                                                                                                                        |
+| ------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `aws_region`                          | string         | From `var.aws_region`                                                                                                                                          |
+| `environment`                         | string         | From `var.environment`                                                                                                                                         |
+| `migration_id`                        | string         | From `var.migration_id`                                                                                                                                        |
+| `service_count`                       | number         | Count of primary logical services / resources represented                                                                                                      |
+| `aligned_with_estimate_tier`          | string         | Always **`"balanced"`** for this advisor — generated IaC matches the **Balanced** scenario in `estimation-infra.json`                                          |
+| `cost_scenarios_modeled_in_terraform` | string         | e.g. **`"design_baseline_only"`** — only one stack generated; Premium/Optimized exist as **pricing** scenarios in estimates, not as additional Terraform trees |
 
 Add VPC ID or other IDs when known from resources. Descriptions on every output.
 

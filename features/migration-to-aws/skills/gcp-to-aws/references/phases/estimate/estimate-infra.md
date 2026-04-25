@@ -85,7 +85,7 @@ For each service in `aws-design.json`, calculate monthly cost using rates from `
 **BigQuery / deferred analytics (mandatory):** For any resource where `aws_service` is exactly **`Deferred — specialist engagement`** OR `gcp_type` starts with `google_bigquery_`:
 
 - **Do not** apply Athena, Redshift, Glue, or EMR rates as the plugin’s “projected” analytics stack.
-- **Exclude** these resources from Premium / Balanced / Optimized **numeric totals** (or list them under a `deferred_services[]` / `excluded_from_totals` section in `estimation-infra.json` with reason: *pending specialist engagement*).
+- **Exclude** these resources from Premium / Balanced / Optimized **numeric totals** (or list them under a `deferred_services[]` / `excluded_from_totals` section in `estimation-infra.json` with reason: _pending specialist engagement_).
 - In the user-facing summary, state that **AWS analytics costs are unknown** until the **AWS account team** and/or **data analytics migration partner** defines the target architecture.
 
 Calculate 3 cost tiers to show the optimization range:
@@ -98,17 +98,17 @@ Calculate 3 cost tiers to show the optimization range:
 
 **Per-service calculation approach:**
 
-| Domain            | Formula                                                                               | Key inputs from aws-design.json                             |
-| ----------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Compute (Fargate) | (vCPU × vCPU rate + memory GB × memory rate) × 730 hours × instance count             | `aws_config.cpu`, `aws_config.memory`                       |
-| Compute (Lambda)  | requests × request rate + (requests × duration × memory GB) × GB-second rate          | Estimated from usage patterns                               |
-| Database (Aurora) | instance rate × 730 hours × instance count + storage GB × storage rate + I/O estimate | `aws_config.instance_class`, `aws_config.allocated_storage` |
-| Database (RDS)    | instance rate × 730 hours × instance count + storage GB × storage rate                | `aws_config.instance_class`, `aws_config.allocated_storage` |
-| Storage (S3)      | GB × per-GB rate + request estimates                                                  | `aws_config.storage_gb` or source `gcp_config`              |
-| Networking (ALB)  | fixed monthly + LCU estimate                                                          | From compute service count                                  |
-| Networking (NAT)  | fixed monthly × count + GB processed × data rate                                      | From VPC design                                             |
-| Security (Secrets Manager) | secrets_count × per-secret monthly rate + api_calls_10k × per-10K API rate   | `aws_config.secrets_count`, `aws_config.api_calls_10k` (or inferred defaults) |
-| Supporting        | Per-unit rates × quantities (secrets, log GB, metrics)                                | Inferred from service count                                 |
+| Domain                     | Formula                                                                               | Key inputs from aws-design.json                                               |
+| -------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Compute (Fargate)          | (vCPU × vCPU rate + memory GB × memory rate) × 730 hours × instance count             | `aws_config.cpu`, `aws_config.memory`                                         |
+| Compute (Lambda)           | requests × request rate + (requests × duration × memory GB) × GB-second rate          | Estimated from usage patterns                                                 |
+| Database (Aurora)          | instance rate × 730 hours × instance count + storage GB × storage rate + I/O estimate | `aws_config.instance_class`, `aws_config.allocated_storage`                   |
+| Database (RDS)             | instance rate × 730 hours × instance count + storage GB × storage rate                | `aws_config.instance_class`, `aws_config.allocated_storage`                   |
+| Storage (S3)               | GB × per-GB rate + request estimates                                                  | `aws_config.storage_gb` or source `gcp_config`                                |
+| Networking (ALB)           | fixed monthly + LCU estimate                                                          | From compute service count                                                    |
+| Networking (NAT)           | fixed monthly × count + GB processed × data rate                                      | From VPC design                                                               |
+| Security (Secrets Manager) | secrets_count × per-secret monthly rate + api_calls_10k × per-10K API rate            | `aws_config.secrets_count`, `aws_config.api_calls_10k` (or inferred defaults) |
+| Supporting                 | Per-unit rates × quantities (secrets, log GB, metrics)                                | Inferred from service count                                                   |
 
 Show calculation breakdown per service: rate × quantity = cost. Present all 3 tiers side-by-side.
 
@@ -222,7 +222,7 @@ After writing `estimation-infra.json`, present a concise summary to the user:
 
 1. **Pricing source and accuracy**: State whether prices came from cache or live API, and the accuracy range (±5-10% for infrastructure from cache/live, ±15-25% if cache is stale). Example: "Estimates based on cached AWS pricing (2026-03-07), accuracy ±5-10%."
 2. GCP baseline vs AWS projected (balanced tier) — one-line comparison
-3. Three-tier table: **Premium**, **Balanced**, **Optimized** with monthly totals. Under or beside each label, use the **short subtitles**: Premium — *Highest resilience / highest monthly estimate in this model*; Balanced — *Default scenario; compare GCP to this first*; Optimized — *Lower monthly estimate; reservations / Spot / storage trade-offs assumed*. Add a one-line **How to read**: three figures are **pricing scenarios** for the same architecture (high → mid → low); **not** three Terraform stacks. When Terraform is generated later, it aligns with **Balanced**.
+3. Three-tier table: **Premium**, **Balanced**, **Optimized** with monthly totals. Under or beside each label, use the **short subtitles**: Premium — _Highest resilience / highest monthly estimate in this model_; Balanced — _Default scenario; compare GCP to this first_; Optimized — _Lower monthly estimate; reservations / Spot / storage trade-offs assumed_. Add a one-line **How to read**: three figures are **pricing scenarios** for the same architecture (high → mid → low); **not** three Terraform stacks. When Terraform is generated later, it aligns with **Balanced**.
 4. Per-service cost breakdown (balanced tier, 1 line per service)
 5. **If billing data available**: Estimated GCP data transfer egress fees. **If billing data NOT available**: "Data transfer cost estimates require GCP billing data."
 6. Monthly and annual savings (or increase) vs GCP per tier

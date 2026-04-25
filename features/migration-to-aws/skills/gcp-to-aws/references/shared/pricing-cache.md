@@ -323,65 +323,65 @@ Serverless inference: $0.0000200 per second per GB memory.
 
 See `shared/ai-model-lifecycle.md` for lifecycle details. **Do not recommend Legacy models for new migrations.**
 
-| Model                            | Model ID                                 | Provider  | Input $/1M | Output $/1M | Context | Tier      | Status                    |
-| -------------------------------- | ---------------------------------------- | --------- | ---------- | ----------- | ------- | --------- | ------------------------- |
-| Claude Sonnet 4.6                | anthropic.claude-sonnet-4-6              | Anthropic | 3.00       | 15.00       | 200K    | flagship  | active                    |
-| Claude Sonnet 4.6 — Long Context | anthropic.claude-sonnet-4-6              | Anthropic | 3.00       | 15.00       | 200K+   | flagship  | active                    |
-| Claude Opus 4.6                  | anthropic.claude-opus-4-6-v1             | Anthropic | 5.00       | 25.00       | 200K    | premium   | active                    |
-| Claude Opus 4.6 — Long Context   | anthropic.claude-opus-4-6-v1             | Anthropic | 5.00       | 25.00       | 200K+   | premium   | active                    |
-| Claude Opus 4.5                  | —                                        | Anthropic | 5.00       | 25.00       | 200K    | premium   | active                    |
-| Claude Sonnet 4.5                | —                                        | Anthropic | 3.00       | 15.00       | 200K    | flagship  | active                    |
-| Claude Sonnet 4.5 — Long Context | —                                        | Anthropic | 6.00       | 22.50       | 200K+   | flagship  | active                    |
-| Claude Haiku 4.5                 | anthropic.claude-haiku-4-5-20251001-v1:0 | Anthropic | 1.00       | 5.00        | 200K    | fast      | active                    |
-| Llama 4 Maverick                 | meta.llama4-maverick-17b-instruct-v1:0   | Meta      | 0.24       | 0.97        | 1M      | mid       | active                    |
-| Llama 4 Scout                    | meta.llama4-scout-17b-instruct-v1:0      | Meta      | 0.17       | 0.66        | 10M     | efficient | active                    |
-| Llama 3.3 70B                    | meta.llama3-3-70b-instruct-v1:0          | Meta      | 0.72       | 0.72        | 128K    | mid       | active                    |
+| Model                            | Model ID                                 | Provider  | Input $/1M | Output $/1M | Context | Tier      | Status                     |
+| -------------------------------- | ---------------------------------------- | --------- | ---------- | ----------- | ------- | --------- | -------------------------- |
+| Claude Sonnet 4.6                | anthropic.claude-sonnet-4-6              | Anthropic | 3.00       | 15.00       | 200K    | flagship  | active                     |
+| Claude Sonnet 4.6 — Long Context | anthropic.claude-sonnet-4-6              | Anthropic | 3.00       | 15.00       | 200K+   | flagship  | active                     |
+| Claude Opus 4.6                  | anthropic.claude-opus-4-6-v1             | Anthropic | 5.00       | 25.00       | 200K    | premium   | active                     |
+| Claude Opus 4.6 — Long Context   | anthropic.claude-opus-4-6-v1             | Anthropic | 5.00       | 25.00       | 200K+   | premium   | active                     |
+| Claude Opus 4.5                  | —                                        | Anthropic | 5.00       | 25.00       | 200K    | premium   | active                     |
+| Claude Sonnet 4.5                | —                                        | Anthropic | 3.00       | 15.00       | 200K    | flagship  | active                     |
+| Claude Sonnet 4.5 — Long Context | —                                        | Anthropic | 6.00       | 22.50       | 200K+   | flagship  | active                     |
+| Claude Haiku 4.5                 | anthropic.claude-haiku-4-5-20251001-v1:0 | Anthropic | 1.00       | 5.00        | 200K    | fast      | active                     |
+| Llama 4 Maverick                 | meta.llama4-maverick-17b-instruct-v1:0   | Meta      | 0.24       | 0.97        | 1M      | mid       | active                     |
+| Llama 4 Scout                    | meta.llama4-scout-17b-instruct-v1:0      | Meta      | 0.17       | 0.66        | 10M     | efficient | active                     |
+| Llama 3.3 70B                    | meta.llama3-3-70b-instruct-v1:0          | Meta      | 0.72       | 0.72        | 128K    | mid       | active                     |
 | Llama 3.2 90B                    | meta.llama3-2-90b-instruct-v1:0          | Meta      | 0.72       | 0.72        | 128K    | mid       | excluded (EOL Jul 7, 2026) |
-| Nova 2 Lite                      | amazon.nova-2-lite-v1:0                  | Amazon    | 0.33       | 2.75        | 1M      | mid       | active                    |
-| Nova 2 Pro (Preview)             | amazon.nova-2-pro-v1:0                   | Amazon    | 1.375      | 11.00       | 1M      | flagship  | active                    |
-| Nova Pro                         | amazon.nova-pro-v1:0                     | Amazon    | 0.80       | 3.20        | 300K    | mid       | active                    |
-| Nova Pro (latency optimized)     | —                                        | Amazon    | 1.00       | 4.00        | 300K    | mid       | active                    |
-| Nova Lite                        | amazon.nova-lite-v1:0                    | Amazon    | 0.06       | 0.24        | 300K    | fast      | active                    |
-| Nova Micro                       | amazon.nova-micro-v1:0                   | Amazon    | 0.035      | 0.14        | 128K    | budget    | active                    |
-| Nova Premier                     | amazon.nova-premier-v1:0                 | Amazon    | 2.50       | 12.50       | 1M      | reasoning | legacy (EOL Sep 14, 2026) |
-| Mistral Large 3                  | mistral.mistral-large-3-675b-instruct    | Mistral   | 0.50       | 1.50        | 256K    | flagship  | active                    |
-| DeepSeek-R1                      | deepseek.r1-v1:0                         | DeepSeek  | 1.35       | 5.40        | 128K    | reasoning | active                    |
-| DeepSeek-V3.1                    | —                                        | DeepSeek  | 0.58       | 1.68        | —       | mid       | active                    |
-| gpt-oss-20b                      | openai.gpt-oss-20b-1:0                   | OpenAI    | 0.07       | 0.30        | 128K    | budget    | active                    |
-| gpt-oss-120b                     | openai.gpt-oss-120b-1:0                  | OpenAI    | 0.15       | 0.60        | 128K    | efficient | active                    |
-| Gemma 3 4B IT                    | google.gemma-3-4b-it                     | Google    | 0.04       | 0.08        | 128K    | budget    | active                    |
-| Gemma 3 12B IT                   | google.gemma-3-12b-it                    | Google    | 0.09       | 0.29        | 128K    | budget    | active                    |
-| Gemma 3 27B IT                   | google.gemma-3-27b-it                    | Google    | 0.23       | 0.38        | 128K    | efficient | active                    |
-| Jamba 1.5 Large                  | —                                        | AI21 Labs | 2.00       | 8.00        | —       | mid       | active                    |
-| Jamba 1.5 Mini                   | —                                        | AI21 Labs | 0.20       | 0.40        | —       | efficient | active                    |
-| Jurassic-2 Mid                   | —                                        | AI21 Labs | 12.50      | 12.50       | —       | legacy    | legacy                    |
-| Jurassic-2 Ultra                 | —                                        | AI21 Labs | 18.80      | 18.80       | —       | legacy    | legacy                    |
-| Jamba-Instruct                   | —                                        | AI21 Labs | 0.50       | 0.70        | —       | mid       | active                    |
+| Nova 2 Lite                      | amazon.nova-2-lite-v1:0                  | Amazon    | 0.33       | 2.75        | 1M      | mid       | active                     |
+| Nova 2 Pro (Preview)             | amazon.nova-2-pro-v1:0                   | Amazon    | 1.375      | 11.00       | 1M      | flagship  | active                     |
+| Nova Pro                         | amazon.nova-pro-v1:0                     | Amazon    | 0.80       | 3.20        | 300K    | mid       | active                     |
+| Nova Pro (latency optimized)     | —                                        | Amazon    | 1.00       | 4.00        | 300K    | mid       | active                     |
+| Nova Lite                        | amazon.nova-lite-v1:0                    | Amazon    | 0.06       | 0.24        | 300K    | fast      | active                     |
+| Nova Micro                       | amazon.nova-micro-v1:0                   | Amazon    | 0.035      | 0.14        | 128K    | budget    | active                     |
+| Nova Premier                     | amazon.nova-premier-v1:0                 | Amazon    | 2.50       | 12.50       | 1M      | reasoning | legacy (EOL Sep 14, 2026)  |
+| Mistral Large 3                  | mistral.mistral-large-3-675b-instruct    | Mistral   | 0.50       | 1.50        | 256K    | flagship  | active                     |
+| DeepSeek-R1                      | deepseek.r1-v1:0                         | DeepSeek  | 1.35       | 5.40        | 128K    | reasoning | active                     |
+| DeepSeek-V3.1                    | —                                        | DeepSeek  | 0.58       | 1.68        | —       | mid       | active                     |
+| gpt-oss-20b                      | openai.gpt-oss-20b-1:0                   | OpenAI    | 0.07       | 0.30        | 128K    | budget    | active                     |
+| gpt-oss-120b                     | openai.gpt-oss-120b-1:0                  | OpenAI    | 0.15       | 0.60        | 128K    | efficient | active                     |
+| Gemma 3 4B IT                    | google.gemma-3-4b-it                     | Google    | 0.04       | 0.08        | 128K    | budget    | active                     |
+| Gemma 3 12B IT                   | google.gemma-3-12b-it                    | Google    | 0.09       | 0.29        | 128K    | budget    | active                     |
+| Gemma 3 27B IT                   | google.gemma-3-27b-it                    | Google    | 0.23       | 0.38        | 128K    | efficient | active                     |
+| Jamba 1.5 Large                  | —                                        | AI21 Labs | 2.00       | 8.00        | —       | mid       | active                     |
+| Jamba 1.5 Mini                   | —                                        | AI21 Labs | 0.20       | 0.40        | —       | efficient | active                     |
+| Jurassic-2 Mid                   | —                                        | AI21 Labs | 12.50      | 12.50       | —       | legacy    | legacy                     |
+| Jurassic-2 Ultra                 | —                                        | AI21 Labs | 18.80      | 18.80       | —       | legacy    | legacy                     |
+| Jamba-Instruct                   | —                                        | AI21 Labs | 0.50       | 0.70        | —       | mid       | active                     |
 
 ### Anthropic Claude — batch & prompt cache (Standard, US East N. Virginia)
 
 Per 1M tokens unless noted. See [Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) for full regional and tier tables.
 
 | Model                    | Batch in | Batch out | 5m cache write | 1h cache write | Cache read |
-| ------------------------ | -------- | --------- | ------------ | -------------- | ---------- |
-| Claude Sonnet 4.6 (+ LC) | 1.50     | 7.50      | 3.75         | 6.00           | 0.30       |
-| Claude Opus 4.6 (+ LC)   | 2.50     | 12.50     | 6.25         | 10.00          | 0.50       |
-| Claude Opus 4.5          | 2.50     | 12.50     | 6.25         | 10.00          | 0.50       |
-| Claude Haiku 4.5         | 0.50     | 2.50      | 1.25         | 2.00           | 0.10       |
-| Claude Sonnet 4.5        | 1.50     | 7.50      | 3.75         | 6.00           | 0.30       |
-| Claude Sonnet 4.5 — LC   | 3.00     | 11.25     | 7.50         | 12.00          | 0.60       |
+| ------------------------ | -------- | --------- | -------------- | -------------- | ---------- |
+| Claude Sonnet 4.6 (+ LC) | 1.50     | 7.50      | 3.75           | 6.00           | 0.30       |
+| Claude Opus 4.6 (+ LC)   | 2.50     | 12.50     | 6.25           | 10.00          | 0.50       |
+| Claude Opus 4.5          | 2.50     | 12.50     | 6.25           | 10.00          | 0.50       |
+| Claude Haiku 4.5         | 0.50     | 2.50      | 1.25           | 2.00           | 0.10       |
+| Claude Sonnet 4.5        | 1.50     | 7.50      | 3.75           | 6.00           | 0.30       |
+| Claude Sonnet 4.5 — LC   | 3.00     | 11.25     | 7.50           | 12.00          | 0.60       |
 
 ### AI21 Labs
 
 **On-demand**, **US East (N. Virginia)** per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/). Prices per 1M input / output tokens.
 
-| Model             | Input $/1M | Output $/1M |
-| ----------------- | ---------- | ----------- |
-| Jamba 1.5 Large   | 2.00       | 8.00        |
-| Jamba 1.5 Mini    | 0.20       | 0.40        |
-| Jurassic-2 Mid    | 12.50      | 12.50       |
-| Jurassic-2 Ultra  | 18.80      | 18.80       |
-| Jamba-Instruct    | 0.50       | 0.70        |
+| Model            | Input $/1M | Output $/1M |
+| ---------------- | ---------- | ----------- |
+| Jamba 1.5 Large  | 2.00       | 8.00        |
+| Jamba 1.5 Mini   | 0.20       | 0.40        |
+| Jurassic-2 Mid   | 12.50      | 12.50       |
+| Jurassic-2 Ultra | 18.80      | 18.80       |
+| Jamba-Instruct   | 0.50       | 0.70        |
 
 _Quick-reference rows use **—** for **model ID** and **context**; resolve in the Bedrock console or AWS model documentation._
 
@@ -399,16 +399,16 @@ Per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) (Mistral A
 
 Prices per 1M input / output tokens.
 
-| Model                 | Input $/1M | Output $/1M |
-| --------------------- | ---------- | ----------- |
-| Devstral 2 135B       | 0.40       | 2.00        |
-| Magistral Small 1.2   | 0.50       | 1.50        |
-| Voxtral Mini 1.0      | 0.04       | 0.04        |
-| Voxtral Small 1.0     | 0.10       | 0.30        |
-| Ministral 3B 3.0      | 0.10       | 0.10        |
-| Ministral 8B 3.0      | 0.15       | 0.15        |
-| Ministral 14B 3.0     | 0.20       | 0.20        |
-| Mistral Large 3       | 0.50       | 1.50        |
+| Model               | Input $/1M | Output $/1M |
+| ------------------- | ---------- | ----------- |
+| Devstral 2 135B     | 0.40       | 2.00        |
+| Magistral Small 1.2 | 0.50       | 1.50        |
+| Voxtral Mini 1.0    | 0.04       | 0.04        |
+| Voxtral Small 1.0   | 0.10       | 0.30        |
+| Ministral 3B 3.0    | 0.10       | 0.10        |
+| Ministral 8B 3.0    | 0.15       | 0.15        |
+| Ministral 14B 3.0   | 0.20       | 0.20        |
+| Mistral Large 3     | 0.50       | 1.50        |
 
 _Rates differ in **Asia Pacific (Mumbai)**, **São Paulo**, **Tokyo**, **Europe (Ireland/Milan/London)**, **Sydney**, **Jakarta**, **Frankfurt**, **Stockholm** (e.g. Mistral Large 3 Mumbai **$0.59 / $1.76**). **Devstral 2 135B** appears in Jakarta / Frankfurt / Stockholm at **$0.48 / $2.40** on the same page._
 
@@ -418,10 +418,10 @@ Per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) (DeepSeek)
 
 #### US East (Ohio) — Standard tier
 
-| Model        | Input $/1M | Output $/1M |
-| ------------ | ---------- | ----------- |
-| DeepSeek-R1  | 1.35       | 5.40        |
-| DeepSeek-V3.1 | 0.58      | 1.68        |
+| Model         | Input $/1M | Output $/1M |
+| ------------- | ---------- | ----------- |
+| DeepSeek-R1   | 1.35       | 5.40        |
+| DeepSeek-V3.1 | 0.58       | 1.68        |
 
 #### US East (N. Virginia), US East (Ohio), US West (Oregon)
 
@@ -438,12 +438,12 @@ Per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) (DeepSeek)
 
 **Standard tier** per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) (OpenAI).
 
-| Model        | Region              | Input $/1M | Output $/1M |
-| ------------ | ------------------- | ---------- | ----------- |
-| gpt-oss-20b  | US East (Ohio)      | 0.07       | 0.30        |
-| gpt-oss-120b | US East (Ohio)      | 0.15       | 0.60        |
-| gpt-oss-20b  | Asia Pacific (Sydney) | 0.0721   | 0.3090      |
-| gpt-oss-120b | Asia Pacific (Sydney) | 0.1545   | 0.6180      |
+| Model        | Region                | Input $/1M | Output $/1M |
+| ------------ | --------------------- | ---------- | ----------- |
+| gpt-oss-20b  | US East (Ohio)        | 0.07       | 0.30        |
+| gpt-oss-120b | US East (Ohio)        | 0.15       | 0.60        |
+| gpt-oss-20b  | Asia Pacific (Sydney) | 0.0721     | 0.3090      |
+| gpt-oss-120b | Asia Pacific (Sydney) | 0.1545     | 0.6180      |
 
 _The Bedrock page also lists **Flex**, **Priority**, **Batch**, **GPT OSS Safeguard**, and **model customization** pricing for other regions._
 
@@ -453,27 +453,27 @@ Per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) (Meta). Pr
 
 #### Llama 4 — US East (Ohio), on-demand and batch
 
-| Model                 | On-demand in | On-demand out | Batch in | Batch out |
-| --------------------- | ------------ | ------------- | -------- | --------- |
-| Llama 4 Maverick 17B  | 0.24         | 0.97          | 0.12     | 0.485     |
-| Llama 4 Scout 17B     | 0.17         | 0.66          | 0.085    | 0.33      |
+| Model                | On-demand in | On-demand out | Batch in | Batch out |
+| -------------------- | ------------ | ------------- | -------- | --------- |
+| Llama 4 Maverick 17B | 0.24         | 0.97          | 0.12     | 0.485     |
+| Llama 4 Scout 17B    | 0.17         | 0.66          | 0.085    | 0.33      |
 
 #### Llama 3.3 — US East (Ohio), on-demand and batch
 
-| Model                   | On-demand in | On-demand out | Batch in | Batch out |
-| ----------------------- | ------------ | ------------- | -------- | --------- |
-| Llama 3.3 Instruct (70B) | 0.72        | 0.72          | 0.36     | 0.36      |
+| Model                    | On-demand in | On-demand out | Batch in | Batch out |
+| ------------------------ | ------------ | ------------- | -------- | --------- |
+| Llama 3.3 Instruct (70B) | 0.72         | 0.72          | 0.36     | 0.36      |
 
 #### Llama 3.2 — US East (Ohio), on-demand and batch
 
 > **Lifecycle note:** All Llama 3.2 Instruct models are in the **exclusion zone** (EOL Jul 7, 2026, ≤90 days). Do not select for new migrations. Use **Llama 4 Scout / Maverick** instead. See `shared/ai-model-lifecycle.md`.
 
-| Model                     | On-demand in | On-demand out | Batch in | Batch out |
-| ------------------------- | ------------ | ------------- | -------- | --------- |
-| Llama 3.2 Instruct (1B)   | 0.10         | 0.10          | N/A      | N/A       |
-| Llama 3.2 Instruct (3B)   | 0.15         | 0.15          | N/A      | N/A       |
-| Llama 3.2 Instruct (11B)  | 0.16         | 0.16          | N/A      | N/A       |
-| Llama 3.2 Instruct (90B)  | 0.72         | 0.72          | N/A      | N/A       |
+| Model                    | On-demand in | On-demand out | Batch in | Batch out |
+| ------------------------ | ------------ | ------------- | -------- | --------- |
+| Llama 3.2 Instruct (1B)  | 0.10         | 0.10          | N/A      | N/A       |
+| Llama 3.2 Instruct (3B)  | 0.15         | 0.15          | N/A      | N/A       |
+| Llama 3.2 Instruct (11B) | 0.16         | 0.16          | N/A      | N/A       |
+| Llama 3.2 Instruct (90B) | 0.72         | 0.72          | N/A      | N/A       |
 
 #### Llama 3.2 — customization & provisioned throughput (US West Oregon)
 
@@ -504,7 +504,7 @@ Per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) (Meta). Pr
 | Llama 3.1 Instruct (8B)                            | 0.22         | 0.22          | 0.11     | 0.11      |
 | Llama 3.1 Instruct (70B)                           | 0.72         | 0.72          | 0.36     | 0.36      |
 | Llama 3.1 Instruct (405B)                          | 2.40         | 2.40          | 1.20     | 1.20      |
-| Llama 3.1 Instruct (70B) (latency optimized inf.)   | 0.90         | 0.90          | N/A      | N/A       |
+| Llama 3.1 Instruct (70B) (latency optimized inf.)  | 0.90         | 0.90          | N/A      | N/A       |
 | Llama 3.1 Instruct (405B) (latency optimized inf.) | 3.00         | 3.00          | N/A      | N/A       |
 
 #### Llama 3.1 — customization & provisioned throughput (US West Oregon)
@@ -521,10 +521,10 @@ Per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) (Meta). Pr
 
 #### Llama 3 — US East (N. Virginia), on-demand
 
-| Model                   | Input $/1M | Output $/1M |
-| ----------------------- | ---------- | ----------- |
-| Llama 3 Instruct (8B)   | 0.30       | 0.60        |
-| Llama 3 Instruct (70B)  | 2.65       | 3.50        |
+| Model                  | Input $/1M | Output $/1M |
+| ---------------------- | ---------- | ----------- |
+| Llama 3 Instruct (8B)  | 0.30       | 0.60        |
+| Llama 3 Instruct (70B) | 2.65       | 3.50        |
 
 #### Llama 2 — US East (N. Virginia) and US West (Oregon), on-demand
 
@@ -568,8 +568,8 @@ Per 1M input / output tokens unless noted.
 
 Per 1M tokens. **Nova 2 Omni** and **Nova 2 Pro** are **Preview**. Image column is **output** image pricing where listed.
 
-| Model                       | Text in | Image in | Video in | Audio in | Text out | Image out |
-| --------------------------- | ------- | -------- | -------- | -------- | -------- | --------- |
+| Model                        | Text in | Image in | Video in | Audio in | Text out | Image out |
+| ---------------------------- | ------- | -------- | -------- | -------- | -------- | --------- |
 | Amazon Nova 2 Omni (Preview) | 0.30    | 0.30     | 0.30     | 1.10     | 2.80     | 44.00     |
 | Amazon Nova 2 Pro (Preview)  | 1.375   | 1.375    | 1.375    | 1.375    | 11.00    | N/A       |
 
@@ -577,7 +577,7 @@ Per 1M tokens. **Nova 2 Omni** and **Nova 2 Pro** are **Preview**. Image column 
 
 #### US East (Ohio) — Nova 2 Lite by tier (text + image + video)
 
-**Global cross-region inference**
+##### Global cross-region inference
 
 | Tier     | Input $/1M | Output $/1M |
 | -------- | ---------- | ----------- |
@@ -586,7 +586,7 @@ Per 1M tokens. **Nova 2 Omni** and **Nova 2 Pro** are **Preview**. Image column 
 | Flex     | 0.15       | 1.25        |
 | Batch    | 0.15       | 1.25        |
 
-**Geo cross-region inference and in-region**
+##### Geo cross-region inference and in-region
 
 | Tier     | Input $/1M | Output $/1M |
 | -------- | ---------- | ----------- |
@@ -607,20 +607,20 @@ Per 1M tokens. **Nova 2 Omni** and **Nova 2 Pro** are **Preview**. Image column 
 
 #### On-demand inference (listed rates, cache read column)
 
-| Model            | Input $/1M | Cache read $/1M | Output $/1M |
-| ---------------- | ---------- | ----------------- | ----------- |
-| Amazon Nova 2.0 Lite | N/A    | N/A               | N/A         |
-| Amazon Nova Micro | 0.035     | N/A               | 0.14        |
-| Amazon Nova Lite  | 0.06      | N/A               | 0.24        |
-| Amazon Nova Pro   | 0.80      | N/A               | 3.20        |
+| Model                | Input $/1M | Cache read $/1M | Output $/1M |
+| -------------------- | ---------- | --------------- | ----------- |
+| Amazon Nova 2.0 Lite | N/A        | N/A             | N/A         |
+| Amazon Nova Micro    | 0.035      | N/A             | 0.14        |
+| Amazon Nova Lite     | 0.06       | N/A             | 0.24        |
+| Amazon Nova Pro      | 0.80       | N/A             | 3.20        |
 
 #### Built-in tools — Web grounding (US East Ohio)
 
-| Model                         | Price              |
-| ----------------------------- | ------------------ |
-| Amazon Nova 2 Omni (Preview)  | $30.00 per 1K requests |
-| Amazon Nova 2 Pro (Preview)   | $30.00 per 1K requests |
-| Amazon Nova Premier           | $30.00 per 1K requests |
+| Model                        | Price                  |
+| ---------------------------- | ---------------------- |
+| Amazon Nova 2 Omni (Preview) | $30.00 per 1K requests |
+| Amazon Nova 2 Pro (Preview)  | $30.00 per 1K requests |
+| Amazon Nova Premier          | $30.00 per 1K requests |
 
 #### Creative — US East (N. Virginia)
 
@@ -638,19 +638,19 @@ Per 1M tokens. **Nova 2 Omni** and **Nova 2 Pro** are **Preview**. Image column 
 
 Per 1M tokens.
 
-| Model                 | Modality | Input $/1M | Output $/1M | Status                    |
-| --------------------- | -------- | ---------- | ----------- | ------------------------- |
-| Amazon Nova Sonic     | Speech   | 3.40       | 13.60       | legacy (EOL Sep 14, 2026) |
-| Amazon Nova Sonic     | Text     | 0.06       | 0.24        | legacy (EOL Sep 14, 2026) |
-| Amazon Nova 2 Sonic   | Speech   | 3.00       | 12.00       | active                    |
-| Amazon Nova 2 Sonic   | Text     | 0.33       | 2.75        | active                    |
+| Model               | Modality | Input $/1M | Output $/1M | Status                    |
+| ------------------- | -------- | ---------- | ----------- | ------------------------- |
+| Amazon Nova Sonic   | Speech   | 3.40       | 13.60       | legacy (EOL Sep 14, 2026) |
+| Amazon Nova Sonic   | Text     | 0.06       | 0.24        | legacy (EOL Sep 14, 2026) |
+| Amazon Nova 2 Sonic | Speech   | 3.00       | 12.00       | active                    |
+| Amazon Nova 2 Sonic | Text     | 0.33       | 2.75        | active                    |
 
 #### Multimodal embeddings — US East (N. Virginia)
 
-| Offering                                      | Text $/1M | Std image / doc image / video sec / audio sec |
-| --------------------------------------------- | --------- | ----------------------------------------------- |
+| Offering                                      | Text $/1M | Std image / doc image / video sec / audio sec    |
+| --------------------------------------------- | --------- | ------------------------------------------------ |
 | Amazon Nova Multimodal Embeddings (On-demand) | 0.135     | $0.00006 / $0.0006 / $0.0007 / $0.00014 per unit |
-| Amazon Nova Multimodal Embeddings (Batch)     | 0.0675    | $0.00003 / $0.00048 / $0.00056 / $0.000112     |
+| Amazon Nova Multimodal Embeddings (Batch)     | 0.0675    | $0.00003 / $0.00048 / $0.00056 / $0.000112       |
 
 _On-demand inference for **custom Nova** models matches **base Nova** inference pricing per AWS._
 
@@ -676,19 +676,19 @@ Prices per 1M tokens.
 
 Prices per 1M tokens. GPT-5.4 and GPT-5.4 Pro use **breakpoint pricing** at 272K input tokens: rates below are for <272K context; above 272K, input is 2x and output is 1.5x.
 
-| Model         | Input $/1M | Output $/1M | Context | Tier      |
-| ------------- | ---------- | ----------- | ------- | --------- |
-| GPT-5.4       | 2.50       | 15.00       | 1.05M   | flagship  |
-| GPT-5.4 Mini  | 0.75       | 4.50        | —       | fast      |
-| GPT-5.4 Nano  | 0.20       | 1.25        | —       | budget    |
-| GPT-5.4 Pro   | 30.00      | 180.00      | 1.05M   | premium   |
-| GPT-5.2       | 1.75       | 14.00       | 200K    | flagship  |
-| GPT-5.1       | 1.25       | 10.00       | 200K    | flagship  |
-| GPT-5 Mini    | 0.25       | 2.00        | 200K    | fast      |
-| GPT-5 Nano    | 0.05       | 0.40        | 128K    | budget    |
-| GPT-4.1       | 2.00       | 8.00        | 1M      | flagship  |
-| GPT-4.1 Mini  | 0.40       | 1.60        | 1M      | fast      |
-| GPT-4.1 Nano  | 0.10       | 0.40        | 1M      | budget    |
-| GPT-4o        | 2.50       | 10.00       | 128K    | flagship  |
-| o3            | 2.00       | 8.00        | 200K    | reasoning |
-| o4-mini       | 1.10       | 4.40        | 200K    | reasoning |
+| Model        | Input $/1M | Output $/1M | Context | Tier      |
+| ------------ | ---------- | ----------- | ------- | --------- |
+| GPT-5.4      | 2.50       | 15.00       | 1.05M   | flagship  |
+| GPT-5.4 Mini | 0.75       | 4.50        | —       | fast      |
+| GPT-5.4 Nano | 0.20       | 1.25        | —       | budget    |
+| GPT-5.4 Pro  | 30.00      | 180.00      | 1.05M   | premium   |
+| GPT-5.2      | 1.75       | 14.00       | 200K    | flagship  |
+| GPT-5.1      | 1.25       | 10.00       | 200K    | flagship  |
+| GPT-5 Mini   | 0.25       | 2.00        | 200K    | fast      |
+| GPT-5 Nano   | 0.05       | 0.40        | 128K    | budget    |
+| GPT-4.1      | 2.00       | 8.00        | 1M      | flagship  |
+| GPT-4.1 Mini | 0.40       | 1.60        | 1M      | fast      |
+| GPT-4.1 Nano | 0.10       | 0.40        | 1M      | budget    |
+| GPT-4o       | 2.50       | 10.00       | 128K    | flagship  |
+| o3           | 2.00       | 8.00        | 200K    | reasoning |
+| o4-mini      | 1.10       | 4.40        | 200K    | reasoning |

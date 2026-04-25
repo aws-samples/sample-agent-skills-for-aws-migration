@@ -191,9 +191,9 @@ Table from estimation artifacts with: Current GCP Monthly, Projected AWS Monthly
 **How to read cost tiers** (required when infra estimates include Premium / Balanced / Optimized):
 
 - The three AWS monthly totals are **scenarios** for the **same** architecture, ordered **high → mid → low** estimate.
-- **Premium** — *Highest resilience / highest monthly estimate in this model*
-- **Balanced** — *Default scenario; compare GCP to this first*
-- **Optimized** — *Lower monthly estimate; reservations / Spot / storage trade-offs assumed*
+- **Premium** — _Highest resilience / highest monthly estimate in this model_
+- **Balanced** — _Default scenario; compare GCP to this first_
+- **Optimized** — _Lower monthly estimate; reservations / Spot / storage trade-offs assumed_
 - **Terraform:** The `terraform/` directory (when present) implements **one** stack, aligned with the **Balanced** scenario. **Premium** and **Optimized** are not separate generated folders — see `terraform/README.md` and the `migration_summary` output in `outputs.tf`.
 
 Include a compact three-tier row or table if the executive report does, matching figures from `estimation-infra.json`.

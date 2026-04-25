@@ -72,10 +72,10 @@ The executive summary is the first thing visible when opening the report. Design
 - Percent change (savings or increase)
 - **How to read cost tiers (callout box — required when infra estimation with three tiers exists):** The three AWS monthly figures are **pricing scenarios** for the **same** mapped architecture (same services in `aws-design.json`), not three different generated Terraform stacks. **Order = highest → middle → lowest** monthly estimate in this model. Use **Balanced** as the **primary** row vs GCP; **Premium** and **Optimized** are **bounds** (higher HA / newer skew vs cost-optimization skew). When `terraform/` is present, it implements **one** infrastructure baseline aligned with the **Balanced** cost scenario (see `terraform/README.md` and `migration_summary` output).
 - If 3 tiers available: show **Premium**, **Balanced**, and **Optimized** with **short subtitles** (second line or subtext under each label):
-  - **Premium** — *Highest resilience / highest monthly estimate in this model*
-  - **Balanced** — *Default scenario; compare GCP to this row first*
-  - **Optimized** — *Lower monthly estimate; reservations, Spot, or storage trade-offs assumed*
-- **Footnote (required):** *Only one Terraform configuration is generated (Balanced-aligned baseline). Premium and Optimized are what-if cost models in `estimation-infra.json` — adjust IaC yourself if you want those postures in production.*
+  - **Premium** — _Highest resilience / highest monthly estimate in this model_
+  - **Balanced** — _Default scenario; compare GCP to this row first_
+  - **Optimized** — _Lower monthly estimate; reservations, Spot, or storage trade-offs assumed_
+- **Footnote (required):** _Only one Terraform configuration is generated (Balanced-aligned baseline). Premium and Optimized are what-if cost models in `estimation-infra.json` — adjust IaC yourself if you want those postures in production._
 - **Only include "GCP data transfer egress (est.)" when the infra estimation artifact has `migration_cost_considerations.billing_data_available === true`.** Never present human one-time migration costs. If `false` or only non-infra estimates exist, footnote: "GCP data transfer egress estimates require billing data and the infra estimate path."
 - Source: estimation artifact
 
@@ -116,7 +116,7 @@ Source: estimation artifact projected_costs.breakdown
 
 **Three-tier comparison table** with columns: **Tier** (name + subtitle as in Section 3), Monthly Cost, vs GCP Monthly, Annual Difference.
 
-Repeat the **How to read cost tiers** callout from Section 3 here or include a one-line pointer: *See executive summary — three tiers are scenario $ only; generated Terraform matches **Balanced** baseline.*
+Repeat the **How to read cost tiers** callout from Section 3 here or include a one-line pointer: _See executive summary — three tiers are scenario $ only; generated Terraform matches **Balanced** baseline._
 
 Source: estimation artifact cost_comparison
 

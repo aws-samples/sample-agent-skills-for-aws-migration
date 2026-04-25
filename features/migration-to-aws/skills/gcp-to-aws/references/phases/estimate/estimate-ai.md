@@ -20,7 +20,7 @@ For typical migrations (Claude, Llama, Nova, Mistral, DeepSeek, Gemma, OpenAI gp
 **Model lifecycle:** When building the model comparison table, check `references/shared/ai-model-lifecycle.md` and apply the 90-day exclusion rule:
 
 - **Excluded** (≤90 days to EOL): omit entirely from `model_comparison`, `recommended_model`, and `backup_model`.
-- **Legacy** (>90 days to EOL): include in `model_comparison` with ` (Legacy — EOL YYYY-MM-DD)` annotation. Do not select as `recommended_model` unless no Active alternative exists.
+- **Legacy** (>90 days to EOL): include in `model_comparison` with `(Legacy — EOL YYYY-MM-DD)` annotation. Do not select as `recommended_model` unless no Active alternative exists.
 - **Active**: no restrictions.
 
 ## Prerequisites
@@ -140,23 +140,23 @@ Write `estimation-ai.json` to `$MIGRATION_DIR/`.
 
 **Schema — top-level fields:**
 
-| Field                           | Type   | Description                                                                                                         |
-| ------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| `phase`                         | string | `"estimate"`                                                                                                        |
-| `timestamp`                     | string | ISO 8601                                                                                                            |
-| `pricing_source`                | string | `"cached"` or `"live"`                                                                                              |
-| `accuracy_confidence`           | string | `"±5-10%"` or `"±15-25%"`                                                                                           |
-| `current_costs`                 | object | `source`, `gcp_monthly_ai_spend`, `services[]`                                                                      |
-| `token_volume`                  | object | `source`, `monthly_input_tokens`, `monthly_output_tokens`, ratio                                                    |
-| `model_comparison`              | array  | All viable models: `model`, `monthly_cost`, `vs_current`, `quality`, `capabilities_match`, `missing_capabilities[]` |
-| `recommended_model`             | object | `model`, `monthly_cost`, `breakdown` (input/output/embeddings), `rationale`                                         |
-| `backup_model`                  | object | `model`, `monthly_cost`, `rationale`                                                                                |
-| `embeddings`                    | object | `model`, `monthly_cost`, `monthly_tokens`, `note` (if applicable)                                                   |
-| `cost_comparison`               | object | `current_gcp_monthly`, `projected_bedrock_monthly`, `monthly_difference`, `annual_difference`, `percent_change`     |
+| Field                           | Type   | Description                                                                                                                     |
+| ------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `phase`                         | string | `"estimate"`                                                                                                                    |
+| `timestamp`                     | string | ISO 8601                                                                                                                        |
+| `pricing_source`                | string | `"cached"` or `"live"`                                                                                                          |
+| `accuracy_confidence`           | string | `"±5-10%"` or `"±15-25%"`                                                                                                       |
+| `current_costs`                 | object | `source`, `gcp_monthly_ai_spend`, `services[]`                                                                                  |
+| `token_volume`                  | object | `source`, `monthly_input_tokens`, `monthly_output_tokens`, ratio                                                                |
+| `model_comparison`              | array  | All viable models: `model`, `monthly_cost`, `vs_current`, `quality`, `capabilities_match`, `missing_capabilities[]`             |
+| `recommended_model`             | object | `model`, `monthly_cost`, `breakdown` (input/output/embeddings), `rationale`                                                     |
+| `backup_model`                  | object | `model`, `monthly_cost`, `rationale`                                                                                            |
+| `embeddings`                    | object | `model`, `monthly_cost`, `monthly_tokens`, `note` (if applicable)                                                               |
+| `cost_comparison`               | object | `current_gcp_monthly`, `projected_bedrock_monthly`, `monthly_difference`, `annual_difference`, `percent_change`                 |
 | `migration_cost_considerations` | object | `categories[]` (always `[]`), `complexity_factors[]` (technical integration only), `note` (must state human/pro costs excluded) |
-| `roi_analysis`                  | object | `monthly_cost_delta`, `annual_cost_delta`, `justification`, `non_cost_benefits[]`                                   |
-| `optimization_opportunities`    | array  | `opportunity`, `potential_savings_monthly`, `implementation_effort`, `description`                                  |
-| `optimized_projection`          | object | `monthly_with_optimizations`, `vs_current`, `note`                                                                  |
+| `roi_analysis`                  | object | `monthly_cost_delta`, `annual_cost_delta`, `justification`, `non_cost_benefits[]`                                               |
+| `optimization_opportunities`    | array  | `opportunity`, `potential_savings_monthly`, `implementation_effort`, `description`                                              |
+| `optimized_projection`          | object | `monthly_with_optimizations`, `vs_current`, `note`                                                                              |
 
 All cost values are numbers, not strings. Output must be valid JSON.
 
