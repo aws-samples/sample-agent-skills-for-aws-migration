@@ -39,7 +39,7 @@ Interpret → `ai_framework` array. Default: auto-detect, fallback `["direct"]`.
 
 | Answer   | Model Impact                                          |
 | -------- | ----------------------------------------------------- |
-| Quality  | Claude Sonnet 4.6 primary; Opus 4.6 for hardest tasks |
+| Quality  | Claude Sonnet 4.6 primary; Opus 4.7 / 4.6 for hardest tasks |
 | Speed    | Claude Haiku 4.5; also Nova Micro/Lite                |
 | Cost     | Claude Haiku 4.5 or Nova Micro                        |
 | Special  | Deferred to Q10                                       |
@@ -72,7 +72,7 @@ Interpret → `cross_cloud`. Default: B → `"latency-acceptable"`.
 
 Establishes baseline Bedrock recommendation. Override hierarchy: Q10 special features > Q2 priority > Q7/Q8 volume/latency > Q5 baseline.
 
-> A) Gemini Flash | B) Gemini Pro | C) GPT-3.5 Turbo | D) GPT-4/4 Turbo | E) GPT-4o | F) GPT-5.4/Mini/Nano | G) GPT-5/5.x (older) | H) o-series | I) Other/Multiple | J) Don't know
+> A) Gemini Flash | B) Gemini Pro | C) GPT-3.5 Turbo | D) GPT-4/4 Turbo | E) GPT-4o | F) GPT-5.4/Mini/Nano | G) GPT-5/5.x (older) | H) GPT-5.5/Pro | I) o-series | J) Other/Multiple | K) Don't know
 
 | Source         | Baseline Recommendation           | Pricing Context                    |
 | -------------- | --------------------------------- | ---------------------------------- |
@@ -86,10 +86,12 @@ Establishes baseline Bedrock recommendation. Override hierarchy: Q10 special fea
 | GPT-5.4 Nano   | Nova Micro ($0.035/$0.14)         | 87% cheaper on Bedrock             |
 | GPT-5.4 Pro    | Nova 2 Pro ($1.38/$11)            | 94% cheaper on Bedrock             |
 | GPT-5/5.x      | Claude Sonnet 4.6 ($3/$15)        | Savings story is quality, not cost |
-| GPT-5 flagship | Claude Opus 4.6 ($5/$25)          | Cheaper than GPT-5 Pro ($15/$120)  |
+| GPT-5 flagship | Claude Opus 4.7 / 4.6 ($5/$25)   | Cheaper than GPT-5 Pro ($15/$120)  |
+| GPT-5.5        | Claude Opus 4.7 ($5/$25)          | Bedrock 17% cheaper on output      |
+| GPT-5.5 Pro    | Nova 2 Pro ($1.38/$11)            | 95% cheaper on Bedrock             |
 | o-series       | Sonnet 4.6 with extended thinking | o1 $15/$60 → significant savings   |
 
-Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → Sonnet; GPT-4o + Q10=speech → Nova 2 Sonic.
+Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → Sonnet; GPT-4o + Q10=speech → Nova 2 Sonic; GPT-5.5 + Q2=cost → Sonnet 4.6.
 
 Interpret → `ai_model_baseline`. Default: auto-detect, fallback Q2 priority-based.
 
@@ -142,7 +144,7 @@ Present with concrete examples: Simple = classify/extract/summarize; Moderate = 
 | -------- | ------------------------------------------------------------------- |
 | Simple   | Haiku/Nova Micro sufficient; significant cost savings               |
 | Moderate | Sonnet 4.6 recommended; Haiku may suffice with prompt engineering   |
-| Complex  | Sonnet 4.6 required; extended thinking considered; Opus for hardest |
+| Complex  | Sonnet 4.6 required; extended thinking considered; Opus 4.7 / 4.6 for hardest |
 
 Interpret → `ai_complexity`. Default: B → `"moderate"`.
 
