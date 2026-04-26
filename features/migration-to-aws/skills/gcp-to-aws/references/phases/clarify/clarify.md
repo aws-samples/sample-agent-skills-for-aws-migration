@@ -221,6 +221,8 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 | OpenAI Agents SDK            | Q14 includes E                               | Highest AI effort; Bedrock Agents; 2–4 weeks                                                   |
 | Multi-agent + MCP            | Q14 = D + F                                  | Bedrock Agents to unify orchestration + MCP                                                    |
 | Voice platform AI            | Q14 includes G                               | Check native Bedrock support; Nova 2 Sonic if needed                                           |
+| GPT-5.5 migration            | Q19 = GPT-5.5                                | Claude Opus 4.6 — Bedrock 17% cheaper on output; or Sonnet 4.6 for 53% savings                |
+| GPT-5.5 Pro migration        | Q19 = GPT-5.5 Pro                            | Nova 2 Pro — 95% cheaper on Bedrock                                                            |
 | GPT-5.4 migration            | Q19 = GPT-5.4                                | Claude Sonnet 4.6 — near price parity; AWS consolidation                                       |
 | GPT-5.4 Mini/Nano migration  | Q19 = GPT-5.4 Mini or Nano                   | Nova Lite/Micro — 87-94% cheaper on Bedrock                                                    |
 | GPT-4 Turbo migration        | Q19 = GPT-4 Turbo                            | Claude Sonnet 4.6 — 70% cheaper on input                                                       |

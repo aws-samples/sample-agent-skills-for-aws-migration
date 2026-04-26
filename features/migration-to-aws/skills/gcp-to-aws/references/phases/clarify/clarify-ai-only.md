@@ -72,7 +72,7 @@ Interpret → `cross_cloud`. Default: B → `"latency-acceptable"`.
 
 Establishes baseline Bedrock recommendation. Override hierarchy: Q10 special features > Q2 priority > Q7/Q8 volume/latency > Q5 baseline.
 
-> A) Gemini Flash | B) Gemini Pro | C) GPT-3.5 Turbo | D) GPT-4/4 Turbo | E) GPT-4o | F) GPT-5.4/Mini/Nano | G) GPT-5/5.x (older) | H) o-series | I) Other/Multiple | J) Don't know
+> A) Gemini Flash | B) Gemini Pro | C) GPT-3.5 Turbo | D) GPT-4/4 Turbo | E) GPT-4o | F) GPT-5.4/Mini/Nano | G) GPT-5/5.x (older) | H) GPT-5.5/Pro | I) o-series | J) Other/Multiple | K) Don't know
 
 | Source         | Baseline Recommendation           | Pricing Context                    |
 | -------------- | --------------------------------- | ---------------------------------- |
@@ -87,9 +87,11 @@ Establishes baseline Bedrock recommendation. Override hierarchy: Q10 special fea
 | GPT-5.4 Pro    | Nova 2 Pro ($1.38/$11)            | 94% cheaper on Bedrock             |
 | GPT-5/5.x      | Claude Sonnet 4.6 ($3/$15)        | Savings story is quality, not cost |
 | GPT-5 flagship | Claude Opus 4.6 ($5/$25)          | Cheaper than GPT-5 Pro ($15/$120)  |
+| GPT-5.5        | Claude Opus 4.6 ($5/$25)          | Bedrock 17% cheaper on output      |
+| GPT-5.5 Pro    | Nova 2 Pro ($1.38/$11)            | 95% cheaper on Bedrock             |
 | o-series       | Sonnet 4.6 with extended thinking | o1 $15/$60 → significant savings   |
 
-Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → Sonnet; GPT-4o + Q10=speech → Nova 2 Sonic.
+Override examples: GPT-4 + Q2=cost → Haiku; Flash + Q10=extended thinking → Sonnet; GPT-4o + Q10=speech → Nova 2 Sonic; GPT-5.5 + Q2=cost → Sonnet 4.6.
 
 Interpret → `ai_model_baseline`. Default: auto-detect, fallback Q2 priority-based.
 

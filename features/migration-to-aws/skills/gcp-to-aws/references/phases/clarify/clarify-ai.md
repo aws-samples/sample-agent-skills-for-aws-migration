@@ -181,9 +181,10 @@ Establishes baseline Bedrock recommendation. **Override hierarchy:** Q17 special
 > E) GPT-4o
 > F) GPT-5.4 / GPT-5.4 Mini / GPT-5.4 Nano
 > G) GPT-5 / GPT-5.x (older)
-> H) o-series (o1, o3)
-> I) Other / Multiple models
-> J) I don't know
+> H) GPT-5.5 / GPT-5.5 Pro
+> I) o-series (o1, o3)
+> J) Other / Multiple models
+> K) I don't know
 
 | Source Model              | Baseline Bedrock Recommendation                                       | Pricing Context                                                                   |
 | ------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
@@ -198,9 +199,12 @@ Establishes baseline Bedrock recommendation. **Override hierarchy:** Q17 special
 | GPT-5.4 Pro               | Nova 2 Pro ($1.38/$11) — flagship reasoning on AWS                    | 94% cheaper on Bedrock; strongest migration case                                  |
 | GPT-5 / GPT-5.x (older)   | Claude Sonnet 4.6 ($3/$15) — performance equivalent                   | GPT-5 is $1.25/$10 — savings story is quality/features, not cost                  |
 | GPT-5 (flagship use case) | Claude Opus 4.6 ($5/$25) — flagship-to-flagship                       | Opus still cheaper than GPT-5 Pro ($15/$120)                                      |
+| GPT-5.5                   | Claude Opus 4.6 ($5/$25) — flagship-to-flagship                       | Bedrock 17% cheaper on output ($25 vs $30); same input price                      |
+| GPT-5.5 (cost-sensitive)  | Claude Sonnet 4.6 ($3/$15) — 53% cheaper                              | Strong cost case; Sonnet leads on agentic reliability                             |
+| GPT-5.5 Pro               | Nova 2 Pro ($1.38/$11) — flagship reasoning on AWS                    | 95% cheaper on Bedrock; strongest migration case                                  |
 | o-series (o1, o3)         | Claude Sonnet 4.6 with extended thinking; Opus 4.6 for most demanding | o1 is $15/$60 — significant savings with Sonnet 4.6 at $3/$15                     |
 
-**Override examples:** GPT-4 + Q16=cost → Haiku; Flash + Q17=extended thinking → Sonnet; GPT-4o + Q17=speech → Nova 2 Sonic; GPT-3.5 + Q22=complex → Sonnet; GPT-5 + Q16=balanced → Sonnet.
+**Override examples:** GPT-4 + Q16=cost → Haiku; Flash + Q17=extended thinking → Sonnet; GPT-4o + Q17=speech → Nova 2 Sonic; GPT-3.5 + Q22=complex → Sonnet; GPT-5 + Q16=balanced → Sonnet; GPT-5.5 + Q16=cost → Sonnet 4.6.
 
 Interpret → `ai_model_baseline`. Default: auto-detect from code, fallback Q16 priority-based.
 

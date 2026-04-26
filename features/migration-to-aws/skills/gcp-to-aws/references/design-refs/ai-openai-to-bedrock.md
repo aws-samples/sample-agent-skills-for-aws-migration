@@ -16,14 +16,28 @@ Verify all pricing via AWS Pricing MCP or `references/shared/pricing-cache.md`. 
 
 **It is no longer "Bedrock is always cheaper."** It depends on the model.
 
+- **Bedrock cheaper:** GPT-5.5 flagship (17% cheaper output via Opus 4.6), Nova Lite vs Mini models (85-94%), Nova Micro vs Nano (65-87%), Nova 2 Pro vs Pro models (90-95%), DeepSeek-R1 vs o3 (32%)
 - **OpenAI cheaper:** GPT-5.4 (5%), GPT-5.2 (50%), GPT-5.1/5 (40%), GPT-4.1 (43%), GPT-4o (29%), o4-mini/o3-mini/o1-mini (69%)
-- **Bedrock cheaper:** Nova Lite vs Mini models (85-94%), Nova Micro vs Nano (65-87%), Nova 2 Pro vs Pro models (90-94%), DeepSeek-R1 vs o3 (32%)
+
+> **GPT-5.5 note (April 23, 2026):** GPT-5.5 doubled pricing to $5/$30 per MTok vs GPT-5.4's $2.50/$15. Claude Opus 4.6 at $5/$25 now matches on input and is **17% cheaper on output**. This reverses the GPT-5.4 dynamic where OpenAI was cheaper — at the GPT-5.5 tier, Bedrock wins on cost. GPT-5.5 uses 40% fewer output tokens on coding tasks (per OpenAI), partially offsetting the price hike for Codex-style workloads.
 
 ---
 
 ## Model Mapping Tables
 
-### GPT-5.4 Series (Latest)
+### GPT-5.5 Series (Latest — April 23, 2026)
+
+GPT-5.5 is the first fully retrained base model since GPT-4.5. Natively omnimodal (text + image + audio + video), 88.7% SWE-Bench Verified, 256K context in ChatGPT / 1M in API. Two variants: standard and Pro. No Mini/Nano variants at launch (expected Q3 2026). Percentages below are blended savings using a 2:1 input-to-output token ratio.
+
+| OpenAI Model | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price  | Winner              |
+| ------------ | --------------------- | -------------------- | -------------- | ------------------- |
+| GPT-5.5      | $5.00 / $30.00        | Claude Opus 4.6      | $5.00 / $25.00 | Bedrock 17% cheaper |
+| GPT-5.5      | $5.00 / $30.00        | Claude Sonnet 4.6    | $3.00 / $15.00 | Bedrock 53% cheaper |
+| GPT-5.5 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 95% cheaper |
+
+> **Token efficiency caveat:** OpenAI reports GPT-5.5 uses ~40% fewer output tokens on Codex-style tasks vs GPT-5.4. Effective cost increase over GPT-5.4 is ~50% (not 100%) for coding workloads. For non-coding workloads, the full 2× price applies.
+
+### GPT-5.4 Series
 
 Percentages below are blended savings using a 2:1 input-to-output token ratio. GPT-5.4 uses breakpoint pricing at 272K input tokens; rates below assume <272K context.
 
@@ -51,6 +65,7 @@ Percentages below are blended savings using a 2:1 input-to-output token ratio.
 
 | OpenAI Model | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price  | Winner              |
 | ------------ | --------------------- | -------------------- | -------------- | ------------------- |
+| GPT-5.5 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 95% cheaper |
 | GPT-5.4 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 94% cheaper |
 | GPT-5.2 Pro  | $21.00 / $168.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 93% cheaper |
 | GPT-5 Pro    | $15.00 / $120.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 90% cheaper |
@@ -109,7 +124,8 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 
 **Migrate to Bedrock if:**
 
-- Using Pro/expensive models (GPT-5.4 Pro, o1-pro) → 87-98% savings via Nova 2 Pro
+- Using GPT-5.5 flagship → Bedrock 17% cheaper on output via Opus 4.6 ($5/$25 vs $5/$30); Sonnet 4.6 is 53% cheaper
+- Using Pro/expensive models (GPT-5.5 Pro, GPT-5.4 Pro, o1-pro) → 87-98% savings via Nova 2 Pro
 - Using Mini/Nano models at high volume → 87-94% savings via Nova Lite/Micro
 - Using legacy GPT-4/3.5 → 42-82% savings
 - Need AWS infrastructure integration
@@ -119,6 +135,7 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 
 **Consider staying on OpenAI if:**
 
+- Using GPT-5.5 for omnimodal (audio/video) → Claude is text+image only; GPT-5.5 has native audio/video
 - Using GPT-5.4 flagship → only 5% cheaper than Sonnet 4.6; marginal either way
 - Using mid-tier flagships (GPT-5, GPT-4.1, o3, o4-mini) → OpenAI 29-69% cheaper
 - Low volume (<$500/mo) where absolute savings are small
@@ -147,6 +164,18 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 ---
 
 ## Common Migration Paths
+
+### GPT-5.5 → Claude Opus 4.6
+
+Same input price ($5/MTok), Bedrock 17% cheaper on output ($25 vs $30). Both are frontier-tier on SWE-Bench (Opus 4.6 80.8% vs GPT-5.5 88.7% on Verified). Migration case: cost savings on output + AWS consolidation + prompt caching. Caveat: GPT-5.5 has native omnimodal (audio/video) that Claude lacks; GPT-5.5 context is 1M vs Opus 200K.
+
+### GPT-5.5 → Claude Sonnet 4.6
+
+53% cheaper on Bedrock. Strong cost case if workload doesn't require absolute frontier reasoning. Sonnet 4.6 leads on agentic reliability (GDPval). Best for teams prioritizing cost + agentic tasks over raw benchmark scores.
+
+### GPT-5.5 Pro → Nova 2 Pro
+
+95% savings. Strongest migration case in the entire table. At $30/$180 vs $1.38/$11, even modest volume produces massive savings.
 
 ### GPT-5.4 → Claude Sonnet 4.6
 

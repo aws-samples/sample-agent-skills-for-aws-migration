@@ -1,5 +1,13 @@
 # Changelog — GCP-to-AWS Migration Plugin
 
+## OpenAI: GPT-5.5 (2026-04-26)
+
+**Change:** Documented **GPT-5.5** ($5/$30 per 1M input/output) and **GPT-5.5 Pro** ($30/$180) in the pricing cache and model mapping tables. GPT-5.5 launched April 23, 2026 as OpenAI's first fully retrained base model since GPT-4.5 — natively omnimodal, 88.7% SWE-Bench Verified, 256K context (1M in API). Key competitive insight: at $5/$30, **Claude Opus 4.6** ($5/$25) now matches on input and is **17% cheaper on output**, and **Claude Sonnet 4.6** ($3/$15) is 53% cheaper — reversing the GPT-5.4 dynamic where OpenAI was marginally cheaper. Updated clarify-phase Q19 options to include GPT-5.5/Pro as a selectable source model, added GPT-5.5 migration scenarios to the pattern table, and added three new common migration paths (GPT-5.5 → Opus 4.6, GPT-5.5 → Sonnet 4.6, GPT-5.5 Pro → Nova 2 Pro).
+
+**Files:** `references/shared/pricing-cache.md`, `references/design-refs/ai-openai-to-bedrock.md`, `references/phases/clarify/clarify-ai.md`, `references/phases/clarify/clarify-ai-only.md`, `references/phases/clarify/clarify.md`.
+
+---
+
 ## Summary
 
 Eight epics were addressed across 18 files (17 modified, 1 new). All changes are prompt-only — no application code was added or changed. Epic 4 (Gemini 3.1 Pro GA) is deferred pending confirmed GA date, pricing, and benchmark data.
