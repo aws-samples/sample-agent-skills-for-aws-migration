@@ -96,7 +96,8 @@ Generate `ai-migration/setup_bedrock.sh`.
 - Step 1 — Request model access: List each model from `aws-design-ai.json` → `bedrock_models[].aws_model_id` and the embedding model
 - Step 2 — Create IAM role: Trust policy for the compute platform (Lambda, ECS, or EC2 based on `aws-design.json` if present). Bedrock policy: `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` scoped to `arn:aws:bedrock:*::foundation-model/*`
 - Step 3 — Print required environment variables: `AWS_REGION`, `AI_PROVIDER=bedrock`, model IDs
-- Step 4 — Verification: Test Bedrock access with a simple `converse` call using the primary model
+- Step 4 — Check quota: Query current TPM quota for the primary model via `aws service-quotas get-service-quota`. If `aws-design-ai.json` → `ai_architecture.quota_risk` is `"high"` or `"medium"`, print warning: "⚠️ Your token volume may exceed default Bedrock quotas. Request a quota increase via Service Quotas console (allow 1–5 business days)." Include the `aws service-quotas request-service-quota-increase` command template.
+- Step 5 — Verification: Test Bedrock access with a simple `converse` call using the primary model
 - If `$MIGRATION_DIR/terraform/` exists, print coordination note: "Ensure the IAM role is referenced in compute.tf task definitions"
 - Use region from `preferences.json` → `design_constraints.target_region`
 
