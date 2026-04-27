@@ -122,7 +122,7 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 - Using GPT-5.4 flagship → only 5% cheaper than Sonnet 4.6; marginal either way
 - Using mid-tier flagships (GPT-5, GPT-4.1, o3, o4-mini) → OpenAI 29-69% cheaper
 - Low volume (<$500/mo) where absolute savings are small
-- Heavily integrated with OpenAI ecosystem (Assistants API, DALL-E, Whisper, Realtime)
+- Heavily integrated with OpenAI ecosystem (Assistants API, gpt-image, Whisper, Realtime)
 - Need Realtime API (no Bedrock equivalent)
 
 **Analyze carefully:** Calculate actual token usage x model-specific pricing. Small % differences matter at scale.
@@ -137,7 +137,7 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 | Streaming            | All major models                                          | Verify gateway format                                            |
 | Vision (GPT-4V)      | Claude Sonnet/Haiku, Llama 4 Maverick                     | 70-95% cheaper                                                   |
 | Embeddings (ada-002) | Titan Embeddings ($0.02/1M, 1536 dims)                    | Must re-embed all docs                                           |
-| DALL-E               | Nova Canvas ($0.04-$0.08/img)                             | Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
+| DALL-E / gpt-image   | Nova Canvas ($0.04-$0.08/img)                             | DALL-E EOL May 12, 2026; OpenAI replacement is gpt-image-1.5; Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
 | Whisper (STT)        | Amazon Transcribe ($0.024/min)                            | 4x more expensive but more features                              |
 | TTS                  | Amazon Polly                                              | Different pricing model                                          |
 | Assistants API       | Bedrock Agents (sessions, action groups, knowledge bases) | 2-4 week migration                                               |
