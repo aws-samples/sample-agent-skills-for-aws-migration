@@ -59,7 +59,7 @@ If `agentic_profile.is_agentic == true`:
 
 | `migration_approach` | Action |
 |---------------------|--------|
-| `"retarget"` | Continue with standard model-swap design below (Parts 1–6). The existing framework stays; only the model layer changes. No additional design ref needed. |
+| `"retarget"` | Continue with standard model-swap design below (Parts 1–6). The existing framework stays; only the model layer changes. Load `references/shared/retarget-gotchas.md` for framework-specific migration pitfalls to include in the code migration plan (Part 5). |
 | `"harness"` | Load `references/design-refs/design-ref-harness.md`. If file does not exist: continue with standard model-swap design, add note to user summary: "AgentCore Harness design reference not yet available. Proceeding with model-layer migration only. For Harness guidance, see https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/harness.html" |
 | `"strands"` | Load `references/design-refs/design-ref-agentic-to-agentcore.md`. |
 | `"undecided"` | Treat as `"retarget"` (safest default). Note in user summary: "No migration approach selected — defaulting to retarget (keep framework, swap model layer). Re-run Clarify to select a different approach." |
