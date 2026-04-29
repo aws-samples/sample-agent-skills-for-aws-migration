@@ -119,6 +119,52 @@ Also check dependency manifests for AI/ML SDK dependencies:
 
 ---
 
+## Step 3B: Agentic Framework Signals
+
+Scan source code and dependency manifests for agentic framework patterns. These are separate from AI model signals — they indicate agent orchestration, not just LLM usage.
+
+| Pattern | What to look for | Confidence |
+| ------- | ---------------- | ---------- |
+| 3B.1 LangGraph | `from langgraph` imports, `StateGraph(`, `add_node(`, `add_edge(`, `.compile()` | 95% |
+| 3B.2 CrewAI | `from crewai` imports, `Crew(`, `Agent(` with `role=`, `Task(` class definitions | 95% |
+| 3B.3 AutoGen | `from autogen` imports, `AssistantAgent(`, `GroupChat(`, `ConversableAgent(` | 95% |
+| 3B.4 OpenAI Agents SDK | `from openai.agents` or `from agents import`, `openai.beta.assistants`, `Runner(` | 95% |
+| 3B.5 Strands Agents | `from strands` imports, `Agent(` with `tools=`, `Swarm(`, `GraphBuilder(` | 95% |
+| 3B.6 Custom agent loop | `while` loop body containing BOTH an LLM call (completions/generate) AND tool execution (function dispatch from model output) AND result parsing back to model | 80% |
+| 3B.7 Tool definitions | `@tool` decorators, `function_declarations=`, `tools=[{...schema...}]`, tool schema objects with `name`+`description`+`parameters` | 90% |
+| 3B.8 MCP integration | `from mcp.server` or `from mcp.client`, `mcp.json` config files, `MCPClient(` | 90% |
+| 3B.9 Agent memory | `ConversationBufferMemory(`, `ChatMessageHistory(`, `MemorySaver(`, vector store retrieval feeding agent context | 85% |
+
+Also check dependency manifests for agentic framework dependencies:
+
+- `langgraph` (LangGraph)
+- `crewai` (CrewAI)
+- `pyautogen` or `autogen` (AutoGen)
+- `openai` with agents imports (OpenAI Agents SDK — same package, different import path)
+- `strands-agents` (Strands Agents SDK)
+- `mcp` (Model Context Protocol SDK)
+
+---
+
+## Step 3.5: Agentic Classification Gate
+
+Determine whether the codebase contains agentic workflows. Execute these rules in order:
+
+1. If ANY framework signal from 3B.1–3B.5 detected → set `is_agentic: true`, set `framework` to the detected framework name
+2. If NO framework signal BUT 3B.6 (custom agent loop) detected → set `is_agentic: true`, set `framework: "custom"`
+3. If 3B.7 (tool definitions) detected WITH an LLM call in a loop pattern → set `is_agentic: true`, set `framework: "custom"`
+4. If ONLY 3B.8 (MCP integration) detected WITHOUT an agent loop → set `is_agentic: false` (MCP alone does not imply agent orchestration)
+5. If ONLY 3B.9 (agent memory) detected WITHOUT an agent loop or framework → set `is_agentic: false`
+6. If NO agentic signals detected → set `is_agentic: false`
+
+**If multiple frameworks detected:** Set `framework` to the one with the most agent definitions. Record others in `detection_signals`.
+
+**If `is_agentic: false`:** Skip Steps 5.5 and 6.5. Continue to Step 4.
+
+**If `is_agentic: true`:** Continue to Step 4, then execute Steps 5.5 and 6.5 after Step 5.
+
+---
+
 ## Step 4: AI Detection Gate
 
 Compute overall AI confidence from all signals found in Step 3:
@@ -207,6 +253,69 @@ Scan files that contained AI signals for specific model information:
 
 ---
 
+## Step 5.5: Extract Agentic Details (Only if `is_agentic: true`)
+
+**Skip this step entirely if `is_agentic: false` from Step 3.5.**
+
+For each detected agent in the codebase, extract:
+
+1. **Agent identifier** (`agent_id`) — Class name, variable name, or function name that defines the agent. Use snake_case normalized form (e.g., `ResearchAgent` → `"research-agent"`, `research_agent` → `"research-agent"`).
+
+2. **File and line** — Source file and line number where the agent is defined.
+
+3. **Model ID** — The LLM model this agent uses. Look for:
+   - Constructor parameter: `Agent(model="gpt-4o")`, `Agent(llm=ChatOpenAI(model="gpt-4o"))`
+   - Config reference: model string in config file referenced by agent
+   - Set to `"unknown"` if model is not extractable from code
+
+4. **Tools list** — Tool names attached to this agent. Look for:
+   - `tools=[web_search, calculator]` → `["web_search", "calculator"]`
+   - `@tool` decorated functions passed to agent
+   - Tool schema objects in `function_declarations` or `tools` parameter
+   - Set to `[]` if no tools detected
+
+5. **Memory type** — Classify per-agent memory:
+   - `"conversation_buffer"` — `ConversationBufferMemory`, `ChatMessageHistory`, message list accumulation
+   - `"rag"` — Vector store retrieval feeding agent context, `RetrievalQA`, knowledge base lookup
+   - `"none"` — No memory pattern detected for this agent
+   - `"unknown"` — Memory detected but type indeterminate
+
+6. **Role** — Human-readable description of what this agent does. Infer from:
+   - System prompt or `role=` parameter
+   - Class/function docstring
+   - Variable name and surrounding context
+   - Keep to one sentence
+
+**Classify orchestration pattern** from the overall agent architecture:
+
+| Pattern | Evidence |
+|---------|----------|
+| `single` | One agent definition, no delegation or coordination |
+| `hierarchical` | One orchestrator agent delegates to specialist agents (agents-as-tools, manager/worker) |
+| `swarm` | Multiple agents share memory/state, no fixed hierarchy (CrewAI `process=Process.hierarchical` is hierarchical, not swarm) |
+| `graph` | Explicit node/edge definitions, conditional routing between agents (`StateGraph`, `GraphBuilder`, `add_edge`) |
+| `sequential` | Agents execute in fixed order, output of one feeds next (`process=Process.sequential` in CrewAI, pipeline patterns) |
+| `unknown` | Agentic signals detected but orchestration pattern unclear from code |
+
+**Determine system-level memory:**
+
+- `has_memory`: `true` if ANY agent has memory OR if shared memory store detected
+- `memory_backend`: Classify from imports/config:
+  - `"redis"` — Redis client imports, `RedisMemory`, Redis URL in config
+  - `"postgres"` — PostgreSQL connection for memory/history storage
+  - `"in_memory"` — In-process memory only (default `ConversationBufferMemory`, Python dicts)
+  - `"vector_store"` — Pinecone, Weaviate, ChromaDB, pgvector for memory retrieval
+  - `"unknown"` — Memory detected but backend indeterminate
+
+**Determine human-in-the-loop:**
+
+- `has_human_in_loop`: `true` if any of:
+  - `HumanInputRun`, `human_input` tool, `input()` calls in agent loop
+  - Approval/confirmation patterns before tool execution
+  - `handoff_to_user` tool or similar delegation to human
+
+---
+
 ## Step 6: Map Integration Patterns
 
 Determine how the application integrates with AI services:
@@ -271,6 +380,37 @@ A capability is `true` only if there is evidence from code analysis that it is a
 
 ---
 
+## Step 6.5: Extract Tool Manifest (Only if `is_agentic: true`)
+
+**Skip this step entirely if `is_agentic: false` from Step 3.5.**
+
+Catalog all tool definitions found in agent code. This is inventory only — do NOT include migration recommendations, AWS equivalents, or effort estimates.
+
+For each tool detected in Step 5.5 (from agent `tools` lists) or Step 3B.7 (tool definitions):
+
+1. **Name** — Tool name as defined in code (function name, `name` field in schema, decorator argument)
+
+2. **File and line** — Source file and line number where the tool is defined or imported
+
+3. **Transport classification** — How the tool communicates:
+   - `"function"` — Local function with `@tool` decorator, no network calls in body, pure computation or file I/O
+   - `"api"` — HTTP client calls in tool body (`requests.get`, `httpx.post`, `fetch`, external URL references)
+   - `"mcp"` — MCP client imports, MCP server URL in tool config, tool served via MCP protocol
+   - `"unknown"` — Tool schema defined but implementation not inspectable (e.g., imported from external package)
+
+4. **Auth hint** — Detected authentication pattern in tool implementation:
+   - `"none"` — No credentials, tokens, or auth headers visible
+   - `"api_key"` — API key env var (`os.environ["API_KEY"]`), `Authorization: Bearer` header, `x-api-key` header
+   - `"oauth"` — OAuth flow, token refresh logic, `client_id`/`client_secret` patterns
+   - `"iam"` — AWS SigV4, boto3 client usage, IAM role assumption, GCP service account credentials
+   - `"unknown"` — Auth pattern not determinable from code inspection
+
+5. **Used by agents** — Array of `agent_id` values (from Step 5.5) that reference this tool. A tool may be used by multiple agents.
+
+**Deduplication:** If the same tool is used by multiple agents, create one `tool_manifest` entry with all agent IDs in `used_by_agents`. Do not duplicate tool entries.
+
+---
+
 ## Step 7: Capture Supporting Infrastructure
 
 **Only if Terraform files were found (IaC discovery also ran)**, extract AI-related infrastructure resources:
@@ -315,6 +455,8 @@ Load `references/shared/schema-discover-ai.md` and generate output following the
 
 - `current_costs` — Include ONLY if billing data was provided (billing discovery ran). Omit entirely if no billing data.
 - `infrastructure` — Set to `[]` if no Terraform files were provided (IaC discovery did not run).
+- `agentic_profile` — Include ONLY if `is_agentic: true` from Step 3.5. Omit entirely if not agentic.
+- `tool_manifest` — Include ONLY if `agentic_profile` exists. Set to `[]` if agentic but no tools detected in Step 6.5.
 
 After generating the output file, the parent `discover.md` handles the phase status update — do not update `.phase-status.json` here.
 
@@ -336,6 +478,15 @@ After generating the output file, the parent `discover.md` handles the phase sta
 - `current_costs` section is present ONLY if billing data was provided; omitted entirely otherwise
 - `detection_signals` matches the signals found in Step 3
 - All field names use EXACT required keys
+- If `is_agentic: true`: `agentic_profile` section exists with all required fields
+- If `is_agentic: true`: `agentic_profile.agent_count` equals length of `agentic_profile.agents[]`
+- If `is_agentic: true`: `agentic_profile.tool_count` equals length of `tool_manifest[]` (deduplicated)
+- If `is_agentic: true`: `agentic_profile.framework` is one of: `"langgraph"`, `"crewai"`, `"autogen"`, `"openai_agents"`, `"strands"`, `"custom"`, `"none"`
+- If `is_agentic: true`: `agentic_profile.orchestration_pattern` is one of: `"single"`, `"hierarchical"`, `"swarm"`, `"graph"`, `"sequential"`, `"unknown"`
+- If `is_agentic: true`: every `agent_id` in `tool_manifest[].used_by_agents` exists in `agentic_profile.agents[].agent_id`
+- If `is_agentic: true`: `tool_manifest[].transport` is one of: `"function"`, `"api"`, `"mcp"`, `"unknown"`
+- If `is_agentic: true`: `tool_manifest[].auth_hint` is one of: `"none"`, `"api_key"`, `"oauth"`, `"iam"`, `"unknown"`
+- If `is_agentic: false`: `agentic_profile` and `tool_manifest` are ABSENT from output (not present with null/false values)
 
 ---
 
@@ -351,6 +502,8 @@ The Design phase (`references/phases/design/design.md`) uses `ai-workload-profil
 6. **`integration.frameworks`** — If LangChain is used, migration may be simpler (swap provider, keep chains)
 7. **`infrastructure`** — Identifies supporting AWS resources needed (IAM roles, VPC config)
 8. **`current_costs.monthly_ai_spend`** — Baseline for cost comparison in estimate phase
+9. **`agentic_profile`** (if present) — Routes to agentic design path: determines migration approach (retarget / Harness / Strands), maps tools to AgentCore Gateway targets, configures AgentCore Memory
+10. **`tool_manifest`** (if present) — Inventories tools for AgentCore Gateway or Harness tool configuration
 
 ---
 
