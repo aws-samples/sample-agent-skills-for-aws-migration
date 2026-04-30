@@ -96,12 +96,13 @@ For each model in `models[]`, record:
 - **Workload type**: text generation, embeddings, vision, code generation, custom model
 - **Integration pattern mapping**:
 
-| GCP Pattern  | AWS Pattern                    | Effort |
-| ------------ | ------------------------------ | ------ |
-| `direct_sdk` | Bedrock SDK (boto3 / AWS SDK)  | Medium |
-| `framework`  | LangChain/LlamaIndex + Bedrock | Low    |
-| `rest_api`   | Bedrock REST API               | Medium |
-| `mixed`      | Match per-model                | Varies |
+| GCP Pattern  | AWS Pattern                                      | Effort   |
+| ------------ | ------------------------------------------------ | -------- |
+| `direct_sdk` | Mantle OpenAI-compat (if OpenAI source + region) | Minimal  |
+| `direct_sdk` | Bedrock SDK (boto3 / AWS SDK)                    | Medium   |
+| `framework`  | LangChain/LlamaIndex + Bedrock                   | Low      |
+| `rest_api`   | Bedrock REST API                                 | Medium   |
+| `mixed`      | Match per-model                                  | Varies   |
 
 - **Migration complexity**: Low / Medium / High
 
@@ -131,13 +132,16 @@ For each detected `integration.pattern` and `ai_source`, generate before/after m
 
 | Pattern              | Source                    | Target              | Key Change                            |
 | -------------------- | ------------------------- | ------------------- | ------------------------------------- |
+| Direct SDK (OpenAI)  | OpenAI                    | Mantle (OpenAI-compat) | Change `OPENAI_BASE_URL` + `OPENAI_API_KEY` + model string (zero code changes) |
 | Direct SDK           | Vertex AI                 | boto3 Converse API  | `generate_content()` → `converse()`   |
-| Direct SDK           | OpenAI                    | boto3 Converse API  | `completions.create()` → `converse()` |
+| Direct SDK           | OpenAI                    | boto3 Converse API  | `completions.create()` → `converse()` (use if Mantle region unavailable or Converse features needed) |
 | LangChain            | ChatVertexAI / ChatOpenAI | ChatBedrock         | Swap import and model_id              |
 | LlamaIndex           | Vertex / OpenAI LLM       | BedrockConverse     | Swap import                           |
 | LLM Router (LiteLLM) | Any                       | Config change       | `model="bedrock/<model_id>"` (1 line) |
 | Embeddings           | TextEmbeddingModel        | Titan Embeddings v2 | `invoke_model` with JSON body         |
 | Streaming            | `stream=True`             | `converse_stream`   | Event loop over `contentBlockDelta`   |
+
+**Mantle (OpenAI-compatible endpoints):** If `ai_source = "openai"` and `integration.pattern = "direct_sdk"`, prefer the Mantle path as the primary migration option. Mantle provides OpenAI-compatible Chat Completions and Responses APIs on Bedrock — the existing OpenAI SDK code works with zero changes, only environment variable updates. Check [Mantle regional availability](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) — if the target region does not have Mantle, fall back to the boto3 Converse API path. Record `migration_path: "mantle"` or `migration_path: "converse"` in `aws-design-ai.json` → `ai_architecture.code_migration`.
 
 Generate concrete code examples using actual model IDs from the selected Bedrock models. Only include patterns matching the detected integration.
 
