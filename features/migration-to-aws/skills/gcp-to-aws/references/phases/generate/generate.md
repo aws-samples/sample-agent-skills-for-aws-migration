@@ -140,7 +140,7 @@ Verify both stages are complete:
    - If `estimation-ai.json` exists -> require `generation-ai.json`
    - If `estimation-billing.json` exists -> require `generation-billing.json`
 2. **Stage 2 route gates (fail closed)**:
-   - If infra artifact route is active (`generation-infra.json` AND `aws-design.json`) -> require `terraform/` and `scripts/`
+   - If infra artifact route is active (`generation-infra.json` AND `aws-design.json`) -> require `terraform/`, `scripts/`, and `validation-report.json` (with `status` in `{passed, passed_degraded_offline, skipped_user_continue}`)
    - If AI artifact route is active (`generation-ai.json` AND `aws-design-ai.json`) -> require `ai-migration/`
    - If billing artifact route is active (`generation-billing.json` AND `aws-design-billing.json`) -> require `terraform/skeleton.tf`
 3. **Documentation gate (always)**:
@@ -179,10 +179,11 @@ After the structured block, include:
 
 1. **Plans generated** — List all `generation-*.json` files produced
 2. **Artifacts generated** — List all directories and files created (terraform/, scripts/, ai-migration/, MIGRATION_GUIDE.md, README.md). Include `migration-report.html` only if it exists.
-3. **Key timelines** — Highlight migration timeline from the generation plans
-4. **Key risks** — Highlight top risks from the generation plans
-5. **TODO markers** — Note any TODO markers in generated artifacts that require manual attention
-6. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
+3. **Validation status** — If `$MIGRATION_DIR/validation-report.json` exists, report its `status` field (`passed`, `passed_degraded_offline`, or `skipped_user_continue`). If `status == "passed_degraded_offline"`, add: "Provider registry was unreachable; `terraform validate` was skipped. Re-run `terraform init && terraform validate` from a network-connected shell to complete validation."
+4. **Key timelines** — Highlight migration timeline from the generation plans
+5. **Key risks** — Highlight top risks from the generation plans
+6. **TODO markers** — Note any TODO markers in generated artifacts that require manual attention
+7. **Next steps** — Recommend reviewing generated artifacts, customizing TODO sections, and beginning migration execution
 
 Output to user:
 

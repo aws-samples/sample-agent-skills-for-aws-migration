@@ -158,6 +158,84 @@ Verify these quality rules before reporting completion:
 - [ ] `main.tf` begins with the required cost-tier / Balanced alignment comment block
 - [ ] `migration_summary` output includes `aligned_with_estimate_tier` and `cost_scenarios_modeled_in_terraform`
 
+## Step 6: Validate Generated Terraform
+
+**This step is mandatory. Do not skip, even if Step 5 self-check passed.**
+
+Execute the full fmt → init → validate → fix-and-retry → offline-fallback protocol defined in `references/shared/terraform-validation.md`. That file is the canonical specification; the summary below is informative only.
+
+Working directory for all commands: `$MIGRATION_DIR/terraform/`.
+
+### 6.1 Format (auto-apply + verify)
+
+Run:
+
+```bash
+terraform fmt -recursive
+```
+
+to auto-apply formatting, then:
+
+```bash
+terraform fmt -recursive -check
+```
+
+to verify. If `-check` exits non-zero, treat as a validation failure (goto 6.4).
+
+### 6.2 Initialize (no backend) with network-unavailable detection
+
+Run:
+
+```bash
+terraform init -backend=false -input=false -no-color
+```
+
+Capture stderr. If exit code is non-zero:
+
+- Classify with the offline-detection algorithm in `references/shared/terraform-validation.md` § Offline Detection.
+- **IF network-unavailable**: set `validation_status = "passed_degraded_offline"`, emit a user-visible warning, skip 6.3, and proceed to 6.5. **Do not** enter the retry loop.
+- **IF NOT network-unavailable**: treat as a validation failure (goto 6.4).
+
+The network-unavailable patterns are `{"lookup", "dial tcp", "connection refused", "timeout", "no such host"}`, matched case-insensitively, first-match-wins.
+
+### 6.3 Validate
+
+Run:
+
+```bash
+terraform validate -json
+```
+
+If exit code is non-zero, treat as a validation failure (goto 6.4). Parse the JSON diagnostics (`.diagnostics[]`) for the retry loop.
+
+### 6.4 Fix-and-retry loop
+
+Bounded at 3 attempts per batch. On each attempt:
+
+1. Read the failing command's error output (fmt diff, init stderr, or validate `-json` diagnostics).
+2. Group errors by file; edit the `.tf` files to correct only the reported defects.
+3. Re-run the failing command (fmt -check, init, or validate — whichever failed).
+4. If it now passes, advance to the next sub-step (6.2 → 6.3 → 6.5).
+
+If 3 consecutive attempts fail in the same batch, prompt the user:
+
+```
+Terraform validation failed after 3 automated fix attempts.
+Last error: <one-line summary>
+[retry] attempt 3 more fixes
+[skip]  proceed with warning, mark validation_status = skipped_user_continue
+[abort] stop, do NOT write .phase-status.json
+Choose [retry/skip/abort]:
+```
+
+- **retry** → reset counter to 0 for 3 more attempts.
+- **skip** → set `validation_status = "skipped_user_continue"`, emit warning, proceed to 6.5, allow Phase Completion.
+- **abort** → set `validation_status = "skipped_user_abort"`, STOP, do NOT update `.phase-status.json`.
+
+### 6.5 Emit `validation-report.json`
+
+Write `$MIGRATION_DIR/validation-report.json` following the schema in `references/shared/terraform-validation.md` § Report Schema, with `status` set to the terminal `validation_status`.
+
 ## Phase Completion
 
 Report generated files to the parent orchestrator. **Do NOT update `.phase-status.json`** — the parent `generate.md` handles phase completion.
@@ -167,6 +245,9 @@ Before reporting completion, enforce artifact output gate:
 - `terraform/` directory exists.
 - At minimum: `terraform/main.tf`, `terraform/variables.tf`, and `terraform/outputs.tf` exist.
 - At least one domain file exists among: `vpc.tf`, `security.tf`, `storage.tf`, `database.tf`, `compute.tf`, `monitoring.tf`.
+- `terraform fmt -recursive -check` exited 0 during Step 6.1 (required even when Step 6.2 fell back to `passed_degraded_offline`).
+- `validation_status` is set to one of `{passed, passed_degraded_offline, skipped_user_continue}`. If `validation_status = "skipped_user_abort"`, do NOT enter this gate — Step 6.4 already stopped the run without writing `.phase-status.json`.
+- `$MIGRATION_DIR/validation-report.json` exists with a `status` field matching `validation_status`.
 
 If this gate fails: STOP and output: "generate-artifacts-infra did not produce required Terraform artifacts; do not complete Generate Stage 2."
 
@@ -177,7 +258,9 @@ Generated terraform artifacts:
 - terraform/variables.tf
 - terraform/outputs.tf
 - terraform/[domain].tf (for each domain with resources)
+- validation-report.json (status: <validation_status>)
 
 Total: [N] Terraform files
+Validation: <validation_status> (attempts=<N>, errors_fixed=<N>)
 TODO markers: [N] items requiring manual configuration
 ```
