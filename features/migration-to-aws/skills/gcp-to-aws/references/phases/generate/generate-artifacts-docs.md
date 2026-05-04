@@ -52,6 +52,13 @@ The MIGRATION_GUIDE.md follows this structure:
 
 #### Prerequisites Section Content
 
+#### Pre-migration: root user security
+
+- **Enable root MFA (ACCT.05).** Operators must complete root MFA setup before first console sign-in. The plugin does not manage MFA devices.
+- **Restrict use of the root user (ACCT.02).** Store root credentials in a password manager; use only for account recovery or the small handful of tasks that require root. Do not use for daily work.
+- **Remove any root access keys.** Root access keys should not exist; if any are present, delete them before any migration work.
+- **Plan for day-to-day access via IAM Identity Center (ACCT.03, ACCT.04, ACCT.13).** Creating IAM Identity Center users, group-based permission sets, and short-lived credentials is out of scope for this plan and is covered by the landing-zone spec.
+
 Include these checklists:
 
 - AWS Account Setup: account created, IAM user, AWS CLI, Terraform >= 1.5.0
@@ -123,6 +130,23 @@ Generate the following section:
 
 **Validation and Cleanup section** with subsections:
 
+#### Post-migration: remove unused default VPC (ACCT.09)
+
+Confirm first that no resources depend on the default VPC:
+
+```bash
+aws ec2 describe-instances --filters "Name=vpc-id,Values=<default-vpc-id>" \
+  --region <target-region>
+```
+
+Delete the default VPC (this also deletes default subnets, route tables, and internet gateway associations):
+
+```bash
+aws ec2 delete-vpc --vpc-id <default-vpc-id> --region <target-region>
+```
+
+If the command fails with dependency errors, investigate the listed resources before retrying. Do not force-delete.
+
 - Validation Steps checklist: services responding, performance thresholds, data integrity, cost tracking
 - GCP Teardown checklist (after stability period): archive data, delete resources, disable billing
 
@@ -185,6 +209,51 @@ Subsections:
 - Migration Approach: summary from generation plans (phased/fast-track/conservative)
 
 #### Cost Summary
+
+#### Security baseline costs
+
+**Scenario A — Tier 1 alone** (no compliance declared in Q2):
+
+Per-unit pricing verified against the AWS Pricing API for us-east-1 on 2026-05-04; accuracy ±25%.
+
+| Resource                      | Monthly cost                                                        | Notes                                                              |
+| ----------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Account alternate contacts    | $0                                                                  | Free (ACCT.01)                                                     |
+| IAM password policy           | $0                                                                  | Free (ACCT.06)                                                     |
+| S3 account-level PAB          | $0                                                                  | Free (ACCT.08)                                                     |
+| EBS default encryption        | $0                                                                  | Free (defense-in-depth; KMS encrypt/decrypt is negligible for EBS) |
+| IAM Access Analyzer           | $0                                                                  | Free for external-access analyzers on your own account (ACCT.11)   |
+| IMDSv2 account default        | $0                                                                  | Free (defense-in-depth)                                            |
+| CloudTrail trail              | $0 for events (first trail per region free); S3 storage ~$0.50–3/mo | Management events only (ACCT.07)                                   |
+| S3 bucket for CloudTrail logs | ~$0.50–3/mo                                                         | Storage + PUT requests                                             |
+| AWS Budgets (1 budget)        | $0                                                                  | First 2 budgets per account are free (ACCT.10)                     |
+| GuardDuty                     | $0 for 30 days, then ~$2–25/mo                                      | Scales with VPC traffic and API calls (defense-in-depth)           |
+| **Total estimate**            | **$3–30/mo after trial**                                            | GuardDuty is the dominant line item                                |
+
+To skip the baseline, delete `terraform/baseline.tf` before running `terraform apply`.
+
+**Scenario B — Tier 1 + compliance-conditional** (SOC 2 / PCI / HIPAA / FedRAMP declared in Q2):
+
+Per-unit pricing verified against the AWS Pricing API for us-east-1 on 2026-05-04; accuracy ±25%.
+
+Tier 1 subtotal (as in Scenario A above): **$3–30/mo after trial**.
+
+Additional compliance-conditional resources:
+
+| Resource                                      | Monthly cost                           | Notes                                                                                 |
+| --------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
+| AWS Config (account-level recorder)           | ~$2–10/mo                              | $0.003 per CI continuous mode; daily mode cheaper, lower signal                       |
+| S3 bucket for Config delivery                 | ~$0.20–1/mo                            | Storage + PUT requests; same retention as CloudTrail                                  |
+| AWS Security Hub (FSBP + any extra standards) | $0 for 30 days, then ~$1–15/mo         | Tiered per-check + per-resource (Fargate-only startups pay nothing for EC2 dimension) |
+| **Compliance-conditional subtotal**           | **~$3–25/mo after Security Hub trial** |                                                                                       |
+| **Grand total**                               | **~$6–55/mo after both free trials**   |                                                                                       |
+
+**Compliance notes**:
+
+- Security Hub does NOT provide a HIPAA-specific standard. FSBP covers many overlapping controls; for full HIPAA attestation, engage a qualified HIPAA auditor and review the [AWS HIPAA Eligible Services Reference](https://aws.amazon.com/compliance/hipaa-eligible-services-reference/).
+- FedRAMP compliance uses NIST 800-53 at the agency level, but this mapping is not directly subscribable in Security Hub — engage your AWS account team for FedRAMP attestation.
+
+To skip the compliance-conditional section only, delete the block between `########## Compliance-Conditional ##########` and `########## End Compliance-Conditional ##########` in `terraform/baseline.tf` before `terraform apply`. To skip the baseline entirely, delete `terraform/baseline.tf`.
 
 Table from estimation artifacts with: Current GCP Monthly, Projected AWS Monthly (use **Balanced** tier for the primary AWS column when `estimation-infra.json` exists), Timeline. **Only include a "GCP data transfer egress (est.)" column when `estimation-infra.json` exists and `migration_cost_considerations.billing_data_available` is `true`.** Do **not** add columns or rows for human labor, professional services, or other people-time migration costs. If billing data is unavailable, add a note below the table: "GCP data transfer egress estimates require billing data. Provide a billing export and re-run discovery to see vendor egress projections."
 

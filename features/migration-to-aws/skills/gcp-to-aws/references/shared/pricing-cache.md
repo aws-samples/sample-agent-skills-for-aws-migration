@@ -692,3 +692,55 @@ Prices per 1M tokens. GPT-5.4 and GPT-5.4 Pro use **breakpoint pricing** at 272K
 | GPT-4o       | 2.50       | 10.00       | 128K    | flagship  |
 | o3           | 2.00       | 8.00        | 200K    | reasoning |
 | o4-mini      | 1.10       | 4.40        | 200K    | reasoning |
+
+## Security Baseline
+
+**Per-unit rates verified via AWS Pricing API for us-east-1 on 2026-05-04.**
+**Config pricing effective 2025-09-01; Security Hub pricing effective 2026-03-01.**
+**Re-verify if migrating to a non-us-east-1 region or if any of these services re-prices.**
+
+### CloudTrail
+
+| Metric                                          | Rate                                       |
+| ----------------------------------------------- | ------------------------------------------ |
+| Management events (first trail per region/type) | $0.00                                      |
+| Management events (additional trails)           | $2.00 per 100K events                      |
+| Data events                                     | $0.10 per 100K events (not used by Tier 1) |
+
+### GuardDuty
+
+| Metric                      | Rate                       | Notes                                           |
+| --------------------------- | -------------------------- | ----------------------------------------------- |
+| First 30 days               | $0.00                      | Free trial per account                          |
+| CloudTrail event analysis   | $4.00 per 1M events        | First 500M/mo; scales down thereafter           |
+| VPC Flow Log / DNS analysis | $1.00 per GB               | First 500 GB/mo                                 |
+| DNS query analysis          | $1.00 per 1M queries       |                                                 |
+| Small-startup typical       | ~$2–25/mo (typical $14/mo) | After free trial, with ~2M CloudTrail events/mo |
+
+### AWS Config (pricing effective 2025-09-01)
+
+| Metric                             | Rate                                   | Notes                                                                  |
+| ---------------------------------- | -------------------------------------- | ---------------------------------------------------------------------- |
+| Continuous configuration item      | $0.003 per item                        | Records every change                                                   |
+| Daily configuration item           | $0.012 per daily item                  | Once-per-day snapshot; cheaper for slow-changing accounts, less signal |
+| Small-startup typical (continuous) | ~$2–10/mo                              | 50–300 CIs/mo continuous                                               |
+| Source                             | AWS Pricing API, us-east-1, 2026-05-04 |                                                                        |
+
+### AWS Security Hub (pricing effective 2026-03-01)
+
+| Metric                         | Rate                                   | Notes                                                                |
+| ------------------------------ | -------------------------------------- | -------------------------------------------------------------------- |
+| First 30 days                  | $0.00                                  | Free trial per account                                               |
+| Security checks                | $0.001 per check                       | First 100K checks/mo; tapers above                                   |
+| Per-EC2-hour monitoring        | $0.0052083/hr                          | ~$3.80/mo per instance                                               |
+| Per-Lambda-function monitoring | $0.000434/hr                           | ~$0.32/mo per function                                               |
+| Per-container-image scanning   | $0.0002894/hr                          |                                                                      |
+| Small-startup typical          | ~$1–15/mo                              | After trial; Fargate-only startups pay nothing for the EC2 dimension |
+| Source                         | AWS Pricing API, us-east-1, 2026-05-04 |                                                                      |
+
+### AWS Budgets
+
+| Metric                      | Rate                     | Notes                                      |
+| --------------------------- | ------------------------ | ------------------------------------------ |
+| First 2 budgets per account | $0.00                    | Free tier                                  |
+| Additional budgets          | $0.02 per budget per day | Tier 1 emits 1 budget, so effectively free |
