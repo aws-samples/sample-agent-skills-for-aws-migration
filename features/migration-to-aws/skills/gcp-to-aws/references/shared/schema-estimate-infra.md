@@ -98,6 +98,15 @@ The fields **`aws_monthly_premium`**, **`aws_monthly_balanced`**, **`aws_monthly
       "monthly_difference": -106,
       "annual_difference": -1272,
       "percent_change": "-35%"
+    },
+    "commitment_context": {
+      "gcp_has_active_cuds": true,
+      "gcp_effective_discount_percent": 8.2,
+      "gcp_monthly_at_list": 300,
+      "gcp_monthly_net_of_discounts": 275,
+      "aws_1yr_savings_plan_typical_discount": "20-30%",
+      "aws_3yr_savings_plan_typical_discount": "40-60%",
+      "note": "GCP baseline uses list price for apples-to-apples comparison. Customer currently saves 8.2% via CUDs. AWS Savings Plans offer comparable or deeper discounts post-migration."
     }
   },
 
@@ -208,6 +217,7 @@ The fields **`aws_monthly_premium`**, **`aws_monthly_balanced`**, **`aws_monthly
 - `projected_costs.breakdown` covers compute, database, storage, networking, and supporting services
 - Every service in `aws-design.json` is represented in the cost breakdown
 - `cost_comparison` shows all three options with monthly and annual differences
+- `cost_comparison.commitment_context` is present if `billing-profile.json` has `commitments.has_active_cuds == true`; omitted otherwise
 - `migration_cost_considerations.billing_data_available` is `true` if `billing-profile.json` exists, `false` otherwise
 - If `billing_data_available` is `true`: `migration_cost_considerations.categories` lists **GCP vendor egress / data transfer** only (never human or professional-services costs)
 - If `billing_data_available` is `false`: `migration_cost_considerations.categories` is empty; `note` explains that billing data is required for GCP egress fee estimates
