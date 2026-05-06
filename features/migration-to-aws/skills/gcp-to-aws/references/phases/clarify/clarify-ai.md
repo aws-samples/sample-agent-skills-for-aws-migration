@@ -10,9 +10,10 @@ Before presenting questions, show:
 
 > **AI Context Summary:**
 > **AI source:** [from `summary.ai_source`: "Gemini", "OpenAI", "Both", or "Other"]
-> **Models detected:** [from `models[].model_id`]
-> **Capabilities in use:** [from `integration.capabilities_summary` where true]
-> **Integration pattern:** [from `integration.pattern`] via [from `integration.primary_sdk`]
+> **Profile origin:** [from `metadata.profile_source`: if `iac_vertex` or `summary.inferred_from_iac` is true, state that Terraform was the primary signal and application code did not fully characterize the workload]
+> **Models detected:** [from `models[].model_id`; if empty, say **None inferred from code or IaC** — the following questions will pin down models and frameworks]
+> **Capabilities in use:** [from `integration.capabilities_summary` where true; if all false or pattern is `unknown`, say **Not inferred — confirm below**]
+> **Integration pattern:** [from `integration.pattern`; if `unknown`, say **Unknown (IaC-only)**] via [from `integration.primary_sdk`, or **not determined**]
 > **Gateway/router:** [from `integration.gateway_type`, or "None (direct SDK)"]
 > **Frameworks:** [from `integration.frameworks`, or "None"]
 

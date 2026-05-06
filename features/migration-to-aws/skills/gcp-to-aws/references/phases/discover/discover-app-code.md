@@ -145,7 +145,10 @@ Before finalizing AI detection, verify signals are genuine:
 - **Vector database alone is not AI** — Require embeddings library imports (langchain, llama-index). A Firestore/Datastore by itself is a regular database.
 - **Dead/commented-out code excluded** — Only count active code.
 
-**Exit gate:** If overall AI confidence < 70%, **exit cleanly**. Do not generate `ai-workload-profile.json`. Report to the parent orchestrator: signals found, confidence level, and reason for not generating the AI profile. The inferred resources from Steps 1-2 remain available for other sub-files (e.g., discover-iac.md may use them for evidence merge). If no other sub-discoverer produces artifacts, the parent orchestrator will inform the user to provide Terraform files or billing exports.
+**Exit gate:** If overall AI confidence < 70%:
+
+- **If** `$MIGRATION_DIR/ai-workload-profile.json` **already exists** with `metadata.profile_source` = `"iac_vertex"` (from `discover-iac.md` Step 7d — strong Vertex Terraform): **exit cleanly** without deleting or modifying that file. Report to the parent orchestrator: signals found, confidence below 70%, and that the **IaC-inferred AI profile is retained** for Clarify.
+- **Otherwise:** Do **not** generate `ai-workload-profile.json`. Report signals found, confidence level, and reason for not generating the AI profile. The inferred resources from Steps 1-2 remain available for other sub-files (e.g., discover-iac.md may use them for evidence merge). If no other sub-discoverer produces artifacts, the parent orchestrator will inform the user to provide Terraform files or billing exports.
 
 **If confidence >= 70%**, continue to Steps 5-8 below.
 
@@ -292,6 +295,20 @@ If no Terraform files were provided, set `infrastructure: []`.
 
 Load `references/shared/schema-discover-ai.md` and generate output following the `ai-workload-profile.json` schema.
 
+### Pre-existing IaC profile (`profile_source: "iac_vertex"`)
+
+If `$MIGRATION_DIR/ai-workload-profile.json` **already exists** with `metadata.profile_source` = `"iac_vertex"`:
+
+1. Execute Steps 5–7 to build the **code-derived** profile content as usual.
+2. **Merge** into the final file written to `$MIGRATION_DIR/ai-workload-profile.json`:
+   - Set `metadata.profile_source` to **`"merged"`**.
+   - Set `metadata.sources_analyzed.terraform` to **`true`** when Terraform was present in the project (IaC discovery ran).
+   - Set `metadata.sources_analyzed.application_code` to **`true`**.
+   - **Code wins on conflict** for `models[]`, `integration`, `summary.ai_source`, `summary.overall_confidence`, `summary.confidence_level`, and `detection_signals` (code-derived signals take precedence; you may append non-duplicate Terraform `detection_signals` entries).
+   - **`infrastructure[]`:** Union by resource `address`. Include all Vertex-related entries from the IaC profile plus any from Step 7; where the same `address` appears, prefer the entry with richer `config` (typically Step 7 after code).
+   - Set `summary.inferred_from_iac` to **`false`** when Step 5–6 populated models or integration from code; if `models[]` is still empty after code analysis, keep `inferred_from_iac` consistent with whether Clarify still needs to disambiguate (default **`false`** once code path ran at ≥70% confidence).
+3. If no pre-existing `iac_vertex` file, generate a fresh profile with `metadata.profile_source` = **`"application_code"`**.
+
 **CRITICAL field names** — use EXACTLY these keys:
 
 - `model_id` (not model_name, name)
@@ -322,6 +339,7 @@ After generating the output file, the parent `discover.md` handles the phase sta
 
 ## Output Validation Checklist — ai-workload-profile.json
 
+- `metadata.profile_source` is one of: `"application_code"`, `"iac_vertex"`, `"merged"`
 - `metadata.sources_analyzed` reflects which data sources were actually provided
 - `summary.overall_confidence` matches the detection confidence from Step 4
 - `summary.total_models_detected` matches the length of `models` array
