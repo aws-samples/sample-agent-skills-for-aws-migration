@@ -407,6 +407,242 @@
     "mtime": 1778087605.4945729,
     "hash": "857df26d2b9111abe5ed6e35b2c6c5af"
   },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/SKILL.md": {
+    "mtime": 1778090828.4964738,
+    "hash": "98727ab966816b6dbe35c7da87a38521"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/clustering/terraform/depth-calculation.md": {
+    "mtime": 1778092175.3157406,
+    "hash": "5010ad90ffd468538c3620042c340623"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/clustering/terraform/clustering-algorithm.md": {
+    "mtime": 1778092146.6808462,
+    "hash": "5d0bc411e514fe628ed60ea63d4c07a8"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/clustering/terraform/typed-edges-strategy.md": {
+    "mtime": 1778092204.4038281,
+    "hash": "154d62252cc77f70b698a0707bb46c2d"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/clustering/terraform/classification-rules.md": {
+    "mtime": 1778092094.2502573,
+    "hash": "424559305465666c9a548fee29a5d139"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/schema-discover-ai.md": {
+    "mtime": 1778092307.8083842,
+    "hash": "827028d495ed42f0c206b7c9e25d652e"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/ai-migration-guardrails.md": {
+    "mtime": 1778092784.392413,
+    "hash": "da0a196f42fed2f2fc4c5c20c0805fc5"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/schema-phase-status.md": {
+    "mtime": 1778092214.8819103,
+    "hash": "346b302ec1abf422c007c9a5adba6480"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/bedrock-quotas.md": {
+    "mtime": 1778092622.7770712,
+    "hash": "a3426801eafea43e53fa305d8ebd7b81"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/migration-complexity.md": {
+    "mtime": 1778092571.483927,
+    "hash": "e9eccc76474e582d883076e127dc1496"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/terraform-validation.md": {
+    "mtime": 1778092683.180493,
+    "hash": "42426093b2f0d15921acda74c9984fdc"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/pricing-cache.md": {
+    "mtime": 1778093011.6838555,
+    "hash": "184390b484b69d1077b0c36f90bd5ca9"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/schema-estimate-infra.md": {
+    "mtime": 1778092470.329556,
+    "hash": "847b7f65dc48cdde51100628d0d321b2"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/schema-discover-iac.md": {
+    "mtime": 1778092246.092841,
+    "hash": "aade3e0d273eba15971d7f1aa5501b20"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/retarget-gotchas.md": {
+    "mtime": 1778092759.5993812,
+    "hash": "cf28d14d9b8fddadb9c187a3ae843126"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/schema-discover-billing.md": {
+    "mtime": 1778092337.6161354,
+    "hash": "94ba8449466225c673ab245d1520f6a6"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/shared/ai-model-lifecycle.md": {
+    "mtime": 1778092831.4395523,
+    "hash": "44cb59fec330bf58e8d370a463d8ff3d"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/fast-path.md": {
+    "mtime": 1778092058.9867246,
+    "hash": "adaf22318ceab4807cd112e239f1df11"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/storage.md": {
+    "mtime": 1778092092.358142,
+    "hash": "f099e55c1d00a6cd2f4830e712aeb8f8"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/design-ref-agentic-to-agentcore.md": {
+    "mtime": 1778093066.6163497,
+    "hash": "b0c576a4a69640ea2faa83d8f6923341"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/design-ref-harness.md": {
+    "mtime": 1778093066.618621,
+    "hash": "e14354b6d53fd5f8efdc3f0008eb6283"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/networking.md": {
+    "mtime": 1778092145.892228,
+    "hash": "91ad79ccb7cfb651f61de1143082819a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/compute.md": {
+    "mtime": 1778091994.649128,
+    "hash": "0bf22a310a7ace0aa894dcea75a94fc5"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/messaging.md": {
+    "mtime": 1778092176.4356036,
+    "hash": "bcd87e9581f444831ae5a0c348f670e0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/index.md": {
+    "mtime": 1778091996.2328362,
+    "hash": "be93d17bce1ef192f1b7ac0b40558906"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/ai-openai-to-bedrock.md": {
+    "mtime": 1778092060.927634,
+    "hash": "5e2bad44c13c7c7193019e3436c98ea5"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/security.md": {
+    "mtime": 1778092219.7947934,
+    "hash": "7ac4a52c8cb7df8013ed538615063ed2"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/ai.md": {
+    "mtime": 1778092091.1856282,
+    "hash": "8b6f2f259fe62880fd15010752512886"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/design-refs/database.md": {
+    "mtime": 1778092058.5192616,
+    "hash": "3adbfc4a78d2ba2936323ce215e16f35"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/design/design-infra.md": {
+    "mtime": 1778091855.2206328,
+    "hash": "e73a0fa3c6a65d7b55cafaeb5b8ad036"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/design/design-billing.md": {
+    "mtime": 1778092057.7494218,
+    "hash": "501631d880dc16ad07263a6f9294dec1"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/design/design-ai.md": {
+    "mtime": 1778091967.267051,
+    "hash": "fa15de51c46962f0b143ee01f27f1bc8"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/design/design.md": {
+    "mtime": 1778091338.4205654,
+    "hash": "b47aab246301dc55958eefa79f4b81cf"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/discover/discover-app-code.md": {
+    "mtime": 1778091004.4541328,
+    "hash": "ab6dcb785711d361ae50eaaf683e0ea0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/discover/discover-iac.md": {
+    "mtime": 1778090966.737323,
+    "hash": "7ba576824daaa768fd32f93eff148ceb"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/discover/discover.md": {
+    "mtime": 1778090923.9058182,
+    "hash": "0b7521504295582bd7424abdf7b120a9"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/discover/discover-billing.md": {
+    "mtime": 1778091032.1722205,
+    "hash": "acb0b6f49f3537050eeba0998f7f4026"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/clarify/clarify-compute.md": {
+    "mtime": 1778091215.2958195,
+    "hash": "975759f72b797b5f5b30565cf97940ed"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/clarify/clarify-ai.md": {
+    "mtime": 1778091275.3941169,
+    "hash": "8f6d48164b672fa35c9afe68d915c5d3"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/clarify/clarify-ai-only.md": {
+    "mtime": 1778091305.9395185,
+    "hash": "4943bf286c928f87fd78a548aef79f59"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/clarify/clarify-global.md": {
+    "mtime": 1778091144.7522783,
+    "hash": "bf524754611c1323a0703b55407b859c"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/clarify/clarify.md": {
+    "mtime": 1778091115.4190943,
+    "hash": "d8db6019e9df397c81657716849a9a4b"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/clarify/clarify-database.md": {
+    "mtime": 1778091236.3166227,
+    "hash": "a96b04d15875b38df63374e3f9205608"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/feedback/feedback-trace.md": {
+    "mtime": 1778091966.1247637,
+    "hash": "e733083b24b83be26c0a0acb215f8110"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/feedback/feedback.md": {
+    "mtime": 1778091942.8979664,
+    "hash": "01f3f685d2d3c3ce2e4655ce4deefe87"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-artifacts-ai.md": {
+    "mtime": 1778092203.401081,
+    "hash": "4ce4c9e61513dfd0c59a5d4c4a558ae2"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-billing.md": {
+    "mtime": 1778092146.9417422,
+    "hash": "60a7c6396ee4d2d9bf25ca52cf8baf0a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-ai.md": {
+    "mtime": 1778092060.6174197,
+    "hash": "4903a010bf813fbe095b4e61b8b6d59f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-artifacts-scripts.md": {
+    "mtime": 1778092060.1535227,
+    "hash": "e8c589b945d237b9f8845a2fe9adfd60"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-artifacts-docs.md": {
+    "mtime": 1778092467.4806929,
+    "hash": "95513f497cd628f3a1877f5a433f42a9"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-artifacts-billing.md": {
+    "mtime": 1778092241.1471665,
+    "hash": "ff3a22f8d098f3ca999a496bdc40117a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-infra.md": {
+    "mtime": 1778091997.2533028,
+    "hash": "a7d39564cd496ab49cf143f16c82639b"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate.md": {
+    "mtime": 1778091898.5528407,
+    "hash": "296448b2c3404b53f6463a0dd1547bb9"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-artifacts-report.md": {
+    "mtime": 1778092572.0842383,
+    "hash": "0a141f74bcc7932f473d439e4b7d158a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/generate/generate-artifacts-infra.md": {
+    "mtime": 1778091985.0661497,
+    "hash": "348c0c8fc250f06bc0b7d9c991904344"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/estimate/estimate-infra.md": {
+    "mtime": 1778092077.7500823,
+    "hash": "1eebb7e4a525195168866dcbd535e0a7"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/estimate/estimate.md": {
+    "mtime": 1778091896.756967,
+    "hash": "9236a822018a490bfa208fe9c8ab79fe"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/estimate/estimate-ai.md": {
+    "mtime": 1778092146.4263213,
+    "hash": "4c6e45d7162201ff7c48f5fe8dc14bb0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/azure-to-aws/references/phases/estimate/estimate-billing.md": {
+    "mtime": 1778091955.3835595,
+    "hash": "4c47a2cd33aa49559edcd604825dfa1b"
+  },
   "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/invariants.yml": {
     "mtime": 1778087605.50169,
     "hash": "4ba4f67a678109c7dde4fb6dd22eaad7"
