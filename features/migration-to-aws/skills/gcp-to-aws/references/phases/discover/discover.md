@@ -37,6 +37,7 @@ Multiple artifacts can be produced in a single run — they are not mutually exc
    {
      "migration_id": "[MMDD-HHMM]",
      "last_updated": "[ISO 8601 timestamp]",
+     "current_phase": "discover",
      "phases": {
        "discover": "in_progress",
        "clarify": "pending",
@@ -121,10 +122,19 @@ After all loaded sub-discoveries complete, check what artifacts were produced in
    - `ai-workload-profile.json` — App code discovery detected AI workloads
    - `billing-profile.json` — Billing data parsed
 2. **If NO artifacts were produced** (sub-discoveries ran but produced no output): STOP and output: "Discovery ran but produced no artifacts. Check that your input files contain valid GCP resources and try again."
+3. **Route output gate (fail closed):** For each triggered sub-discovery route, require at least one expected artifact before completion:
+   - If `discover-iac.md` ran -> require `gcp-resource-inventory.json` and `gcp-resource-clusters.json`
+   - If `discover-app-code.md` ran -> require `ai-workload-profile.json`
+   - If full `discover-billing.md` ran OR lightweight billing extraction ran -> require `billing-profile.json`
+   - If any triggered route is missing its expected artifact(s): STOP and output: "Discover route [name] did not produce required artifacts. Resolve the sub-discovery failure before completing Phase 1."
 
 ## Step 3: Update Phase Status
 
-In the **same turn** as the output message below, use the Phase Status Update Protocol (Write tool) to write `.phase-status.json` with `phases.discover` set to `"completed"` and all other phases unchanged from their initial values.
+In the **same turn** as the output message below, use the Phase Status Update Protocol (read-merge-write) to update `.phase-status.json`:
+
+- Set `phases.discover` to `"completed"`
+- Set `current_phase` to `"clarify"`
+- Keep all other phase values unchanged unless already advanced by a resumed run
 
 Output to user — build message from whichever artifacts exist:
 

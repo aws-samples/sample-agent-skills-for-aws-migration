@@ -1,8 +1,12 @@
 # Compute Services Design Rubric
 
-**Applies to:** Cloud Run, Cloud Functions, Compute Engine, GKE, App Engine
+**Applies to:** Cloud Run (v1/v2), Cloud Functions (Gen 1/Gen 2), Compute Engine, GKE, App Engine
 
-**Table lookup first:** Check `fast-path.md` **Direct Mappings** for this Terraform type. **Cloud Run, Cloud Functions, GKE, Compute Engine, and App Engine are not** in Direct Mappings — go straight to the rubric below (confidence will be **`inferred`**). Only types in Direct Mappings (e.g. none of the above for compute) get **`deterministic`** from that file.
+**Table lookup first:** Check `fast-path.md` **Direct Mappings** for this Terraform type.
+
+- `google_cloud_run_service`, `google_cloud_run_v2_service`, `google_cloudfunctions_function`, and `google_cloudfunctions2_function` are currently in Direct Mappings and usually resolve with `confidence: "deterministic"` when row conditions are met.
+- `google_compute_instance`, `google_container_cluster`, and `google_app_engine_application` are not direct-mapped in `fast-path.md`; use the rubric below (typically `confidence: "inferred"`).
+- If a resource is not eligible for Direct Mappings (or row conditions are not met), use the rubric below.
 
 ## Eliminators (Hard Blockers)
 

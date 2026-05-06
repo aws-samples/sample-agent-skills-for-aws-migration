@@ -79,6 +79,13 @@ Count resources matching these types. This is the **primary resource count**.
 
 For small projects, skip the full clustering pipeline. Instead:
 
+0. **Exclude Priority 0 resources** before classification. Remove any resources matching the
+   Excluded Resources list in `classification-rules.md` (Priority 0). These include:
+   - `google_identity_platform_*` — Auth provider (keep existing, do not migrate)
+   - `google_firebase_auth_*` — Auth provider (keep existing, do not migrate)
+     Log each excluded resource: "Auth provider detected — excluded from migration scope. Keep your existing auth solution."
+     Do NOT include excluded resources in `gcp-resource-inventory.json` or any cluster.
+
 1. **Classify resources** using only Priority 1 hardcoded rules from the PRIMARY types list above.
    - Resources matching the list → PRIMARY
    - All other resources → SECONDARY with role inferred from type:
@@ -120,6 +127,7 @@ phases (clarify, design, estimate, generate) work identically regardless of clus
 
 1. Read `references/clustering/terraform/classification-rules.md` completely
 2. For EACH resource from Step 1, apply classification rules in priority order:
+   - **Priority 0**: Check if in Excluded Resources list → **remove from resource list entirely**. Do not classify, cluster, or include in output. Log: "Auth provider detected — excluded from migration scope."
    - **Priority 1**: Check if in PRIMARY list → mark `classification: "PRIMARY"`, assign `tier`, continue
    - **Priority 2**: Check if type matches SECONDARY patterns → mark `classification: "SECONDARY"` with `secondary_role` (one of: `identity`, `access_control`, `network_path`, `configuration`, `encryption`, `orchestration`)
    - **Priority 3**: Apply fallback heuristics first, then LLM inference → mark as SECONDARY with `secondary_role` and `confidence` field (0.5-0.75)

@@ -14,23 +14,23 @@
 
 ## Database Services
 
-| GCP Service            | Resource Type                  | Reference File | Typical AWS target  |
-| ---------------------- | ------------------------------ | -------------- | --------------------- |
-| Cloud SQL (PostgreSQL) | `google_sql_database_instance` | `database.md`  | RDS Aurora PostgreSQL |
-| Cloud SQL (MySQL)      | `google_sql_database_instance` | `database.md`  | RDS Aurora MySQL      |
-| Cloud SQL (SQL Server) | `google_sql_database_instance` | `database.md`  | RDS SQL Server        |
-| Firestore (instance)   | `google_firestore_database`    | `database.md`  | DynamoDB              |
-| Firestore (document)   | `google_firestore_document`    | `database.md`  | DynamoDB              |
+| GCP Service            | Resource Type                  | Reference File | Typical AWS target                                                                |
+| ---------------------- | ------------------------------ | -------------- | --------------------------------------------------------------------------------- |
+| Cloud SQL (PostgreSQL) | `google_sql_database_instance` | `database.md`  | RDS Aurora PostgreSQL                                                             |
+| Cloud SQL (MySQL)      | `google_sql_database_instance` | `database.md`  | RDS Aurora MySQL                                                                  |
+| Cloud SQL (SQL Server) | `google_sql_database_instance` | `database.md`  | RDS SQL Server                                                                    |
+| Firestore (instance)   | `google_firestore_database`    | `database.md`  | DynamoDB                                                                          |
+| Firestore (document)   | `google_firestore_document`    | `database.md`  | DynamoDB                                                                          |
 | BigQuery               | `google_bigquery_*`            | `database.md`  | **`Deferred — specialist engagement`** only (see `design-infra.md` BigQuery gate) |
-| Memorystore (Redis)    | `google_redis_instance`        | `database.md`  | ElastiCache Redis     |
-| Cloud Spanner          | `google_spanner_instance`      | `database.md`  | Aurora DSQL           |
+| Memorystore (Redis)    | `google_redis_instance`        | `database.md`  | ElastiCache Redis                                                                 |
+| Cloud Spanner          | `google_spanner_instance`      | `database.md`  | Aurora DSQL                                                                       |
 
 ## Storage Services
 
 | GCP Service         | Resource Type               | Reference File | Typical AWS target |
-| ------------------- | --------------------------- | -------------- | --------- |
-| Cloud Storage (GCS) | `google_storage_bucket`     | `storage.md`   | S3        |
-| Filestore           | `google_filestore_instance` | `storage.md`   | EFS       |
+| ------------------- | --------------------------- | -------------- | ------------------ |
+| Cloud Storage (GCS) | `google_storage_bucket`     | `storage.md`   | S3                 |
+| Filestore           | `google_filestore_instance` | `storage.md`   | EFS                |
 
 ## Networking Services
 
@@ -63,10 +63,12 @@
 
 ## Secondary/Infrastructure Services
 
-| GCP Service      | Resource Type            | Reference File    | Typical AWS target |
-| ---------------- | ------------------------ | ----------------- | ---------- |
-| Service Accounts | `google_service_account` | `networking.md`   | IAM Roles  |
-| Cloud Monitoring | (managed)                | Not in v1.0 scope | CloudWatch |
+| GCP Service              | Resource Type                          | Reference File    | Typical AWS target |
+| ------------------------ | -------------------------------------- | ----------------- | ------------------ |
+| Service Accounts         | `google_service_account`               | `networking.md`   | IAM Roles          |
+| Secret Manager (secret)  | `google_secret_manager_secret`         | `security.md`     | Secrets Manager    |
+| Secret Manager (version) | `google_secret_manager_secret_version` | `security.md`     | Secrets Manager    |
+| Cloud Monitoring         | (managed)                              | Not in v1.0 scope | CloudWatch         |
 
 ---
 

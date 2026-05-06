@@ -38,7 +38,7 @@ Before presenting questions, show:
 - `mcp.server` / `mcp.client` imports, MCP config JSON files → F
 - A2A protocol config or SDK imports → F
 - Vapi, Bland.ai, Retell SDK imports → G
-- Nova Sonic or Whisper integration in code → G
+- Nova Sonic / Nova 2 Sonic or Whisper integration in code → G
 
 _Skip when:_ Auto-detection fully resolves the framework(s). Use detected value(s) with `chosen_by: "extracted"`.
 
@@ -54,15 +54,15 @@ _Skip when:_ Auto-detection fully resolves the framework(s). Use detected value(
 >
 > _(Multiple selections allowed)_
 
-| Answer                             | Recommendation Impact                                                                                     | Migration Effort  | Timeline                                           |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------- | -------------------------------------------------- |
-| A) No framework — direct API calls | Swap SDK calls to Bedrock SDK; evaluate Bedrock Agents if planning agentic                                | Low               | 1–3 weeks depending on call sites                  |
-| B) LLM router/gateway              | Add Bedrock as provider in gateway config; no app code changes; verify SigV4 auth                         | Minimal           | Hours to 1–3 days                                  |
-| C) LangChain / LangGraph           | Provider swap via `ChatBedrock`; chains/graphs/tools preserved; validate tool schemas                     | Low               | 1–3 days; 1 week if complex graphs                 |
-| D) Multi-agent framework           | Path 1: Keep framework, swap LLM provider (lower effort). Path 2: Migrate to Bedrock multi-agent (deeper) | Medium            | Path 1: 3–5 days; Path 2: 2–4 weeks                |
-| E) OpenAI Agents SDK               | Highest effort; tightly coupled to OpenAI API; recommend Bedrock Agents or LangGraph as portable step     | High              | 2–4 weeks                                          |
-| F) MCP / A2A                       | Bedrock Agents supports MCP natively; A2A interop available; recommend Bedrock Agents as orchestration    | Low–Medium        | 3–5 days MCP; 1–2 weeks A2A                        |
-| G) Voice platform                  | If platform supports Bedrock natively → config change; otherwise evaluate Nova Sonic                      | Minimal to Medium | Hours if native; 2–3 weeks if Nova Sonic migration |
+| Answer                             | Recommendation Impact                                                                                     | Migration Effort  | Timeline                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------- | ---------------------------------------------------- |
+| A) No framework — direct API calls | Swap SDK calls to Bedrock SDK; evaluate Bedrock Agents if planning agentic                                | Low               | 1–3 weeks depending on call sites                    |
+| B) LLM router/gateway              | Add Bedrock as provider in gateway config; no app code changes; verify SigV4 auth                         | Minimal           | Hours to 1–3 days                                    |
+| C) LangChain / LangGraph           | Provider swap via `ChatBedrock`; chains/graphs/tools preserved; validate tool schemas                     | Low               | 1–3 days; 1 week if complex graphs                   |
+| D) Multi-agent framework           | Path 1: Keep framework, swap LLM provider (lower effort). Path 2: Migrate to Bedrock multi-agent (deeper) | Medium            | Path 1: 3–5 days; Path 2: 2–4 weeks                  |
+| E) OpenAI Agents SDK               | Highest effort; tightly coupled to OpenAI API; recommend Bedrock Agents or LangGraph as portable step     | High              | 2–4 weeks                                            |
+| F) MCP / A2A                       | Bedrock Agents supports MCP natively; A2A interop available; recommend Bedrock Agents as orchestration    | Low–Medium        | 3–5 days MCP; 1–2 weeks A2A                          |
+| G) Voice platform                  | If platform supports Bedrock natively → config change; otherwise evaluate Nova 2 Sonic                    | Minimal to Medium | Hours if native; 2–3 weeks if Nova 2 Sonic migration |
 
 ### Combination Logic
 
@@ -137,18 +137,18 @@ Interpret → `ai_priority`. Default: E → `"balanced"`.
 > I) Real-time conversational speech
 > J) None — standard features are sufficient
 
-| Answer                               | Recommendation Impact                                                                                                                                                        |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Function calling / Tool use          | Claude Sonnet 4.6 — best-in-class tool use on Bedrock via structured JSON tool schemas; supports parallel tool calls and multi-turn tool use                                 |
+| Answer                               | Recommendation Impact                                                                                                                                                                                                                                                                                           |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Function calling / Tool use          | Claude Sonnet 4.6 — best-in-class tool use on Bedrock via structured JSON tool schemas; supports parallel tool calls and multi-turn tool use                                                                                                                                                                    |
 | Ultra-long context (> 300K tokens)   | Claude Sonnet/Opus 4.6 long-context SKUs where available (standard on-demand for 4.6 matches base tier in US East N. Virginia per [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/)); or Llama 4 Scout (10M), Llama 4 Maverick (1M), Nova 2 Pro/Lite (1M) for very large native context windows |
-| Extended thinking / Chain-of-thought | Claude Sonnet 4.6 with extended thinking mode; Claude Opus 4.7 (or Opus 4.6) for the most complex reasoning                                                                                    |
-| Prompt caching                       | Claude Sonnet 4.6 with prompt caching enabled; cost savings analysis included                                                                                                |
-| RAG optimization                     | Amazon Bedrock Knowledge Bases recommended alongside model; Titan Embeddings for vector store                                                                                |
-| Agentic workflows                    | Claude Sonnet 4.6 with Bedrock Agents; multi-agent orchestration guidance included                                                                                           |
-| Real-time speed (< 500ms)            | Claude Haiku 4.5 or Nova Micro; streaming response guidance included                                                                                                         |
-| Multimodal with image generation     | Claude Sonnet 4.6 (vision) + Amazon Nova Canvas or Titan Image Generator for generation                                                                                      |
-| Real-time conversational speech      | Amazon Nova Sonic recommended for speech-to-speech; latency guidance included                                                                                                |
-| None                                 | Default recommendation from Q16 priority stands                                                                                                                              |
+| Extended thinking / Chain-of-thought | Claude Sonnet 4.6 with extended thinking mode; Claude Opus 4.6 for most complex reasoning                                                                                                                                                                                                                       |
+| Prompt caching                       | Claude Sonnet 4.6 with prompt caching enabled; cost savings analysis included                                                                                                                                                                                                                                   |
+| RAG optimization                     | Amazon Bedrock Knowledge Bases recommended alongside model; Titan Embeddings for vector store                                                                                                                                                                                                                   |
+| Agentic workflows                    | Claude Sonnet 4.6 with Bedrock Agents; multi-agent orchestration guidance included                                                                                                                                                                                                                              |
+| Real-time speed (< 500ms)            | Claude Haiku 4.5 or Nova Micro; streaming response guidance included                                                                                                                                                                                                                                            |
+| Multimodal with image generation     | Claude Sonnet 4.6 (vision) + Amazon Nova Canvas for generation                                                                                                                                                                                                                                                  |
+| Real-time conversational speech      | Amazon Nova 2 Sonic recommended for speech-to-speech; latency guidance included                                                                                                                                                                                                                                 |
+| None                                 | Default recommendation from Q16 priority stands                                                                                                                                                                                                                                                                 |
 
 Interpret → `ai_critical_feature`. Default: J → no override.
 
@@ -179,23 +179,28 @@ Establishes baseline Bedrock recommendation. **Override hierarchy:** Q17 special
 > C) GPT-3.5 Turbo
 > D) GPT-4 / GPT-4 Turbo
 > E) GPT-4o
-> F) GPT-5 / GPT-5.x
-> G) o-series (o1, o3)
-> H) Other / Multiple models
-> I) I don't know
+> F) GPT-5.4 / GPT-5.4 Mini / GPT-5.4 Nano
+> G) GPT-5 / GPT-5.x (older)
+> H) o-series (o1, o3)
+> I) Other / Multiple models
+> J) I don't know
 
-| Source Model              | Baseline Bedrock Recommendation                                       | Pricing Context                                                  |
-| ------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Gemini Flash variants     | Claude Haiku 4.5 ($1/$5) — speed and cost optimized                   | Strong savings vs Gemini Flash pricing                           |
-| Gemini Pro variants       | Claude Sonnet 4.6 ($3/$15) — quality match                            | Comparable pricing tier                                          |
-| GPT-3.5 Turbo             | Claude Haiku 4.5 ($1/$5) — cost-equivalent                            | Haiku is faster and cheaper                                      |
-| GPT-4 / GPT-4 Turbo       | Claude Sonnet 4.6 ($3/$15) — quality equivalent                       | Major savings: GPT-4 Turbo is $10/$30 vs Sonnet $3/$15           |
-| GPT-4o                    | Claude Sonnet 4.6 ($3/$15) — performance equivalent                   | Modest savings on output; input slightly higher on Bedrock       |
-| GPT-5 / GPT-5.x           | Claude Sonnet 4.6 ($3/$15) — performance equivalent                   | GPT-5 is $1.25/$10 — savings story is quality/features, not cost |
-| GPT-5 (flagship use case) | Claude Opus 4.7 / 4.6 ($5/$25) — flagship-to-flagship                       | Opus still cheaper than GPT-5 Pro ($15/$120)                     |
-| o-series (o1, o3)         | Claude Sonnet 4.6 with extended thinking; Opus 4.7 / 4.6 for most demanding | o1 is $15/$60 — significant savings with Sonnet 4.6 at $3/$15    |
+| Source Model              | Baseline Bedrock Recommendation                                       | Pricing Context                                                                   |
+| ------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Gemini Flash variants     | Claude Haiku 4.5 ($1/$5) — speed and cost optimized                   | Strong savings vs Gemini Flash pricing                                            |
+| Gemini Pro variants       | Claude Sonnet 4.6 ($3/$15) — quality match                            | Comparable pricing tier                                                           |
+| GPT-3.5 Turbo             | Claude Haiku 4.5 ($1/$5) — cost-equivalent                            | Haiku is faster and cheaper                                                       |
+| GPT-4 / GPT-4 Turbo       | Claude Sonnet 4.6 ($3/$15) — quality equivalent                       | Major savings: GPT-4 Turbo is $10/$30 vs Sonnet $3/$15                            |
+| GPT-4o                    | Claude Sonnet 4.6 ($3/$15) — performance equivalent                   | Modest savings on output; input slightly higher on Bedrock                        |
+| GPT-5.4                   | Claude Sonnet 4.6 ($3/$15) — near price parity                        | GPT-5.4 is $2.50/$15 — ~5% cheaper; migration case is AWS consolidation, not cost |
+| GPT-5.4 Mini              | Nova Lite ($0.06/$0.24) — massive cost savings                        | 94% cheaper on Bedrock; strong migration case                                     |
+| GPT-5.4 Nano              | Nova Micro ($0.035/$0.14) — massive cost savings                      | 87% cheaper on Bedrock; strong migration case                                     |
+| GPT-5.4 Pro               | Nova 2 Pro ($1.38/$11) — flagship reasoning on AWS                    | 94% cheaper on Bedrock; strongest migration case                                  |
+| GPT-5 / GPT-5.x (older)   | Claude Sonnet 4.6 ($3/$15) — performance equivalent                   | GPT-5 is $1.25/$10 — savings story is quality/features, not cost                  |
+| GPT-5 (flagship use case) | Claude Opus 4.6 ($5/$25) — flagship-to-flagship                       | Opus still cheaper than GPT-5 Pro ($15/$120)                                      |
+| o-series (o1, o3)         | Claude Sonnet 4.6 with extended thinking; Opus 4.6 for most demanding | o1 is $15/$60 — significant savings with Sonnet 4.6 at $3/$15                     |
 
-**Override examples:** GPT-4 + Q16=cost → Haiku; Flash + Q17=extended thinking → Sonnet; GPT-4o + Q17=speech → Nova Sonic; GPT-3.5 + Q22=complex → Sonnet; GPT-5 + Q16=balanced → Sonnet.
+**Override examples:** GPT-4 + Q16=cost → Haiku; Flash + Q17=extended thinking → Sonnet; GPT-4o + Q17=speech → Nova 2 Sonic; GPT-3.5 + Q22=complex → Sonnet; GPT-5 + Q16=balanced → Sonnet.
 
 Interpret → `ai_model_baseline`. Default: auto-detect from code, fallback Q16 priority-based.
 
@@ -207,11 +212,11 @@ Interpret → `ai_model_baseline`. Default: auto-detect from code, fallback Q16 
 > B) Vision required — model must process images
 > C) Audio/Video inputs needed
 
-| Answer             | Recommendation Impact                                                                    |
-| ------------------ | ---------------------------------------------------------------------------------------- |
-| Text only          | Full model catalog available; cheapest/fastest text model per Q16 priority               |
-| Vision required    | Claude Sonnet or Haiku (both support multimodal vision); Nova Micro excluded (text-only) |
-| Audio/Video inputs | Amazon Nova Reel (video) or Nova Sonic (audio); Claude excluded for audio/video input    |
+| Answer             | Recommendation Impact                                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Text only          | Full model catalog available; cheapest/fastest text model per Q16 priority                                             |
+| Vision required    | Claude Sonnet or Haiku (both support multimodal vision); Nova Micro excluded (text-only)                               |
+| Audio/Video inputs | Amazon Nova 2 Sonic (audio); Nova Reel v1 for video (Legacy — EOL Sep 30, 2026); Claude excluded for audio/video input |
 
 Interpret → `ai_vision`. Default: A → no constraint.
 

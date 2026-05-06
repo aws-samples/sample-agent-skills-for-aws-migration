@@ -39,7 +39,7 @@ For resources not covered by fast-path:
 2. Set `aws_service` to **`Deferred — specialist engagement`**, `human_expertise_required` to **`true`**, `confidence` to **`inferred`**, and `aws_config` to include `specialist_engagement` (text: engage **AWS account team** and/or **data analytics migration partner** before choosing any AWS target) and `no_automated_aws_target`: `true`. Set `rubric_applied` to `["BigQuery specialist gate — no automated AWS service target"]`.
 3. **Skip** rubric steps 1–6 and the Preferred AWS target check for this resource.
 
-1. Determine service category (via `design-refs/index.md`):
+4. Determine service category (via `design-refs/index.md`):
    - `google_compute_instance` → compute
    - `google_cloudfunctions_function` → compute
    - `google_sql_database_instance` → database
@@ -52,9 +52,9 @@ For resources not covered by fast-path:
    - If pattern match: use that category
    - If no pattern match: **STOP**. Output: "Unknown GCP resource type: [type]. Not in fast-path.md or index.md. Cannot auto-map. Please file an issue with this resource type."
 
-2. Load rubric from corresponding `design-refs/*.md` file (e.g., `compute.md`, `database.md`)
+5. Load rubric from corresponding `design-refs/*.md` file (e.g., `compute.md`, `database.md`)
 
-3. Evaluate 6 criteria (1-sentence each):
+6. Evaluate 6 criteria (1-sentence each):
    - **Eliminators**: Feature incompatibility (hard blocker)
    - **Operational Model**: Managed vs self-hosted fit
    - **User Preference**: From `preferences.json` design_constraints
@@ -62,11 +62,11 @@ For resources not covered by fast-path:
    - **Cluster Context**: Affinity with other resources in this cluster
    - **Simplicity**: Prefer fewer resources / less config
 
-4. Select best-fit AWS service. Confidence = `inferred`
+7. Select best-fit AWS service. Confidence = `inferred`
 
-5. **Set `human_expertise_required`**: If the BigQuery specialist gate applied, already `true`. Otherwise set `false` unless another rubric explicitly requires it. This field is REQUIRED on every resource in the output.
+8. **Set `human_expertise_required`**: If the BigQuery specialist gate applied, already `true`. Otherwise set `false` unless another rubric explicitly requires it. This field is REQUIRED on every resource in the output.
 
-6. **Preferred AWS target check**: **Skip** if `aws_service` is **`Deferred — specialist engagement`**. Otherwise verify the selected `aws_service` aligns with the Preferred AWS Target Services table in `design-refs/fast-path.md`. If a non-preferred service is selected (e.g., App Runner for containerized workloads), substitute the preferred alternative (e.g., Fargate). Add a note to the rationale: "Preferred target: [alternative] selected for stronger ecosystem integration."
+9. **Preferred AWS target check**: **Skip** if `aws_service` is **`Deferred — specialist engagement`**. Otherwise verify the selected `aws_service` aligns with the Preferred AWS Target Services table in `design-refs/fast-path.md`. If a non-preferred service is selected (e.g., App Runner for containerized workloads), substitute the preferred alternative (e.g., Fargate). Add a note to the rationale: "Preferred target: [alternative] selected for stronger ecosystem integration."
 
 ## Step 3: Handle Secondary Resources
 
@@ -168,6 +168,14 @@ For each mapped AWS service, verify:
 - Every resource from every evaluated cluster appears in the output
 - No duplicate `gcp_address` values across clusters
 - Output is valid JSON
+
+## Completion Handoff Gate (Fail Closed)
+
+Before returning control to `design.md`, require:
+
+- `aws-design.json` exists and passes the Output Validation Checklist above.
+
+If this gate fails: STOP and output: "design-infra did not produce a valid `aws-design.json`; do not complete Phase 3."
 
 ## Present Summary
 
