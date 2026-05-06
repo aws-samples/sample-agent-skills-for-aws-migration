@@ -1,0 +1,1752 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "eval_check_phrases.py",
+      "file_type": "code",
+      "source_file": "tools/eval_check_phrases.py",
+      "source_location": "L1",
+      "community": 5,
+      "norm_label": "eval_check_phrases.py",
+      "id": "tools_eval_check_phrases_py"
+    },
+    {
+      "label": "check_phrases()",
+      "file_type": "code",
+      "source_file": "tools/eval_check_phrases.py",
+      "source_location": "L118",
+      "community": 5,
+      "norm_label": "check_phrases()",
+      "id": "tools_eval_check_phrases_check_phrases"
+    },
+    {
+      "label": "Check all required phrases exist in their target files.      Returns a list of r",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check_phrases.py",
+      "source_location": "L119",
+      "community": 5,
+      "norm_label": "check all required phrases exist in their target files.      returns a list of r",
+      "id": "tools_eval_check_phrases_rationale_119"
+    },
+    {
+      "label": "validate-manifests.mjs",
+      "file_type": "code",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L1",
+      "community": 1,
+      "norm_label": "validate-manifests.mjs",
+      "id": "tools_validate_manifests_mjs"
+    },
+    {
+      "label": "addError()",
+      "file_type": "code",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L19",
+      "community": 1,
+      "norm_label": "adderror()",
+      "id": "tools_validate_manifests_adderror"
+    },
+    {
+      "label": "readJson()",
+      "file_type": "code",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L21",
+      "community": 1,
+      "norm_label": "readjson()",
+      "id": "tools_validate_manifests_readjson"
+    },
+    {
+      "label": "findFiles()",
+      "file_type": "code",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L36",
+      "community": 1,
+      "norm_label": "findfiles()",
+      "id": "tools_validate_manifests_findfiles"
+    },
+    {
+      "label": "validatePluginJson()",
+      "file_type": "code",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L52",
+      "community": 1,
+      "norm_label": "validatepluginjson()",
+      "id": "tools_validate_manifests_validatepluginjson"
+    },
+    {
+      "label": "validateMcpJson()",
+      "file_type": "code",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L65",
+      "community": 1,
+      "norm_label": "validatemcpjson()",
+      "id": "tools_validate_manifests_validatemcpjson"
+    },
+    {
+      "label": "eval_check.py",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L1",
+      "community": 3,
+      "norm_label": "eval_check.py",
+      "id": "tools_eval_check_py"
+    },
+    {
+      "label": "load_invariants()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L29",
+      "community": 3,
+      "norm_label": "load_invariants()",
+      "id": "tools_eval_check_load_invariants"
+    },
+    {
+      "label": "check_file_exists()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L65",
+      "community": 13,
+      "norm_label": "check_file_exists()",
+      "id": "tools_eval_check_check_file_exists"
+    },
+    {
+      "label": "check_file_absent()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L73",
+      "community": 3,
+      "norm_label": "check_file_absent()",
+      "id": "tools_eval_check_check_file_absent"
+    },
+    {
+      "label": "check_content_absent()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L85",
+      "community": 9,
+      "norm_label": "check_content_absent()",
+      "id": "tools_eval_check_check_content_absent"
+    },
+    {
+      "label": "check_content_present()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L112",
+      "community": 8,
+      "norm_label": "check_content_present()",
+      "id": "tools_eval_check_check_content_present"
+    },
+    {
+      "label": "check_json_path_value()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L138",
+      "community": 12,
+      "norm_label": "check_json_path_value()",
+      "id": "tools_eval_check_check_json_path_value"
+    },
+    {
+      "label": "check_json_every()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L182",
+      "community": 10,
+      "norm_label": "check_json_every()",
+      "id": "tools_eval_check_check_json_every"
+    },
+    {
+      "label": "check_uniqueness()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L219",
+      "community": 11,
+      "norm_label": "check_uniqueness()",
+      "id": "tools_eval_check_check_uniqueness"
+    },
+    {
+      "label": "check_cross_file_join()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L255",
+      "community": 14,
+      "norm_label": "check_cross_file_join()",
+      "id": "tools_eval_check_check_cross_file_join"
+    },
+    {
+      "label": "check_custom()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L296",
+      "community": 4,
+      "norm_label": "check_custom()",
+      "id": "tools_eval_check_check_custom"
+    },
+    {
+      "label": "run_check()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L333",
+      "community": 4,
+      "norm_label": "run_check()",
+      "id": "tools_eval_check_run_check"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L353",
+      "community": 0,
+      "norm_label": "main()",
+      "id": "tools_eval_check_main"
+    },
+    {
+      "label": "Load invariant definitions for the given fixture.      Looks for fixture-specifi",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L30",
+      "community": 3,
+      "norm_label": "load invariant definitions for the given fixture.      looks for fixture-specifi",
+      "id": "tools_eval_check_rationale_30"
+    },
+    {
+      "label": "Assert a file exists in the migration directory.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L66",
+      "community": 13,
+      "norm_label": "assert a file exists in the migration directory.",
+      "id": "tools_eval_check_rationale_66"
+    },
+    {
+      "label": "Assert file(s) do NOT exist in the migration directory.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L74",
+      "community": 3,
+      "norm_label": "assert file(s) do not exist in the migration directory.",
+      "id": "tools_eval_check_rationale_74"
+    },
+    {
+      "label": "Assert patterns are NOT present in a file.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L86",
+      "community": 9,
+      "norm_label": "assert patterns are not present in a file.",
+      "id": "tools_eval_check_rationale_86"
+    },
+    {
+      "label": "Assert patterns ARE present in file(s).",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L113",
+      "community": 8,
+      "norm_label": "assert patterns are present in file(s).",
+      "id": "tools_eval_check_rationale_113"
+    },
+    {
+      "label": "Assert a JSON field has a specific value or is not null.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L139",
+      "community": 12,
+      "norm_label": "assert a json field has a specific value or is not null.",
+      "id": "tools_eval_check_rationale_139"
+    },
+    {
+      "label": "Assert every item in a JSON array has required fields.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L183",
+      "community": 10,
+      "norm_label": "assert every item in a json array has required fields.",
+      "id": "tools_eval_check_rationale_183"
+    },
+    {
+      "label": "Assert all values at a path are unique.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L220",
+      "community": 11,
+      "norm_label": "assert all values at a path are unique.",
+      "id": "tools_eval_check_rationale_220"
+    },
+    {
+      "label": "Assert all values in source path exist in target path.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L256",
+      "community": 14,
+      "norm_label": "assert all values in source path exist in target path.",
+      "id": "tools_eval_check_rationale_256"
+    },
+    {
+      "label": "Delegate to a custom Python handler script.      Runs the handler in-process by",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L297",
+      "community": 4,
+      "norm_label": "delegate to a custom python handler script.      runs the handler in-process by",
+      "id": "tools_eval_check_rationale_297"
+    },
+    {
+      "label": "Run a single invariant check and return the result.",
+      "file_type": "rationale",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L334",
+      "community": 4,
+      "norm_label": "run a single invariant check and return the result.",
+      "id": "tools_eval_check_rationale_334"
+    },
+    {
+      "label": "validate-cross-refs.mjs",
+      "file_type": "code",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L1",
+      "community": 1,
+      "norm_label": "validate-cross-refs.mjs",
+      "id": "tools_validate_cross_refs_mjs"
+    },
+    {
+      "label": "addWarning()",
+      "file_type": "code",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L19",
+      "community": 1,
+      "norm_label": "addwarning()",
+      "id": "tools_validate_cross_refs_addwarning"
+    },
+    {
+      "label": "pathExists()",
+      "file_type": "code",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L21",
+      "community": 1,
+      "norm_label": "pathexists()",
+      "id": "tools_validate_cross_refs_pathexists"
+    },
+    {
+      "label": "isSafeRelativePath()",
+      "file_type": "code",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L33",
+      "community": 1,
+      "norm_label": "issaferelativepath()",
+      "id": "tools_validate_cross_refs_issaferelativepath"
+    },
+    {
+      "label": "validateMarketplace()",
+      "file_type": "code",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L40",
+      "community": 1,
+      "norm_label": "validatemarketplace()",
+      "id": "tools_validate_cross_refs_validatemarketplace"
+    },
+    {
+      "label": "h09_primary_fields.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h09_primary_fields.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h09_primary_fields.py",
+      "id": "tools_invariants_h09_primary_fields_py"
+    },
+    {
+      "label": "ai7_category_f_enabled.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/ai7_category_f_enabled.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "ai7_category_f_enabled.py",
+      "id": "tools_invariants_ai7_category_f_enabled_py"
+    },
+    {
+      "label": "bq_s1_clarify_advisory.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/bq_s1_clarify_advisory.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "bq_s1_clarify_advisory.py",
+      "id": "tools_invariants_bq_s1_clarify_advisory_py"
+    },
+    {
+      "label": "h05_phase_sequence.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h05_phase_sequence.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h05_phase_sequence.py",
+      "id": "tools_invariants_h05_phase_sequence_py"
+    },
+    {
+      "label": "ai6_no_legacy_primary.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/ai6_no_legacy_primary.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "ai6_no_legacy_primary.py",
+      "id": "tools_invariants_ai6_no_legacy_primary_py"
+    },
+    {
+      "label": "ai3_models_detected.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/ai3_models_detected.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "ai3_models_detected.py",
+      "id": "tools_invariants_ai3_models_detected_py"
+    },
+    {
+      "label": "ai_s1_gpt4o_mapping.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/ai_s1_gpt4o_mapping.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "ai_s1_gpt4o_mapping.py",
+      "id": "tools_invariants_ai_s1_gpt4o_mapping_py"
+    },
+    {
+      "label": "h43_ingress_rules.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h43_ingress_rules.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h43_ingress_rules.py",
+      "id": "tools_invariants_h43_ingress_rules_py"
+    },
+    {
+      "label": "up1_has_user_choices.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/up1_has_user_choices.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "up1_has_user_choices.py",
+      "id": "tools_invariants_up1_has_user_choices_py"
+    },
+    {
+      "label": "h22_chosen_by_values.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h22_chosen_by_values.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h22_chosen_by_values.py",
+      "id": "tools_invariants_h22_chosen_by_values_py"
+    },
+    {
+      "label": "up_s1_questions_asked.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/up_s1_questions_asked.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "up_s1_questions_asked.py",
+      "id": "tools_invariants_up_s1_questions_asked_py"
+    },
+    {
+      "label": "neg4_no_beanstalk.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/neg4_no_beanstalk.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "neg4_no_beanstalk.py",
+      "id": "tools_invariants_neg4_no_beanstalk_py"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/__init__.py",
+      "source_location": "L1",
+      "community": 15,
+      "norm_label": "__init__.py",
+      "id": "tools_invariants_init_py"
+    },
+    {
+      "label": "ai5_no_excluded_models.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/ai5_no_excluded_models.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "ai5_no_excluded_models.py",
+      "id": "tools_invariants_ai5_no_excluded_models_py"
+    },
+    {
+      "label": "neg3_no_lightsail.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/neg3_no_lightsail.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "neg3_no_lightsail.py",
+      "id": "tools_invariants_neg3_no_lightsail_py"
+    },
+    {
+      "label": "h34_empty_migration_costs.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h34_empty_migration_costs.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h34_empty_migration_costs.py",
+      "id": "tools_invariants_h34_empty_migration_costs_py"
+    },
+    {
+      "label": "up6_single_az.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/up6_single_az.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "up6_single_az.py",
+      "id": "tools_invariants_up6_single_az_py"
+    },
+    {
+      "label": "neg2_no_cognito.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/neg2_no_cognito.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "neg2_no_cognito.py",
+      "id": "tools_invariants_neg2_no_cognito_py"
+    },
+    {
+      "label": "h20_no_nulls.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h20_no_nulls.py",
+      "source_location": "L1",
+      "community": 6,
+      "norm_label": "h20_no_nulls.py",
+      "id": "tools_invariants_h20_no_nulls_py"
+    },
+    {
+      "label": "find_nulls()",
+      "file_type": "code",
+      "source_file": "tools/invariants/h20_no_nulls.py",
+      "source_location": "L38",
+      "community": 6,
+      "norm_label": "find_nulls()",
+      "id": "invariants_h20_no_nulls_find_nulls"
+    },
+    {
+      "label": "Recursively find null values, returning their paths.",
+      "file_type": "rationale",
+      "source_file": "tools/invariants/h20_no_nulls.py",
+      "source_location": "L39",
+      "community": 6,
+      "norm_label": "recursively find null values, returning their paths.",
+      "id": "invariants_h20_no_nulls_rationale_39"
+    },
+    {
+      "label": "h28_confidence_values.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h28_confidence_values.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h28_confidence_values.py",
+      "id": "tools_invariants_h28_confidence_values_py"
+    },
+    {
+      "label": "h02_phase_ordering.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h02_phase_ordering.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h02_phase_ordering.py",
+      "id": "tools_invariants_h02_phase_ordering_py"
+    },
+    {
+      "label": "h25_bigquery_gate.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h25_bigquery_gate.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h25_bigquery_gate.py",
+      "id": "tools_invariants_h25_bigquery_gate_py"
+    },
+    {
+      "label": "h27_expertise_field.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h27_expertise_field.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h27_expertise_field.py",
+      "id": "tools_invariants_h27_expertise_field_py"
+    },
+    {
+      "label": "up5_design_region.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/up5_design_region.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "up5_design_region.py",
+      "id": "tools_invariants_up5_design_region_py"
+    },
+    {
+      "label": "h21_preference_fields.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h21_preference_fields.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h21_preference_fields.py",
+      "id": "tools_invariants_h21_preference_fields_py"
+    },
+    {
+      "label": "bq5_non_bq_mapped.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/bq5_non_bq_mapped.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "bq5_non_bq_mapped.py",
+      "id": "tools_invariants_bq5_non_bq_mapped_py"
+    },
+    {
+      "label": "neg1_auth_excluded.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/neg1_auth_excluded.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "neg1_auth_excluded.py",
+      "id": "tools_invariants_neg1_auth_excluded_py"
+    },
+    {
+      "label": "bq4_no_analytics_services.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/bq4_no_analytics_services.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "bq4_no_analytics_services.py",
+      "id": "tools_invariants_bq4_no_analytics_services_py"
+    },
+    {
+      "label": "bq3_no_redshift.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/bq3_no_redshift.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "bq3_no_redshift.py",
+      "id": "tools_invariants_bq3_no_redshift_py"
+    },
+    {
+      "label": "h10_secondary_fields.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h10_secondary_fields.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "h10_secondary_fields.py",
+      "id": "tools_invariants_h10_secondary_fields_py"
+    },
+    {
+      "label": "h36_bigquery_excluded.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/h36_bigquery_excluded.py",
+      "source_location": "L1",
+      "community": 7,
+      "norm_label": "h36_bigquery_excluded.py",
+      "id": "tools_invariants_h36_bigquery_excluded_py"
+    },
+    {
+      "label": "has_bigquery()",
+      "file_type": "code",
+      "source_file": "tools/invariants/h36_bigquery_excluded.py",
+      "source_location": "L43",
+      "community": 7,
+      "norm_label": "has_bigquery()",
+      "id": "invariants_h36_bigquery_excluded_has_bigquery"
+    },
+    {
+      "label": "Check if any BigQuery resources exist in the design.",
+      "file_type": "rationale",
+      "source_file": "tools/invariants/h36_bigquery_excluded.py",
+      "source_location": "L44",
+      "community": 7,
+      "norm_label": "check if any bigquery resources exist in the design.",
+      "id": "invariants_h36_bigquery_excluded_rationale_44"
+    },
+    {
+      "label": "ai4_confidence_threshold.py",
+      "file_type": "code",
+      "source_file": "tools/invariants/ai4_confidence_threshold.py",
+      "source_location": "L1",
+      "community": 0,
+      "norm_label": "ai4_confidence_threshold.py",
+      "id": "tools_invariants_ai4_confidence_threshold_py"
+    },
+    {
+      "label": "chatbot.py",
+      "file_type": "code",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L1",
+      "community": 2,
+      "norm_label": "chatbot.py",
+      "id": "tests_fixtures_ai_workload_openai_src_chatbot_py"
+    },
+    {
+      "label": "generate_response()",
+      "file_type": "code",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L10",
+      "community": 2,
+      "norm_label": "generate_response()",
+      "id": "src_chatbot_generate_response"
+    },
+    {
+      "label": "get_embedding()",
+      "file_type": "code",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L25",
+      "community": 2,
+      "norm_label": "get_embedding()",
+      "id": "src_chatbot_get_embedding"
+    },
+    {
+      "label": "Chatbot API \u2014 uses OpenAI SDK for text generation and embeddings.",
+      "file_type": "rationale",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L1",
+      "community": 2,
+      "norm_label": "chatbot api \u2014 uses openai sdk for text generation and embeddings.",
+      "id": "src_chatbot_rationale_1"
+    },
+    {
+      "label": "Generate a chat response using GPT-4o.",
+      "file_type": "rationale",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L11",
+      "community": 2,
+      "norm_label": "generate a chat response using gpt-4o.",
+      "id": "src_chatbot_rationale_11"
+    },
+    {
+      "label": "Generate text embeddings for semantic search.",
+      "file_type": "rationale",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L26",
+      "community": 2,
+      "norm_label": "generate text embeddings for semantic search.",
+      "id": "src_chatbot_rationale_26"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check_phrases.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_phrases_py",
+      "target": "tools_eval_check_phrases_check_phrases"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check_phrases.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_phrases_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check_phrases.py",
+      "source_location": "L181",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_phrases_check_phrases",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check_phrases.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_phrases_check_phrases",
+      "target": "tools_eval_check_phrases_rationale_119"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_mjs",
+      "target": "tools_validate_manifests_adderror"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_mjs",
+      "target": "tools_validate_manifests_readjson"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_mjs",
+      "target": "tools_validate_manifests_findfiles"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_mjs",
+      "target": "tools_validate_manifests_validatepluginjson"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L65",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_mjs",
+      "target": "tools_validate_manifests_validatemcpjson"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L86",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_mjs",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_adderror",
+      "target": "tools_validate_manifests_readjson"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L58",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_adderror",
+      "target": "tools_validate_manifests_validatepluginjson"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L71",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_adderror",
+      "target": "tools_validate_manifests_validatemcpjson"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_mjs",
+      "target": "tools_validate_manifests_adderror"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_adderror",
+      "target": "tools_validate_cross_refs_validatemarketplace"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L54",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_readjson",
+      "target": "tools_validate_manifests_validatepluginjson"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L67",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_readjson",
+      "target": "tools_validate_manifests_validatemcpjson"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L90",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_readjson",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_mjs",
+      "target": "tools_validate_manifests_readjson"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_readjson",
+      "target": "tools_validate_cross_refs_validatemarketplace"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L95",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_findfiles",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_validatepluginjson",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-manifests.mjs",
+      "source_location": "L110",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_manifests_validatemcpjson",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_load_invariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_file_exists"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_file_absent"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_content_absent"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_content_present"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L138",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_json_path_value"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L182",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_json_every"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L219",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_uniqueness"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L255",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_cross_file_join"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L296",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_check_custom"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L333",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_run_check"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L353",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L382",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_load_invariants",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_load_invariants",
+      "target": "tools_eval_check_rationale_30"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_file_exists",
+      "target": "tools_eval_check_rationale_66"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_file_absent",
+      "target": "tools_eval_check_rationale_74"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_content_absent",
+      "target": "tools_eval_check_rationale_86"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L113",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_content_present",
+      "target": "tools_eval_check_rationale_113"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L139",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_json_path_value",
+      "target": "tools_eval_check_rationale_139"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_json_every",
+      "target": "tools_eval_check_rationale_183"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L220",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_uniqueness",
+      "target": "tools_eval_check_rationale_220"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L256",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_cross_file_join",
+      "target": "tools_eval_check_rationale_256"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L339",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_custom",
+      "target": "tools_eval_check_run_check"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L297",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_check_custom",
+      "target": "tools_eval_check_rationale_297"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L389",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_run_check",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/eval_check.py",
+      "source_location": "L334",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_eval_check_run_check",
+      "target": "tools_eval_check_rationale_334"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L110",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_mjs",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L111",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_validatemarketplace",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h09_primary_fields.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h09_primary_fields_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/ai7_category_f_enabled.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_ai7_category_f_enabled_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/bq_s1_clarify_advisory.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_bq_s1_clarify_advisory_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h05_phase_sequence.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h05_phase_sequence_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/ai6_no_legacy_primary.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_ai6_no_legacy_primary_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/ai3_models_detected.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_ai3_models_detected_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/ai_s1_gpt4o_mapping.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_ai_s1_gpt4o_mapping_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h43_ingress_rules.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h43_ingress_rules_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/up1_has_user_choices.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_up1_has_user_choices_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h22_chosen_by_values.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h22_chosen_by_values_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/up_s1_questions_asked.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_up_s1_questions_asked_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/neg4_no_beanstalk.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_neg4_no_beanstalk_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/ai5_no_excluded_models.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_ai5_no_excluded_models_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/neg3_no_lightsail.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_neg3_no_lightsail_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h34_empty_migration_costs.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h34_empty_migration_costs_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/up6_single_az.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_up6_single_az_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/neg2_no_cognito.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_neg2_no_cognito_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h20_no_nulls.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h20_no_nulls_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h20_no_nulls.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "invariants_h20_no_nulls_find_nulls",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h28_confidence_values.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h28_confidence_values_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h02_phase_ordering.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h02_phase_ordering_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h25_bigquery_gate.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h25_bigquery_gate_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h27_expertise_field.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h27_expertise_field_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/up5_design_region.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_up5_design_region_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h21_preference_fields.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h21_preference_fields_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/bq5_non_bq_mapped.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_bq5_non_bq_mapped_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/neg1_auth_excluded.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_neg1_auth_excluded_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/bq4_no_analytics_services.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_bq4_no_analytics_services_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/bq3_no_redshift.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_bq3_no_redshift_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h10_secondary_fields.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h10_secondary_fields_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h36_bigquery_excluded.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h36_bigquery_excluded_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h36_bigquery_excluded.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "invariants_h36_bigquery_excluded_has_bigquery",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/ai4_confidence_threshold.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_ai4_confidence_threshold_py",
+      "target": "tools_eval_check_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_mjs",
+      "target": "tools_validate_cross_refs_addwarning"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_mjs",
+      "target": "tools_validate_cross_refs_pathexists"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_mjs",
+      "target": "tools_validate_cross_refs_issaferelativepath"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_mjs",
+      "target": "tools_validate_cross_refs_validatemarketplace"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_addwarning",
+      "target": "tools_validate_cross_refs_validatemarketplace"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L90",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_pathexists",
+      "target": "tools_validate_cross_refs_validatemarketplace"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/validate-cross-refs.mjs",
+      "source_location": "L84",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_validate_cross_refs_issaferelativepath",
+      "target": "tools_validate_cross_refs_validatemarketplace"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h20_no_nulls.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h20_no_nulls_py",
+      "target": "invariants_h20_no_nulls_find_nulls"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h20_no_nulls.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "invariants_h20_no_nulls_find_nulls",
+      "target": "invariants_h20_no_nulls_rationale_39"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h36_bigquery_excluded.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tools_invariants_h36_bigquery_excluded_py",
+      "target": "invariants_h36_bigquery_excluded_has_bigquery"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tools/invariants/h36_bigquery_excluded.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "invariants_h36_bigquery_excluded_has_bigquery",
+      "target": "invariants_h36_bigquery_excluded_rationale_44"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_fixtures_ai_workload_openai_src_chatbot_py",
+      "target": "src_chatbot_generate_response"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_fixtures_ai_workload_openai_src_chatbot_py",
+      "target": "src_chatbot_get_embedding"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_fixtures_ai_workload_openai_src_chatbot_py",
+      "target": "src_chatbot_rationale_1"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chatbot_generate_response",
+      "target": "src_chatbot_rationale_11"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/fixtures/ai-workload-openai/src/chatbot.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chatbot_get_embedding",
+      "target": "src_chatbot_rationale_26"
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "8a2bbd6669a133dcfce9f5ab65ead84873a3455b"
+}

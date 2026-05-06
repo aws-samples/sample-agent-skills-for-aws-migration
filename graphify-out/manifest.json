@@ -1,0 +1,478 @@
+{
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/eval_check_phrases.py": {
+    "mtime": 1778087605.502109,
+    "hash": "c3cfd8618526fca572550d07a91a28af"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/validate-manifests.mjs": {
+    "mtime": 1778087605.505047,
+    "hash": "c6537f415116fa359531e9613dcada73"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/eval_check.py": {
+    "mtime": 1778087605.5019891,
+    "hash": "587515e34ea5ca24827c81b4f164079f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/validate-cross-refs.mjs": {
+    "mtime": 1778087605.5049503,
+    "hash": "5267a1b98ac3363ce4cea52a238c112b"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h09_primary_fields.py": {
+    "mtime": 1778087605.503347,
+    "hash": "3d198466911dd03e5d60bd16a9c1f513"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/ai7_category_f_enabled.py": {
+    "mtime": 1778087605.502663,
+    "hash": "41fed70fe1e5ef847ead7de0b31019c4"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/bq_s1_clarify_advisory.py": {
+    "mtime": 1778087605.5031018,
+    "hash": "98bdec0388f3078789d2286542083300"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h05_phase_sequence.py": {
+    "mtime": 1778087605.5032542,
+    "hash": "2f48352a730dc81b4ea252379c21cb70"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/ai6_no_legacy_primary.py": {
+    "mtime": 1778087605.5025818,
+    "hash": "45f47e2cb7551b6925cd08a5260152f0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/ai3_models_detected.py": {
+    "mtime": 1778087605.5023181,
+    "hash": "a62989fdee480f28f95a7ae471940b8e"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/ai_s1_gpt4o_mapping.py": {
+    "mtime": 1778087605.5027447,
+    "hash": "5efd6cb62ac31261e61dc92071ca28db"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h43_ingress_rules.py": {
+    "mtime": 1778087605.5041533,
+    "hash": "844ae79ad5bb03151bc28bd15343d604"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/up1_has_user_choices.py": {
+    "mtime": 1778087605.504568,
+    "hash": "fd80b8a528b0d60682d7a8eee353d8e0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h22_chosen_by_values.py": {
+    "mtime": 1778087605.5036669,
+    "hash": "001e9d37b0194582a8e6f2a8cfd46fb1"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/up_s1_questions_asked.py": {
+    "mtime": 1778087605.5048566,
+    "hash": "23c55482e5e5426a02ca2cd12e4b9c86"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/neg4_no_beanstalk.py": {
+    "mtime": 1778087605.5044832,
+    "hash": "d6917fe3af33c87d49855b769c2ff01b"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/__init__.py": {
+    "mtime": 1778087605.5022354,
+    "hash": "c4ed1a165d24f6b5dfcf71ccad7a425c"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/ai5_no_excluded_models.py": {
+    "mtime": 1778087605.5024965,
+    "hash": "fc054d4b3c784cd68f860418b688d72c"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/neg3_no_lightsail.py": {
+    "mtime": 1778087605.5043948,
+    "hash": "b214cc0b204cd6a0100996313a5eedf3"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h34_empty_migration_costs.py": {
+    "mtime": 1778087605.5040002,
+    "hash": "ba4218c4dfd4d8f5719eebc1e3a2346a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/up6_single_az.py": {
+    "mtime": 1778087605.5047727,
+    "hash": "a34eaf3542e621e065a1dd6ee67495a4"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/neg2_no_cognito.py": {
+    "mtime": 1778087605.5043101,
+    "hash": "cf8903f44e89756343dccf50c9b3b93a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h20_no_nulls.py": {
+    "mtime": 1778087605.5035086,
+    "hash": "ee3d22d7f820df6e171b017b33175bd0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h28_confidence_values.py": {
+    "mtime": 1778087605.5039155,
+    "hash": "a2deacf325339b0ea4436e9e2df96971"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h02_phase_ordering.py": {
+    "mtime": 1778087605.5031748,
+    "hash": "a8d80ae476fc3151fec107ea4a938cf0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h25_bigquery_gate.py": {
+    "mtime": 1778087605.5037363,
+    "hash": "f63057468c15ca31395863a1a9f9bd89"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h27_expertise_field.py": {
+    "mtime": 1778087605.503812,
+    "hash": "9009e37c7623d1ee2d90fa3c4833049c"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/up5_design_region.py": {
+    "mtime": 1778087605.5046835,
+    "hash": "6cfa34cf3de3713ded756909e03a9bcb"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h21_preference_fields.py": {
+    "mtime": 1778087605.5035985,
+    "hash": "f4dab4c35e05fc729bf3ade150e62016"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/bq5_non_bq_mapped.py": {
+    "mtime": 1778087605.5030296,
+    "hash": "98bf0e60850b72c85ef40c9bd278e61a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/neg1_auth_excluded.py": {
+    "mtime": 1778087605.5042255,
+    "hash": "2df50e21835f7337f31ddefffe15fa22"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/bq4_no_analytics_services.py": {
+    "mtime": 1778087605.5029433,
+    "hash": "d069f6b101c11124acd1843211c61aa6"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/bq3_no_redshift.py": {
+    "mtime": 1778087605.5028474,
+    "hash": "128b48f0ea4b4264744218bfc5a8c959"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h10_secondary_fields.py": {
+    "mtime": 1778087605.5034325,
+    "hash": "49138070916c88f83eb7131bcc6ba47f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/h36_bigquery_excluded.py": {
+    "mtime": 1778087605.5040765,
+    "hash": "90002bc6e30fd46e0404d83238a44833"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/invariants/ai4_confidence_threshold.py": {
+    "mtime": 1778087605.5024068,
+    "hash": "2d753053b11c2684c0bdd4d206e984ca"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/ai-workload-openai/src/chatbot.py": {
+    "mtime": 1778087605.4994147,
+    "hash": "3d2f763aa9139cf06a09767492ba3f85"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/CODE_OF_CONDUCT.md": {
+    "mtime": 1778087605.4880805,
+    "hash": "a1cdb026494e7ba2aaa8968848e37774"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/CHANGELOG.md": {
+    "mtime": 1778087605.4880047,
+    "hash": "ae4deca9d8ac34807367897d597c55c8"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/README.md": {
+    "mtime": 1778089311.3511822,
+    "hash": "19cb78b0bff036240d2d27b88e44c087"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/CONTRIBUTING.md": {
+    "mtime": 1778087605.488184,
+    "hash": "b962721183256c3e55f747c437d45299"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tools/EVAL_SKILL.md": {
+    "mtime": 1778087605.5018704,
+    "hash": "93f06e00f5fccd9822d199bc228782b6"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/SKILL.md": {
+    "mtime": 1778087605.490161,
+    "hash": "f41fbea41910cd3aa2c28ceb0f2b7877"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/clustering/terraform/depth-calculation.md": {
+    "mtime": 1778087605.490681,
+    "hash": "0e8dac6726b69f850a5b686695f19673"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/clustering/terraform/clustering-algorithm.md": {
+    "mtime": 1778087605.4905682,
+    "hash": "3f5f10b10f4c7d87c312314d966b230f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/clustering/terraform/typed-edges-strategy.md": {
+    "mtime": 1778087605.4907944,
+    "hash": "ffa0909c2217616dfebd2ba30b6fac2e"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/clustering/terraform/classification-rules.md": {
+    "mtime": 1778087605.4904397,
+    "hash": "c99248bc77cbf86ec11ebc3dcc5c2b1d"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/schema-discover-ai.md": {
+    "mtime": 1778087605.4974785,
+    "hash": "fa12132221b0634bf0cea46a95b89108"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/ai-migration-guardrails.md": {
+    "mtime": 1778087605.4966142,
+    "hash": "da0a196f42fed2f2fc4c5c20c0805fc5"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/schema-phase-status.md": {
+    "mtime": 1778087605.4979045,
+    "hash": "346b302ec1abf422c007c9a5adba6480"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/bedrock-quotas.md": {
+    "mtime": 1778087605.496954,
+    "hash": "65e8894fb5bf96aec0404da3df772747"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/migration-complexity.md": {
+    "mtime": 1778087605.4971058,
+    "hash": "e4728d8816d2628cc2b43f6328d699ee"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/terraform-validation.md": {
+    "mtime": 1778087605.4980366,
+    "hash": "42426093b2f0d15921acda74c9984fdc"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/pricing-cache.md": {
+    "mtime": 1778087605.4972432,
+    "hash": "ed78218e1691cd3cd2110dd4dc522592"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/schema-estimate-infra.md": {
+    "mtime": 1778087605.4978259,
+    "hash": "1912fcc2deda54c425b2336f393ef906"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/schema-discover-iac.md": {
+    "mtime": 1778087605.4977002,
+    "hash": "00c00cc96aeb649be7d0ae7f930f5a8b"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/retarget-gotchas.md": {
+    "mtime": 1778087605.497371,
+    "hash": "22feb680919ca134a4172f2ad7b603bd"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/schema-discover-billing.md": {
+    "mtime": 1778087605.4975863,
+    "hash": "3b1e8e709ea9e0098a7f7a9781d1d69b"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/shared/ai-model-lifecycle.md": {
+    "mtime": 1778087605.4967408,
+    "hash": "980ab3d6fafaeccdbdea0ad3b3d0cc9e"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/fast-path.md": {
+    "mtime": 1778087605.4917455,
+    "hash": "9e871a9fc2b813357c9017caa8a98b76"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/storage.md": {
+    "mtime": 1778087605.4923463,
+    "hash": "37a17226acec55f828f65da6523dfe04"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/design-ref-agentic-to-agentcore.md": {
+    "mtime": 1778087605.4915006,
+    "hash": "b0c576a4a69640ea2faa83d8f6923341"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/design-ref-harness.md": {
+    "mtime": 1778087605.4916167,
+    "hash": "e14354b6d53fd5f8efdc3f0008eb6283"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/networking.md": {
+    "mtime": 1778087605.4921467,
+    "hash": "3bbd3371bb25df74701a61ef0c0372d5"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/compute.md": {
+    "mtime": 1778087605.4912739,
+    "hash": "f2fed0379cbcfddfc5b346037f4ab69a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/messaging.md": {
+    "mtime": 1778087605.492032,
+    "hash": "131a83a19b141b686c2962bfda2b0dd4"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/index.md": {
+    "mtime": 1778087605.4919426,
+    "hash": "276d852c2f93f274925d774af6bfc5c7"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/ai-openai-to-bedrock.md": {
+    "mtime": 1778087605.4910862,
+    "hash": "5ebe9a8c1e84a9edfaf274eceb7e4c92"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/ai-gemini-to-bedrock.md": {
+    "mtime": 1778087605.4909632,
+    "hash": "3e01378a0477281c5064d4da051306df"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/security.md": {
+    "mtime": 1778087605.4922342,
+    "hash": "592f0d963afa89567cd6b1497f7678e4"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/ai.md": {
+    "mtime": 1778087605.4911623,
+    "hash": "d1f5efae542fb909107134f0d07f6c39"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/design-refs/database.md": {
+    "mtime": 1778087605.4913828,
+    "hash": "b33bc9800a88f27fe962b96b3c3cad07"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/design/design-infra.md": {
+    "mtime": 1778087605.4936495,
+    "hash": "d0a649ab3e1a467e66b424a9ac3ef437"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/design/design-billing.md": {
+    "mtime": 1778087605.49353,
+    "hash": "719658a62edf67b0f1fbaba576bad8e1"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/design/design-ai.md": {
+    "mtime": 1778087605.4934185,
+    "hash": "93750f4d117dbb66f87baf66fe0f44c1"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/design/design.md": {
+    "mtime": 1778087605.4937465,
+    "hash": "800d47fed6e115f3d7f19cd68cafa731"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/discover/discover-app-code.md": {
+    "mtime": 1778087605.4939275,
+    "hash": "adbb604da2f1a02729085f3f2f7d42bf"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/discover/discover-iac.md": {
+    "mtime": 1778087605.4941552,
+    "hash": "36e268df3e1d5d3620ca4598c3288e85"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/discover/discover.md": {
+    "mtime": 1778087605.4942896,
+    "hash": "95f679d453f1cc925934f5c11fd790d9"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/discover/discover-billing.md": {
+    "mtime": 1778087605.4940493,
+    "hash": "30dddffdaf09827ff3d457bb5df804bf"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/clarify/clarify-compute.md": {
+    "mtime": 1778087605.4928272,
+    "hash": "433b29ed0911a0ca5cf90f2c79b4d797"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/clarify/clarify-ai.md": {
+    "mtime": 1778087605.4926953,
+    "hash": "23e43bf0caf1b00e31d4aaf7ed598e4f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/clarify/clarify-ai-only.md": {
+    "mtime": 1778087605.4925654,
+    "hash": "a6649365325939d210e775da26be8f5e"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/clarify/clarify-global.md": {
+    "mtime": 1778087605.493094,
+    "hash": "cae5f9173f39ef8d3b9e04e1e22a9f67"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/clarify/clarify.md": {
+    "mtime": 1778087605.4932325,
+    "hash": "f931801fff6a12ba4ab0570f8b331244"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/clarify/clarify-database.md": {
+    "mtime": 1778087605.4929614,
+    "hash": "1c6381857c6bf4227101fba4265a94c7"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/feedback/feedback-trace.md": {
+    "mtime": 1778087605.4950352,
+    "hash": "4b0c3e3f1f2a132ae3a8e84e11b40349"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/feedback/feedback.md": {
+    "mtime": 1778087605.495147,
+    "hash": "01f3f685d2d3c3ce2e4655ce4deefe87"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-artifacts-ai.md": {
+    "mtime": 1778087605.495443,
+    "hash": "c0cb7a928412c9d008366df701b51b8c"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-billing.md": {
+    "mtime": 1778087605.4962218,
+    "hash": "cb0400c85ea1f73f7fe9dc84824dfa2f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-ai.md": {
+    "mtime": 1778087605.495316,
+    "hash": "b73263810556920e8aeafa5bb3defd28"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-artifacts-scripts.md": {
+    "mtime": 1778087605.4961195,
+    "hash": "403a49b12400a81e98001f6d5cb401d0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-artifacts-docs.md": {
+    "mtime": 1778087605.4956844,
+    "hash": "1a84d427e3a43a07c9d177e75260c859"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-artifacts-billing.md": {
+    "mtime": 1778087605.49556,
+    "hash": "d66e66cdc33778ad03e5be4e9c22abe1"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-infra.md": {
+    "mtime": 1778087605.496343,
+    "hash": "ef841295862d1bd0a5bf723f070da09c"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate.md": {
+    "mtime": 1778087605.4964516,
+    "hash": "97248a20330049e2b597c8cbeb267bcf"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-artifacts-report.md": {
+    "mtime": 1778087605.4959948,
+    "hash": "dd78719b6273cf1d015575450f856eb2"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/generate/generate-artifacts-infra.md": {
+    "mtime": 1778087605.49586,
+    "hash": "29e47a82e92e06b6265050051f0b643f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/estimate/estimate-infra.md": {
+    "mtime": 1778087605.4947152,
+    "hash": "c47264fd00b5a303fa984c6a4cfa5cc7"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/estimate/estimate.md": {
+    "mtime": 1778087605.494855,
+    "hash": "9236a822018a490bfa208fe9c8ab79fe"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/estimate/estimate-ai.md": {
+    "mtime": 1778087605.4944508,
+    "hash": "9bf884ccf2077184658ac7bc6c18f0c9"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/features/migration-to-aws/skills/gcp-to-aws/references/phases/estimate/estimate-billing.md": {
+    "mtime": 1778087605.4945729,
+    "hash": "857df26d2b9111abe5ed6e35b2c6c5af"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/invariants.yml": {
+    "mtime": 1778087605.50169,
+    "hash": "4ba4f67a678109c7dde4fb6dd22eaad7"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/minimal-cloud-run-sql/README.md": {
+    "mtime": 1778087605.500293,
+    "hash": "17750a59bb79669b3b371fa7acedad09"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/ai-workload-openai/requirements.txt": {
+    "mtime": 1778087605.4992776,
+    "hash": "f6644b001d748581ae6db96a9b7ef61f"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/ai-workload-openai/invariants.yml": {
+    "mtime": 1778087605.4990852,
+    "hash": "7bc0f0e95857ad472f67a8427ed9a49a"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/ai-workload-openai/README.md": {
+    "mtime": 1778087605.498965,
+    "hash": "ddc14c99b9b91decc18e056f4a0048ab"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/negative-services/invariants.yml": {
+    "mtime": 1778087605.5007634,
+    "hash": "44d18157754398f12d5691c4194c2b47"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/negative-services/README.md": {
+    "mtime": 1778087605.5006702,
+    "hash": "4401222977fa9fcd694f4e2880babafd"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/user-preferences/invariants.yml": {
+    "mtime": 1778087605.5014832,
+    "hash": "3fc0dec61448298d2359125ae2be3e19"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/user-preferences/README.md": {
+    "mtime": 1778087605.5013916,
+    "hash": "921ade4b163d8ddb8ec59e43b021292c"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/bigquery-specialist-gate/invariants.yml": {
+    "mtime": 1778087605.4999135,
+    "hash": "05c729e88f50dd26800798e8f9bb2aa4"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/tests/fixtures/bigquery-specialist-gate/README.md": {
+    "mtime": 1778087605.4998097,
+    "hash": "eef1b41e932cb3dac9f3fe37ffe3a802"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/docs/exploration-prompt.md": {
+    "mtime": 1778087605.488986,
+    "hash": "c666c671ce241f99cd2ed46a8a4aa397"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/docs/exploration-report.md": {
+    "mtime": 1778087605.4891562,
+    "hash": "697fe013fb815b20fdd13f1697634ef0"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/docs/requirements-authoring-prompt.md": {
+    "mtime": 1778087605.4892857,
+    "hash": "068cca8a27d2e0b94963969dd146e0f3"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/docs/README.md": {
+    "mtime": 1778087605.4885125,
+    "hash": "81fcea9e67177890ab39e386418be8f5"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/docs/evaluation-guide.md": {
+    "mtime": 1778087605.488636,
+    "hash": "55ebc3a57bb0bef433219693e4c81015"
+  },
+  "/Users/suliman.lei/sample-agent-skills-for-aws-migration/docs/evaluation-harness-requirements.md": {
+    "mtime": 1778087605.4888473,
+    "hash": "23c67f5fe282ddbbe1d49a3c43350a4e"
+  }
+}
