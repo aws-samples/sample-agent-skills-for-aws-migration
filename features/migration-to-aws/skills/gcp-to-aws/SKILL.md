@@ -40,6 +40,7 @@ Each phase loads reference files on demand. To keep per-turn context manageable 
 | `design-refs/ai.md` | `ai-workload-profile.json` exists AND `summary.ai_source` = `"other"` |
 | `design-refs/design-ref-harness.md` | `agentic_profile.is_agentic == true` AND `ai_constraints.agentic.migration_approach == "harness"` |
 | `design-refs/design-ref-agentic-to-agentcore.md` | `agentic_profile.is_agentic == true` AND `ai_constraints.agentic.migration_approach == "strands"` |
+| `shared/retarget-gotchas.md` | `agentic_profile.is_agentic == true` AND `ai_constraints.agentic.migration_approach == "retarget"` |
 
 When adding new reference files, verify the phase's total loaded instructions remain under budget. If a new file would exceed ~800 lines when combined with other loaded refs, split it or make it conditional.
 
