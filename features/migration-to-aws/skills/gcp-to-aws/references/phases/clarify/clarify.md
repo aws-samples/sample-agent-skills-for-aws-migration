@@ -6,7 +6,7 @@
 
 The output — `preferences.json` — is consumed directly by Design and Estimate without any further interpretation.
 
-Questions are organized into **six named categories (A–F)** with documented firing rules. Up to 22 questions across categories, depending on which discovery artifacts exist and which GCP services are detected. A standalone **AI-Only** flow exists for migrations that only move AI/LLM calls to Bedrock.
+Questions are organized into **six named categories (A–F)** with documented firing rules. Up to 22 questions across categories, depending on which discovery artifacts exist and which GCP services are detected. Questions are presented in **progressive batches** (up to 3 batches) with intermediate saves between each — partial answers persist across sessions. A standalone **AI-Only** flow exists for migrations that only move AI/LLM calls to Bedrock.
 
 ## Category Reference Files
 
@@ -22,7 +22,9 @@ Questions are organized into **six named categories (A–F)** with documented fi
 
 ## Step 0: Prior Run Check
 
-If `$MIGRATION_DIR/preferences.json` already exists:
+Check `$MIGRATION_DIR/` for existing state:
+
+**Case 1 — Completed preferences exist** (`preferences.json` present):
 
 > "I found existing migration preferences from a previous run. Would you like to:"
 >
@@ -30,7 +32,19 @@ If `$MIGRATION_DIR/preferences.json` already exists:
 > B) Start fresh and re-answer all questions
 
 - If A: Run Step 2 item 6 only (BigQuery detection) on current discovery artifacts. If `bigquery_present` is **true**, output the Step 4 **BigQuery / deferred analytics** advisory block once (even though questions are skipped), then skip to Validation Checklist with the existing `preferences.json`.
-- If B: continue to Step 1.
+- If B: delete `preferences.json`, continue to Step 1.
+
+**Case 2 — Draft preferences exist** (`preferences-draft.json` present, no `preferences.json`):
+
+> "I found a partial set of answers from a previous session ([N] of [total] batches completed). Would you like to:"
+>
+> A) Resume from where you left off — I'll pick up the remaining questions
+> B) Start fresh and re-answer all questions
+
+- If A: load the draft, read `metadata.batches_completed` to determine which batches are done, skip completed batches when entering Step 4.
+- If B: delete `preferences-draft.json`, continue to Step 1.
+
+**Case 3 — No prior state**: Continue to Step 1.
 
 ---
 
@@ -109,7 +123,7 @@ Record extracted values. Questions whose answers are fully determined by extract
 2. Check for billing-only mode — if `billing-profile.json` exists and `gcp-resource-inventory.json` does NOT, Category B is active.
 3. Check for compute resources — if present, Category C is active. Within C, skip Q8 if no GKE present. Skip Q10/Q11 if no Cloud Run present.
 4. Check for database resources — if present, Category D is active.
-5. Category E is disabled by default. After presenting all other categories, offer opt-in: "Would you also like HA upgrade and right-sizing recommendations based on your billing data?" If user declines or does not respond, apply Category E defaults (no HA upgrades, no right-sizing).
+5. Category E is disabled by default. Offered after the last batch completes in Step 4 (see **Category E Opt-In** in Step 4). If user declines or does not respond, apply Category E defaults (no HA upgrades, no right-sizing).
 6. Check for `ai-workload-profile.json` — if present, Category F is active.
 
 **If no IaC, billing data, or code is available** (empty discovery): only Category A is active. All service-specific categories are skipped.
@@ -140,6 +154,26 @@ Apply these before presenting questions:
 - **Q12/Q13 N/A** — Cloud SQL not present, auto-skip.
 - **Q14 auto-detected** — If `integration.gateway_type` is non-null OR `integration.frameworks` is non-empty in `ai-workload-profile.json`, skip Q14. Set `ai_framework` from the detected values with `chosen_by: "extracted"`.
 
+### Batch Planning
+
+After determining active categories, organize questions into **up to three batches** presented sequentially with intermediate saves:
+
+| Batch | Name                   | Categories                                   | Questions                    | Fires When                                        |
+| ----- | ---------------------- | -------------------------------------------- | ---------------------------- | ------------------------------------------------- |
+| **1** | Strategic Requirements | A (Global/Strategic)                         | Q1–Q7 (minus Q4)            | Always                                            |
+| **2** | Infrastructure         | B (Config Gaps), C (Compute), D (Database)   | Q8–Q13 + Category B prompts | Any compute or database resources present         |
+| **3** | AI Workloads           | F (AI/Bedrock)                               | Q14–Q22                     | `ai-workload-profile.json` exists                 |
+
+**Determine active batches:**
+
+1. Batch 1 is always active.
+2. Batch 2 is active if Category B, C, or D fired.
+3. Batch 3 is active if Category F fired.
+
+Record the ordered list of active batches and count the questions per batch (after extraction and early-exit filtering). These counts are used for per-batch progress messaging — not shown as a grand total upfront.
+
+**Category E** (Migration Posture) is offered after the last substantive batch completes, before writing final `preferences.json`.
+
 ---
 
 ## Category E — Migration Posture (Disabled by Default)
@@ -163,39 +197,123 @@ Interpret → `right_sizing`: A → `true`, B → `false`. Default: B → `false
 
 ---
 
-## Step 4: Present Questions
+## Step 4: Present Questions in Progressive Batches
 
-**BigQuery / deferred analytics (mandatory callout):** If Step 2 set `bigquery_present` to **true**, output this block **once**, **before** any questions (same turn), then continue with the question flow:
+**BigQuery / deferred analytics (mandatory callout):** If Step 2 set `bigquery_present` to **true**, output this block **once**, **before** any questions (same turn as Batch 1), then continue with the question flow:
 
 > **BigQuery / analytics warehouse:** Your discovery inputs include BigQuery. This skill **does not** select an AWS analytics or data-warehouse target (no Athena, Redshift, Glue, or EMR recommendation from the plugin). **Before** warehouse, data lake, SQL analytics, or BI cutover planning, engage your **AWS account team** and/or a **data analytics migration partner** to assess query patterns, data volumes, ETL/ELT, and downstream consumers. Design will mark these resources as **`Deferred — specialist engagement`**.
 
-Show all generated questions at once, grouped by section. Use a conversational tone with brief context explaining why each question matters. Show a progress indicator: **"Question N of M"** where M is the total number of questions being asked (after filtering).
+Questions are presented in sequential batches with a save after each. After each batch the user can skip individual questions (defaults applied), say **"use defaults for the rest"** to apply defaults for all remaining batches and proceed immediately, or answer normally.
+
+### Batch Loop
+
+For each active batch (determined in Batch Planning above), execute steps 4a–4d:
+
+#### 4a. Present Batch
+
+Use a conversational tone with brief context explaining why each question matters. Number questions within each batch starting from 1.
+
+**Batch 1 — Strategic Requirements (always first):**
 
 ```
-Before mapping your infrastructure to AWS, I have some questions to tailor the migration plan.
-You can answer each, skip individual ones (I'll use sensible defaults),
-or say "use all defaults" to proceed with all recommendations.
+Before mapping your infrastructure to AWS, I have a few sections of questions
+to tailor the migration plan. You can answer each, skip individual ones
+(I'll use sensible defaults), or say "use defaults for the rest" at any point.
 
---- Section 1: About Your Users & Requirements ---
+Let's start with your strategic requirements.
 
-Question 1 of [M]: [Q1 text with context]
-Question 2 of [M]: [Q2 text with context]
+--- Strategic Requirements ---
+
+Question 1: [Q1 text with context]
+Question 2: [Q2 text with context]
 ...
+Question [N]: [Q7 text with context]
+```
 
---- Section 2: Your Infrastructure ---
-[Only if Categories C/D fire]
+**Batch 2 — Infrastructure (if active):**
 
-Question [N] of [M]: [Q8 text with context]
-...
+After Batch 1 answers are saved, present:
 
---- Section 3: AI Workloads ---
-[Only if Category F fires]
+```
+Got it — your strategic preferences are saved.
 
-Question [N] of [M]: [Q14 text with context]
+Next up: [N] questions about your compute and database setup.
+You can answer each, skip individual ones, or say "use defaults for the rest."
+
+--- Infrastructure ---
+
+Question 1: [first active question text with context]
 ...
 ```
 
-Wait for the user's response. Do NOT proceed to Design without a response or an explicit "use all defaults".
+**Batch 3 — AI Workloads (if active):**
+
+After prior batch answers are saved, present. Adapt the intro based on whether this is the second or third batch:
+
+```
+[Infrastructure preferences saved. / Strategic preferences saved.]
+
+Last section — [N] questions about your AI workloads, then we're ready to design.
+You can answer each, skip individual ones, or say "use defaults for the rest."
+
+--- AI Workloads ---
+
+Question 1: [first active question text with context]
+...
+```
+
+If Batch 3 is the second batch (Batch 2 was skipped because no infra resources), use "Next up" instead of "Last section" if appropriate.
+
+**Single-batch shortcut:** If only Batch 1 is active (no infrastructure or AI categories fired), skip the multi-batch framing. Present Batch 1 questions with a simpler intro and proceed directly to Category E opt-in then Step 5 after answers — no draft file needed.
+
+#### 4b. Wait for Response
+
+Wait for the user's response to the current batch. Do NOT present the next batch or proceed to Design without a response or an explicit "use defaults for the rest."
+
+**"Use defaults for the rest" handling:** If the user says this at any point:
+
+1. Apply documented defaults for all unanswered questions in the current batch.
+2. Apply documented defaults for all questions in remaining batches.
+3. Skip directly to Category E opt-in, then Step 5 (write final `preferences.json`).
+
+#### 4c. Interpret Batch Answers
+
+Apply the interpret rule (from the category reference files) for every answered question in the batch. For skipped questions within the batch, apply the documented default.
+
+Apply early-exit rules triggered by this batch's answers. For example, if Batch 1 includes Q5 = "Yes, multi-cloud required", record `compute: "eks"` and mark Q8 as skipped (early-exit) for Batch 2.
+
+#### 4d. Save Draft
+
+**If more batches remain** after this one: Write (or update) `$MIGRATION_DIR/preferences-draft.json` with all answers collected so far. Use the same schema as `preferences.json` with these additional `metadata` fields:
+
+```json
+{
+  "metadata": {
+    "draft": true,
+    "batches_completed": ["strategic"],
+    "batches_remaining": ["infrastructure", "ai"],
+    "migration_type": "full",
+    "timestamp": "<ISO timestamp>",
+    ...
+  },
+  "design_constraints": { ... },
+  "ai_constraints": { ... }
+}
+```
+
+Batch name values: `"strategic"`, `"infrastructure"`, `"ai"`.
+
+Return to **4a** for the next batch.
+
+**If this was the last active batch**: Do not write a draft — proceed to **Category E opt-in** then **Step 5**.
+
+### Category E Opt-In
+
+After the last substantive batch is answered (but before writing final `preferences.json`), offer Category E if `billing-profile.json` exists:
+
+> "Would you also like HA upgrade and right-sizing recommendations based on your billing data? If not, I'll use conservative defaults (no upgrades, match current capacity)."
+
+If user opts in, present Q24–Q25 (defined in **Category E — Migration Posture** above). Otherwise, apply Category E defaults (`ha_upgrade: false`, `right_sizing: false`).
 
 ---
 
@@ -237,9 +355,9 @@ Wait for the user's response. Do NOT proceed to Design without a response or an 
 
 ---
 
-## Step 5: Interpret and Write preferences.json
+## Step 5: Assemble and Write preferences.json
 
-Apply the interpret rule for every answered question (defined in each category file). For skipped questions, apply the documented default. Write `$MIGRATION_DIR/preferences.json`:
+Assemble all interpreted answers from the completed batches into the final `$MIGRATION_DIR/preferences.json`. If `preferences-draft.json` exists, use it as the base — merge in the final batch's answers, remove the draft-specific metadata fields (`draft`, `batches_completed`, `batches_remaining`), and set `metadata.timestamp` to the current time. Write `$MIGRATION_DIR/preferences.json`:
 
 ```json
 {
@@ -310,6 +428,8 @@ Apply the interpret rule for every answered question (defined in each category f
 10. `ai_constraints.ai_capabilities_required` is the UNION of detected capabilities from `ai-workload-profile.json` + critical feature from Q17 + vision from Q20. `chosen_by` is `"derived"`.
 11. `ai_constraints.ai_framework` is an array (Q14 is select-all-that-apply). If auto-detected, `chosen_by` is `"extracted"`.
 
+After writing `preferences.json`, delete `$MIGRATION_DIR/preferences-draft.json` if it exists.
+
 ---
 
 ## Defaults Table
@@ -358,6 +478,7 @@ Before handing off to Design:
 - [ ] If Category F fired, `ai_capabilities_required` is derived from detection + Q17 + Q20
 - [ ] `ai_constraints.ai_framework` is an array (Q14 is multi-select)
 - [ ] Output is valid JSON
+- [ ] `preferences-draft.json` has been deleted (if it existed)
 
 ---
 

@@ -1,10 +1,10 @@
 # Changelog — GCP-to-AWS Migration Plugin
 
-## OpenAI: GPT-5.5 (2026-04-26)
+## Bedrock: Claude Opus 4.7 (2026-04-16)
 
-**Change:** Documented **GPT-5.5** ($5/$30 per 1M input/output) and **GPT-5.5 Pro** ($30/$180) in the pricing cache and model mapping tables. GPT-5.5 launched April 23, 2026 as OpenAI's first fully retrained base model since GPT-4.5 — natively omnimodal, 88.7% SWE-Bench Verified, 256K context (1M in API). Key competitive insight: at $5/$30, **Claude Opus 4.6** ($5/$25) now matches on input and is **17% cheaper on output**, and **Claude Sonnet 4.6** ($3/$15) is 53% cheaper — reversing the GPT-5.4 dynamic where OpenAI was marginally cheaper. Updated clarify-phase Q19 options to include GPT-5.5/Pro as a selectable source model, added GPT-5.5 migration scenarios to the pattern table, and added three new common migration paths (GPT-5.5 → Opus 4.6, GPT-5.5 → Sonnet 4.6, GPT-5.5 Pro → Nova 2 Pro).
+**Change:** Documented **Claude Opus 4.7** (`anthropic.claude-opus-4-7`) in the pricing cache with the same headline on-demand **$5 / $25** per 1M input/output as Opus 4.6 (US East N. Virginia standard table), added **batch N/A** + prompt-cache columns per the Bedrock pricing page when this was updated, and refreshed clarify / design-ref guidance so **Opus 4.7** is the default name for hardest-reasoning Opus work while **Sonnet 4.6** stays the balanced default.
 
-**Files:** `references/shared/pricing-cache.md`, `references/design-refs/ai-openai-to-bedrock.md`, `references/phases/clarify/clarify-ai.md`, `references/phases/clarify/clarify-ai-only.md`, `references/phases/clarify/clarify.md`.
+**Files:** `references/shared/pricing-cache.md`, `references/phases/clarify/clarify-ai.md`, `references/phases/clarify/clarify-ai-only.md`, `references/phases/clarify/clarify.md`, `references/design-refs/ai-gemini-to-bedrock.md`, `references/design-refs/ai-openai-to-bedrock.md`.
 
 ---
 

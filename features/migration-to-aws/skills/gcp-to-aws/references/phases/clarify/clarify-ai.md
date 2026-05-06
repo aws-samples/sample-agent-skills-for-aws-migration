@@ -10,9 +10,10 @@ Before presenting questions, show:
 
 > **AI Context Summary:**
 > **AI source:** [from `summary.ai_source`: "Gemini", "OpenAI", "Both", or "Other"]
-> **Models detected:** [from `models[].model_id`]
-> **Capabilities in use:** [from `integration.capabilities_summary` where true]
-> **Integration pattern:** [from `integration.pattern`] via [from `integration.primary_sdk`]
+> **Profile origin:** [from `metadata.profile_source`: if `iac_vertex` or `summary.inferred_from_iac` is true, state that Terraform was the primary signal and application code did not fully characterize the workload]
+> **Models detected:** [from `models[].model_id`; if empty, say **None inferred from code or IaC** — the following questions will pin down models and frameworks]
+> **Capabilities in use:** [from `integration.capabilities_summary` where true; if all false or pattern is `unknown`, say **Not inferred — confirm below**]
+> **Integration pattern:** [from `integration.pattern`; if `unknown`, say **Unknown (IaC-only)**] via [from `integration.primary_sdk`, or **not determined**]
 > **Gateway/router:** [from `integration.gateway_type`, or "None (direct SDK)"]
 > **Frameworks:** [from `integration.frameworks`, or "None"]
 
@@ -114,7 +115,7 @@ Present with concrete anchors: Quality = legal analysis/code gen; Speed = autoco
 
 | Answer                 | Recommendation Impact                                                                                                        |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Best quality/reasoning | Claude Sonnet 4.6 (latest, highest reasoning in Sonnet family) — primary; Claude Opus 4.6 for most demanding reasoning tasks |
+| Best quality/reasoning | Claude Sonnet 4.6 (latest, highest reasoning in Sonnet family) — primary; Claude Opus 4.7 for the most demanding reasoning tasks (same headline on-demand $5/$25 as Opus 4.6 on standard Bedrock pricing); Claude Opus 4.6 remains a valid alternative |
 | Fastest speed          | Claude Haiku 4.5 — lowest latency in Claude family; also consider Amazon Nova Micro/Lite for cost-optimized speed            |
 | Lowest cost            | Claude Haiku 4.5 or Amazon Nova Micro — lowest cost per token                                                                |
 | Specialized capability | Deferred to Q17 to determine which model                                                                                     |
@@ -256,6 +257,6 @@ Present with concrete examples: Simple = classify/extract/summarize; Moderate = 
 | -------- | ------------------------------------------------------------------------------------------- |
 | Simple   | Claude Haiku 4.5 or Nova Micro sufficient; significant cost savings vs larger models        |
 | Moderate | Claude Sonnet 4.6 recommended; Haiku may suffice with prompt engineering                    |
-| Complex  | Claude Sonnet 4.6 required; extended thinking considered; Claude Opus 4.6 for hardest tasks |
+| Complex  | Claude Sonnet 4.6 required; extended thinking considered; Claude Opus 4.7 / 4.6 for hardest tasks |
 
 Interpret → `ai_complexity`. Default: B → `"moderate"`.
