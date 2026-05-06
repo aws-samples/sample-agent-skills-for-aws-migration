@@ -29,6 +29,47 @@ Read `$MIGRATION_DIR/preferences.json` → `ai_constraints` (if present). If abs
 
 ---
 
+## Step 0.5: Regional Availability Validation
+
+Read target region from `preferences.json` → `design_constraints.target_region` (default: `us-east-1`).
+
+Call `get_regional_availability` from the `awsknowledge` MCP server for:
+
+1. Each Bedrock model ID being considered (from the loaded model mapping tables)
+2. If `agentic_profile.is_agentic == true`: check `bedrock-agentcore` (Runtime)
+3. If `agentic_profile.is_agentic == true` AND `ai_constraints.agentic.migration_approach == "harness"`: check `bedrock-agentcore` harness capability
+
+**If any recommended service is unavailable in target region:**
+
+- Add to `regional_warnings[]` in output: `{"service": "...", "target_region": "...", "nearest_available": "...", "impact": "..."}`
+- Note in user summary with alternative region suggestion
+- Do NOT block the design — proceed with the recommendation and flag the constraint
+
+**If MCP call fails after 3 attempts:** Use the static table in `references/shared/ai-migration-guardrails.md` as fallback. Add `"regional_validation": "fallback_static"` to output metadata.
+
+---
+
+## Step 0.6: Agentic Design Routing
+
+**Skip this step if `agentic_profile` is absent from `ai-workload-profile.json`.**
+
+If `agentic_profile.is_agentic == true`:
+
+1. Load `references/shared/ai-migration-guardrails.md` (shared warnings — load once, do not reload in sub-files)
+2. Read `preferences.json` → `ai_constraints.agentic.migration_approach`
+3. Route based on approach:
+
+| `migration_approach` | Action |
+|---------------------|--------|
+| `"retarget"` | Continue with standard model-swap design below (Parts 1–6). The existing framework stays; only the model layer changes. No additional design ref needed. |
+| `"harness"` | Load `references/design-refs/design-ref-harness.md`. If file does not exist: continue with standard model-swap design, add note to user summary: "AgentCore Harness design reference not yet available. Proceeding with model-layer migration only. For Harness guidance, see https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/harness.html" |
+| `"strands"` | Load `references/design-refs/design-ref-agentic-to-agentcore.md`. If file does not exist: continue with standard model-swap design, add note to user summary: "Strands-native migration path is not yet implemented in this skill. Proceeding with model-layer migration. For Strands SDK guidance, see https://strandsagents.com" |
+| `"undecided"` | Treat as `"retarget"` (safest default). Note in user summary: "No migration approach selected — defaulting to retarget (keep framework, swap model layer). Re-run Clarify to select a different approach." |
+
+**Regardless of approach:** Continue with Parts 1–6 below for model selection and mapping. The agentic design ref (Harness/Strands) adds agent infrastructure on top of the model-layer design — it does not replace it.
+
+---
+
 ## Part 1: Bedrock Model Selection
 
 For each model in `models[]`, select the best-fit Bedrock model using the loaded design reference mapping tables. Do NOT use a hardcoded mapping — the design-ref files contain tier-organized tables with pricing and competitive analysis.
@@ -83,6 +124,31 @@ If `ai_token_volume` is `"high"`, generate a `tiered_strategy`:
 | 3    | 10%     | Claude Sonnet 4.6            | Reasoning, long-form, agentic tasks, tool use        |
 
 Set `tiered_strategy: null` for low/medium volume.
+
+---
+
+## Part 1C: Multi-Model Coordination Warnings
+
+If `models[]` contains more than one model, check for coordination patterns and generate warnings. These help the user understand that migrating multiple models requires coordinated testing, not independent swaps.
+
+**Check and warn:**
+
+1. **Embeddings + generation model detected** — If `models[]` contains both an embeddings model (capabilities_used includes `"embeddings"`) AND a text generation model:
+   > ⚠️ "Migrating the embedding model (e.g., text-embedding-3-small → Titan Embeddings v2) requires re-embedding all documents in your vector store. Plan for re-indexing time and temporary storage. Test retrieval quality with the new embeddings before switching generation model."
+
+2. **Models at different price tiers** — If `models[]` contains both a mini/nano/lite model AND a flagship model (infer from model_id naming: `*-mini`, `*-nano`, `*-lite` vs flagship):
+   > ⚠️ "These models appear to work as a cascade or routing pattern (cheap model for classification/filtering, expensive model for generation). Test the Bedrock replacement pair together — validate that the cheaper model's classification accuracy is preserved with its Bedrock equivalent before testing the expensive model."
+
+3. **More than 3 models** — If `models[]` count > 3:
+   > ⚠️ "Multiple models detected ([count]). Recommend a tiered migration strategy: migrate and validate one model at a time, starting with the lowest-risk (highest-volume, simplest task). See Part 1B for tiered routing recommendations."
+
+4. **Text generation + image generation** — If `models[]` contains both text generation AND image generation capabilities:
+   > ⚠️ "Image generation migration (e.g., DALL-E/gpt-image → Nova Canvas) requires separate evaluation. Image quality is subjective — plan for human evaluation alongside automated metrics."
+
+5. **Speech models** — If `models[]` contains speech-to-text or text-to-speech capabilities:
+   > ⚠️ "Speech model migration targets different AWS services (Whisper → Amazon Transcribe, TTS → Amazon Polly or Nova Sonic) with different pricing models and APIs. These are not Bedrock model swaps — they require separate integration work."
+
+Record all triggered warnings in `aws-design-ai.json` → `multi_model_warnings[]`. Each warning: `{"type": "embeddings_reindex|cascade_pair|multi_model_tiered|image_separate|speech_separate", "message": "..."}`.
 
 ---
 
@@ -158,6 +224,18 @@ For each detected `integration.pattern` and `ai_source`, generate before/after m
 
 Generate concrete code examples using actual model IDs from the selected Bedrock models. Only include patterns matching the detected integration.
 
+**OpenRouter-specific guidance** (if `gateway_type == "llm_router"` AND `detection_signals` contains OpenRouter evidence):
+
+OpenRouter is a hosted routing service (not self-hosted like LiteLLM). It adds a margin on top of provider pricing. Present three options to the user:
+
+| Option | Action | Effort | Trade-off |
+|--------|--------|--------|-----------|
+| A) Direct Bedrock (recommended) | Remove OpenRouter, call Bedrock API directly | 1–2 weeks | Removes middleman + margin; requires SDK changes |
+| B) Self-hosted LiteLLM | Replace OpenRouter with LiteLLM proxy pointing to Bedrock | 1–3 days | Preserves router pattern; removes OpenRouter dependency; adds self-hosting |
+| C) Keep OpenRouter | Use OpenRouter with `amazon/` prefixed Bedrock models | Hours | Lowest effort; retains OpenRouter dependency and margin |
+
+Record user's choice (or recommend A if not asked) in `aws-design-ai.json` → `code_migration.openrouter_path`: `"direct"` / `"litellm"` / `"keep_openrouter"`.
+
 ---
 
 ## Part 6: Generate Output
@@ -176,6 +254,9 @@ Write `aws-design-ai.json` to `$MIGRATION_DIR/`.
 | `ai_architecture.code_migration`      | object      | `primary_pattern`, `framework`, `files_to_modify[]`, `dependency_changes`                                                                                                                           |
 | `ai_architecture.infrastructure`      | array       | GCP resource → AWS equivalent mappings with confidence                                                                                                                                              |
 | `ai_architecture.services_to_migrate` | array       | GCP service → AWS service with effort and notes                                                                                                                                                     |
+| `regional_warnings`                   | array       | Per-service: `service`, `target_region`, `nearest_available`, `impact` (empty array if all services available) |
+| `multi_model_warnings`                | array       | Per-warning: `type`, `message` (empty array if single model or no coordination issues) |
+| `agentic_design`                      | object/null | Present only when `agentic_profile.is_agentic == true`. Contains `migration_approach`, path-specific config (e.g., `harness_config`). Null or absent for non-agentic workloads. |
 
 ## Validation Checklist
 
@@ -187,6 +268,10 @@ Write `aws-design-ai.json` to `$MIGRATION_DIR/`.
 - [ ] All model IDs use current Bedrock identifiers (Active status per `shared/ai-model-lifecycle.md`)
 - [ ] No Legacy model is used as `bedrock_models[].aws_model_id` unless no Active alternative exists (with EOL date noted)
 - [ ] `honest_assessment` logic is consistent (weakest model drives overall)
+- [ ] `regional_warnings` is present (empty array `[]` if no issues; populated if any service unavailable in target region)
+- [ ] `multi_model_warnings` is present (empty array `[]` if single model or no coordination issues)
+- [ ] If `agentic_profile.is_agentic == true`: `agentic_design` object is present with `migration_approach` matching `preferences.json`
+- [ ] If `agentic_profile.is_agentic == false` or absent: `agentic_design` is null or absent
 
 ## Completion Handoff Gate (Fail Closed)
 
