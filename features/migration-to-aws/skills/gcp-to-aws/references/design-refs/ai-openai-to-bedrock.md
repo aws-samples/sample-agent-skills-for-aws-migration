@@ -40,7 +40,7 @@ Percentages below are blended savings using a 2:1 input-to-output token ratio.
 
 | OpenAI Model    | Price (in/out per 1M) | Best Bedrock Match | Bedrock Price  | Winner              |
 | --------------- | --------------------- | ------------------ | -------------- | ------------------- |
-| GPT-5.2         | $1.75 / $14.00        | Claude Opus 4.6    | $5.00 / $25.00 | OpenAI 50% cheaper  |
+| GPT-5.2         | $1.75 / $14.00        | Claude Opus 4.7 / 4.6 | $5.00 / $25.00 | OpenAI 50% cheaper  |
 | GPT-5.1 / GPT-5 | $1.25 / $10.00        | Claude Sonnet 4.6  | $3.00 / $15.00 | OpenAI 40% cheaper  |
 | GPT-5 Mini      | $0.25 / $2.00         | Nova Lite          | $0.06 / $0.24  | Bedrock 86% cheaper |
 | GPT-5 Nano      | $0.05 / $0.40         | Nova Micro         | $0.035 / $0.14 | Bedrock 58% cheaper |
