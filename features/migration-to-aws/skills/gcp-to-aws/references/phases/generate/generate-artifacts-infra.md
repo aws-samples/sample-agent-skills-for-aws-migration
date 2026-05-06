@@ -25,31 +25,35 @@ If any REQUIRED file is missing: **STOP**. Output: "Missing required artifact: [
 
 Generate `$MIGRATION_DIR/terraform/` with only the files needed for domains that have resources in `aws-design.json`:
 
-| File            | Domain     | Contains                                                   |
-| --------------- | ---------- | ---------------------------------------------------------- |
-| `main.tf`       | core       | Provider config, backend, data sources                     |
-| `variables.tf`  | core       | All input variables with types and defaults                |
-| `outputs.tf`    | core       | Resource outputs and migration summary                     |
-| `vpc.tf`        | networking | VPC, subnets, NAT, security groups, route tables           |
-| `security.tf`   | security   | IAM roles, policies, KMS keys, Secrets Manager             |
-| `storage.tf`    | storage    | S3 buckets, EFS, backup vaults                             |
-| `database.tf`   | database   | RDS/Aurora instances, parameter groups                     |
-| `compute.tf`    | compute    | Fargate/ECS, Lambda, EC2                                   |
-| `monitoring.tf` | monitoring | CloudWatch dashboards, alarms, log groups                  |
-| `README.md`     | core       | Cost tiers vs this Terraform (one stack; Balanced-aligned) |
+| File            | Domain            | Contains                                                                                                                                                                                                                                                                                                                                                                                                                |
+| --------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `main.tf`       | core              | Provider config, backend, data sources                                                                                                                                                                                                                                                                                                                                                                                  |
+| `variables.tf`  | core              | All input variables with types and defaults                                                                                                                                                                                                                                                                                                                                                                             |
+| `outputs.tf`    | core              | Resource outputs and migration summary                                                                                                                                                                                                                                                                                                                                                                                  |
+| `baseline.tf`   | security baseline | Account-wide security baseline: alternate contacts, password policy, S3 PAB, EBS encryption, Access Analyzer, IMDSv2 default, CloudTrail + S3 log bucket, AWS Budget, GuardDuty. Plus a compliance-conditional section (Config + Security Hub + standards) when `preferences.json.compliance` contains soc2/pci/hipaa/fedramp. Always emitted; users who want to skip it can delete this file before `terraform apply`. |
+| `vpc.tf`        | networking        | VPC, subnets, NAT, security groups, route tables                                                                                                                                                                                                                                                                                                                                                                        |
+| `security.tf`   | security          | IAM roles, policies, KMS keys, Secrets Manager                                                                                                                                                                                                                                                                                                                                                                          |
+| `storage.tf`    | storage           | S3 buckets, EFS, backup vaults                                                                                                                                                                                                                                                                                                                                                                                          |
+| `database.tf`   | database          | RDS/Aurora instances, parameter groups                                                                                                                                                                                                                                                                                                                                                                                  |
+| `compute.tf`    | compute           | Fargate/ECS, Lambda, EC2                                                                                                                                                                                                                                                                                                                                                                                                |
+| `monitoring.tf` | monitoring        | CloudWatch dashboards, alarms, log groups                                                                                                                                                                                                                                                                                                                                                                               |
+| `README.md`     | core              | Cost tiers vs this Terraform (one stack; Balanced-aligned)                                                                                                                                                                                                                                                                                                                                                              |
 
 ## Step 0: Plan Generation Scope
 
 Build a generation manifest: read all resources from `aws-design.json` clusters, assign each to its target .tf file by `aws_service`:
 
-| AWS Service                                           | Target File     |
-| ----------------------------------------------------- | --------------- |
-| VPC, Subnet, NAT Gateway, Security Group, Route Table | `vpc.tf`        |
-| IAM Role, IAM Policy, KMS Key, Secrets Manager        | `security.tf`   |
-| S3, EFS, Backup Vault                                 | `storage.tf`    |
-| RDS, Aurora, DynamoDB, ElastiCache                    | `database.tf`   |
-| Fargate, ECS, Lambda, EC2                             | `compute.tf`    |
-| CloudWatch, SNS (for alarms)                          | `monitoring.tf` |
+| AWS Service                                                                                                                                                                                                                                                                                                                             | Target File     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Account Alternate Contacts, IAM Account Password Policy, S3 Account Public Access Block, EBS Default Encryption, IAM Access Analyzer (ACCOUNT), EC2 Instance Metadata Defaults, CloudTrail, AWS Budgets, GuardDuty Detector, S3 buckets for CloudTrail and Config logs, AWS Config recorder/delivery/role, AWS Security Hub + standards | `baseline.tf`   |
+| VPC, Subnet, NAT Gateway, Security Group, Route Table                                                                                                                                                                                                                                                                                   | `vpc.tf`        |
+| IAM Role, IAM Policy, KMS Key, Secrets Manager                                                                                                                                                                                                                                                                                          | `security.tf`   |
+| S3, EFS, Backup Vault                                                                                                                                                                                                                                                                                                                   | `storage.tf`    |
+| RDS, Aurora, DynamoDB, ElastiCache                                                                                                                                                                                                                                                                                                      | `database.tf`   |
+| Fargate, ECS, Lambda, EC2                                                                                                                                                                                                                                                                                                               | `compute.tf`    |
+| CloudWatch, SNS (for alarms)                                                                                                                                                                                                                                                                                                            | `monitoring.tf` |
+
+> `baseline.tf` is always emitted. It is NOT driven by `aws-design.json` clusters — the resources are workload-independent account controls. The compliance-conditional subset (Config + Security Hub) is emitted within the same file when `preferences.json.compliance` contains soc2/pci/hipaa/fedramp. The `aws_budgets_budget` resource reads `estimation-infra.json` to set its `limit_amount`. See Step 1.5 below. Users who want to skip the baseline can delete `terraform/baseline.tf` before `terraform apply`.
 
 **BigQuery / specialist-deferred:** If `aws_service` is **`Deferred — specialist engagement`**, **do not** generate Terraform for that resource (no Glue, Athena, Redshift, or EMR modules from the plugin). Optionally add **`terraform/README-BIGQUERY-DEFERRED.md`** with a short checklist: engage **AWS account team** and/or **data analytics migration partner** before implementing analytics infrastructure.
 
@@ -75,6 +79,85 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 5. **Artifacts** — Reference `estimation-infra.json`, `migration-report.html` / `MIGRATION_GUIDE.md` for full tier tables.
 
 Keep it under one screen of text.
+
+## Step 1.5: Generate baseline.tf
+
+Always emitted. The baseline applies account-wide security controls that should be in place on any new AWS account. Users who do not want the baseline can delete `terraform/baseline.tf` before `terraform apply`.
+
+1. **Compute retention.** Read `preferences.json.compliance` (array of strings; may be absent or empty). Compute `cloudtrail_retention_days` using this mapping, taking `max()` across all declared values (use 90 if the array is empty or absent):
+   - absent / `[]` → 90
+   - `soc2` → 365
+   - `pci` → 365
+   - `hipaa` → 2190
+   - `fedramp` → 1095
+   - `gdpr` → 365
+
+2. **Compute budget limit.** Read `estimation-infra.json.projected_costs.breakdown.total.mid` (or the canonical equivalent). Compute `budget_limit = max(50, ceil(total_mid * 1.2))`. If `estimation-infra.json` is missing or unreadable, use `50` and emit an inline comment noting that the projection was unavailable.
+
+3. **Choose file-header variant.** If `compliance` contains any of `soc2`, `pci`, `hipaa`, `fedramp`, emit the compliance-expansion header. Otherwise emit the base header. Both variants include a two-sentence provenance note stating per-unit rates were verified against the AWS Pricing API for us-east-1 on 2026-05-04. Substitute the resolved `cloudtrail_retention_days` value into the header.
+
+4. **Emit `baseline.tf`** starting with the file-header comment block and a `locals` block containing the resolved `cloudtrail_retention_days` integer:
+
+   ```hcl
+   locals {
+     cloudtrail_retention_days = <N>
+   }
+   ```
+
+5. **Append the always-on resources**, in this order. Each resource carries the plugin's standard four default tags plus `Component = "security-baseline"`:
+   - `aws_account_alternate_contact.operations` (ACCT.01, TODO-email placeholder)
+   - `aws_account_alternate_contact.billing` (ACCT.01, TODO-email placeholder)
+   - `aws_account_alternate_contact.security` (ACCT.01, TODO-email placeholder)
+   - `aws_iam_account_password_policy.baseline` (ACCT.06; `minimum_password_length = 14`, `password_reuse_prevention = 24`, `max_password_age = 90`, all four character-class requirements `true`, `hard_expiry = false`)
+   - `aws_s3_account_public_access_block.baseline` (ACCT.08; all four flags `true`)
+   - `aws_ebs_encryption_by_default.baseline` (defense-in-depth; `enabled = true`)
+   - `aws_accessanalyzer_analyzer.baseline` (ACCT.11; `type = "ACCOUNT"`)
+   - `aws_ec2_instance_metadata_defaults.baseline` (defense-in-depth; `http_tokens = "required"`, `http_put_response_hop_limit = 2`)
+   - `aws_cloudtrail.baseline` (ACCT.07; multi-region, management events only, `enable_log_file_validation = true`)
+   - `aws_s3_bucket.cloudtrail_logs` plus `aws_s3_bucket_public_access_block`, `aws_s3_bucket_server_side_encryption_configuration`, `aws_s3_bucket_versioning`, `aws_s3_bucket_lifecycle_configuration` (transitions driven by `local.cloudtrail_retention_days` per item 7), and `aws_s3_bucket_policy` restricting the CloudTrail service principal by `aws:SourceArn`
+   - `aws_budgets_budget.monthly_spend` (ACCT.10; `limit_amount = "<budget_limit>"` from item 2; three `notification` blocks at 50/80/100% `ACTUAL`; TODO-email placeholders)
+   - `aws_guardduty_detector.baseline` (defense-in-depth; `enable = true`, `finding_publishing_frequency = "FIFTEEN_MINUTES"`)
+
+6. **If `compliance` contains any of `soc2`, `pci`, `hipaa`, `fedramp`, append the compliance-conditional section**, wrapped in `########## Compliance-Conditional ##########` / `########## End Compliance-Conditional ##########` dividers:
+   - `aws_iam_role.config` + `aws_iam_role_policy_attachment` for the managed policy `AWSConfigRole`
+   - `aws_config_configuration_recorder.baseline` with `recording_group { all_supported = true, include_global_resource_types = true }`
+   - `aws_config_delivery_channel.baseline` pointing at the Config S3 bucket
+   - `aws_config_configuration_recorder_status.baseline` with `is_enabled = true`
+   - `aws_s3_bucket.config_logs` plus PAB, SSE, versioning, lifecycle (same `local.cloudtrail_retention_days`), and a bucket policy allowing the `config.amazonaws.com` service principal
+   - `aws_securityhub_account.baseline`
+   - `aws_securityhub_standards_subscription.fsbp` (always emitted in this section)
+   - `aws_securityhub_standards_subscription.pci_dss` (only if `compliance` contains `pci`)
+
+   Do NOT emit an NIST 800-53 standards subscription, even if `compliance` contains `hipaa` or `fedramp`. Security Hub does not provide a HIPAA-specific standard; FedRAMP attestation is out-of-band.
+
+7. **Lifecycle rule adjustment.** Omit the `STANDARD_IA` transition block when the resolved retention is less than 90 days. Omit the `GLACIER` transition block when retention is less than 365 days. Both rules apply to both the CloudTrail log bucket and (when emitted) the Config log bucket.
+
+8. **Attach inline HCL comments**:
+   - On each `aws_account_alternate_contact.*`: a TODO-email warning.
+   - On `aws_cloudtrail.baseline`: a collision warning for users who already have a trail in the region.
+   - On `aws_budgets_budget.monthly_spend`: a TODO-email warning plus the limit-rationale comment (`max(50, ceil(total_mid * 1.2))`; $50 floor prevents alert noise; users may edit `limit_amount` directly post-apply).
+   - On `aws_guardduty_detector.baseline`: a cost disclosure noting the 30-day free trial and ~$2–25/mo post-trial.
+   - On `aws_config_configuration_recorder.baseline`: a cost disclosure ($0.003/CI continuous; $0.012/daily-CI as an opt-in for cost-sensitive users).
+   - On `aws_securityhub_account.baseline`: a cost disclosure noting the 30-day free trial and ~$1–15/mo post-trial.
+   - On every defense-in-depth resource (EBS encryption, IMDSv2 account default, GuardDuty, Config, Security Hub): the literal token `defense-in-depth` in the inline comment.
+
+9. **compute.tf modification (runs during Step 3 compute domain, not here):** when `ssb_baseline == "tier1"`, every `aws_launch_template` emitted for ECS-EC2, EKS node groups, or bare EC2 receives:
+
+   ```hcl
+   metadata_options {
+     http_tokens                 = "required"
+     http_put_response_hop_limit = 1
+     http_endpoint               = "enabled"
+     instance_metadata_tags      = "enabled"
+   }
+   ```
+
+   Fargate, Lambda, and App Runner do not emit launch templates and are unaffected (no synthetic launch template is created). Hop limit `1` here is intentionally different from the account-level default `2` in `aws_ec2_instance_metadata_defaults.baseline` — strict on templates the plugin owns, permissive at the account default.
+
+**Emission conditions**:
+
+- Emit `baseline.tf` even when `aws-design.json` contains only AI or billing-only resources (no infrastructure clusters). The baseline is workload-independent.
+- Do NOT probe for existing account resources (CloudTrail trails, Config recorders, Security Hub enrollment). Collision risk is surfaced by the inline comments listed in item 8.
 
 ## Step 2: Generate variables.tf
 
@@ -158,83 +241,18 @@ Verify these quality rules before reporting completion:
 - [ ] `main.tf` begins with the required cost-tier / Balanced alignment comment block
 - [ ] `migration_summary` output includes `aligned_with_estimate_tier` and `cost_scenarios_modeled_in_terraform`
 
-## Step 6: Validate Generated Terraform
-
-**This step is mandatory. Do not skip, even if Step 5 self-check passed.**
-
-Execute the full fmt → init → validate → fix-and-retry → offline-fallback protocol defined in `references/shared/terraform-validation.md`. That file is the canonical specification; the summary below is informative only.
-
-Working directory for all commands: `$MIGRATION_DIR/terraform/`.
-
-### 6.1 Format (auto-apply + verify)
-
-Run:
-
-```bash
-terraform fmt -recursive
-```
-
-to auto-apply formatting, then:
-
-```bash
-terraform fmt -recursive -check
-```
-
-to verify. If `-check` exits non-zero, treat as a validation failure (goto 6.4).
-
-### 6.2 Initialize (no backend) with network-unavailable detection
-
-Run:
-
-```bash
-terraform init -backend=false -input=false -no-color
-```
-
-Capture stderr. If exit code is non-zero:
-
-- Classify with the offline-detection algorithm in `references/shared/terraform-validation.md` § Offline Detection.
-- **IF network-unavailable**: set `validation_status = "passed_degraded_offline"`, emit a user-visible warning, skip 6.3, and proceed to 6.5. **Do not** enter the retry loop.
-- **IF NOT network-unavailable**: treat as a validation failure (goto 6.4).
-
-The network-unavailable patterns are `{"lookup", "dial tcp", "connection refused", "timeout", "no such host"}`, matched case-insensitively, first-match-wins.
-
-### 6.3 Validate
-
-Run:
-
-```bash
-terraform validate -json
-```
-
-If exit code is non-zero, treat as a validation failure (goto 6.4). Parse the JSON diagnostics (`.diagnostics[]`) for the retry loop.
-
-### 6.4 Fix-and-retry loop
-
-Bounded at 3 attempts per batch. On each attempt:
-
-1. Read the failing command's error output (fmt diff, init stderr, or validate `-json` diagnostics).
-2. Group errors by file; edit the `.tf` files to correct only the reported defects.
-3. Re-run the failing command (fmt -check, init, or validate — whichever failed).
-4. If it now passes, advance to the next sub-step (6.2 → 6.3 → 6.5).
-
-If 3 consecutive attempts fail in the same batch, prompt the user:
-
-```
-Terraform validation failed after 3 automated fix attempts.
-Last error: <one-line summary>
-[retry] attempt 3 more fixes
-[skip]  proceed with warning, mark validation_status = skipped_user_continue
-[abort] stop, do NOT write .phase-status.json
-Choose [retry/skip/abort]:
-```
-
-- **retry** → reset counter to 0 for 3 more attempts.
-- **skip** → set `validation_status = "skipped_user_continue"`, emit warning, proceed to 6.5, allow Phase Completion.
-- **abort** → set `validation_status = "skipped_user_abort"`, STOP, do NOT update `.phase-status.json`.
-
-### 6.5 Emit `validation-report.json`
-
-Write `$MIGRATION_DIR/validation-report.json` following the schema in `references/shared/terraform-validation.md` § Report Schema, with `status` set to the terminal `validation_status`.
+- [ ] `baseline.tf` exists.
+- [ ] `baseline.tf` contains `aws_account_alternate_contact` for each of OPERATIONS, BILLING, SECURITY, plus `aws_iam_account_password_policy`, `aws_s3_account_public_access_block`, `aws_ebs_encryption_by_default`, `aws_cloudtrail`, `aws_guardduty_detector`, `aws_accessanalyzer_analyzer`, `aws_ec2_instance_metadata_defaults`, and `aws_budgets_budget`.
+- [ ] `baseline.tf` contains a `locals` block with `cloudtrail_retention_days` set to a positive integer, and the lifecycle `expiration.days` on `aws_s3_bucket_lifecycle_configuration.cloudtrail_logs` equals `local.cloudtrail_retention_days`.
+- [ ] `aws_budgets_budget.monthly_spend.limit_amount` equals `max(50, ceil(estimation-infra.json.projected_costs.breakdown.total.mid * 1.2))` as a string.
+- [ ] If `ssb_baseline == "tier1"` and `compute.tf` contains any `aws_launch_template`, every such launch template has `metadata_options { http_tokens = "required" }`.
+- [ ] If `compliance` contains soc2/pci/hipaa/fedramp, `baseline.tf` contains `aws_config_configuration_recorder`, `aws_config_delivery_channel`, `aws_config_configuration_recorder_status`, `aws_securityhub_account`, `aws_securityhub_standards_subscription` for FSBP.
+- [ ] If `compliance` contains pci, an additional `aws_securityhub_standards_subscription` for PCI DSS exists.
+- [ ] `baseline.tf` does NOT contain any `aws_securityhub_standards_subscription` whose `standards_arn` references `nist-800-53`, regardless of compliance values.
+- [ ] If `compliance` is empty, absent, or contains only gdpr, `baseline.tf` does NOT contain any `aws_config_*` or `aws_securityhub_*` resources.
+- [ ] `baseline.tf` does NOT contain any invented SSB control IDs. Search for `ACCT.IAM`, `ACCT.S3`, `ACCT.EBS`, `ACCT.CT`, `ACCT.GD`, `ACCT.CFG`, `ACCT.SH`, `WKLD.EC2.01` — all MUST have zero matches. Only bare `ACCT.01` through `ACCT.13` identifiers are permitted.
+- [ ] `baseline.tf` does NOT mention "Trusted Advisor" anywhere (Trusted Advisor is docs-action only and out of scope).
+- [ ] Security Hub subscribes to FSBP (always when the compliance-conditional section is emitted) and PCI DSS (only when `compliance` contains `pci`). No other standards subscriptions.
 
 ## Phase Completion
 
@@ -245,9 +263,7 @@ Before reporting completion, enforce artifact output gate:
 - `terraform/` directory exists.
 - At minimum: `terraform/main.tf`, `terraform/variables.tf`, and `terraform/outputs.tf` exist.
 - At least one domain file exists among: `vpc.tf`, `security.tf`, `storage.tf`, `database.tf`, `compute.tf`, `monitoring.tf`.
-- `terraform fmt -recursive -check` exited 0 during Step 6.1 (required even when Step 6.2 fell back to `passed_degraded_offline`).
-- `validation_status` is set to one of `{passed, passed_degraded_offline, skipped_user_continue}`. If `validation_status = "skipped_user_abort"`, do NOT enter this gate — Step 6.4 already stopped the run without writing `.phase-status.json`.
-- `$MIGRATION_DIR/validation-report.json` exists with a `status` field matching `validation_status`.
+- `terraform/baseline.tf` MUST exist (baseline is always emitted).
 
 If this gate fails: STOP and output: "generate-artifacts-infra did not produce required Terraform artifacts; do not complete Generate Stage 2."
 
