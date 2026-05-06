@@ -99,6 +99,7 @@ From `ai-workload-profile.json`, record non-monetary factors in `migration_cost_
 - `integration.pattern = "direct_sdk"` → moderate SDK and API pattern changes
 - `integration.pattern = "rest_api"` → higher endpoint, auth, and parsing changes
 - `summary.total_models_detected` > 3 → multi-model coordination
+- `quota_risk = "high"` (from `aws-design-ai.json`) → Bedrock quota increase required before migration; allow 1–5 business days (see `shared/bedrock-quotas.md`)
 
 Do **not** repeat these as "costs" in the user-facing summary.
 

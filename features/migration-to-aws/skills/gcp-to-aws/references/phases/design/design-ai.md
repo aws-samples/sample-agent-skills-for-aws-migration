@@ -18,7 +18,7 @@ Read `$MIGRATION_DIR/ai-workload-profile.json`:
 
 Read `$MIGRATION_DIR/preferences.json` → `ai_constraints` (if present). If absent: use defaults (prefer managed Bedrock, no latency constraint, no budget cap).
 
-**IaC-only / empty models guard:** If `models[]` is empty, or `summary.inferred_from_iac` is `true` with no code-derived model IDs, do **not** invent source model names. Use `summary.ai_source`, `infrastructure[]`, and `ai_constraints` to propose a **representative** Bedrock direction from the design-ref tables; label per-model source mapping as **pending validation** until clarified. If `integration.pattern` is `unknown`, treat migration effort as **TBD** pending framework answers from Clarify.
+**Region selection for AI workloads:** If `design_constraints.target_region` was derived from GCP region proximity (not explicitly chosen by the user), verify the selected Bedrock models are available in that region. Use the AWS Documentation MCP server to check model availability. If the target region lacks the selected model, prefer the geographically closest AWS region where it is available.
 
 **Load source-specific design reference based on `ai_source`:**
 
@@ -56,6 +56,19 @@ Treat model mapping as compatibility-guided, not 1:1 parity. Before cutover, req
 Overall assessment = weakest across all models. If any `"recommend_stay"`, flag prominently.
 
 **Model comparison table** (include in output and user summary): Model, Provider, Max Context, Input/Output Price per 1M, Price Comparison, Streaming, Function Calling, Assessment.
+
+**Quota risk assessment** (per `references/shared/bedrock-quotas.md`):
+
+After selecting models, assess quota risk based on `ai_token_volume` from `preferences.json`:
+
+| `ai_token_volume` | Selected Model Family | `quota_risk` | Action |
+| ------------------ | --------------------- | ------------ | ------ |
+| `"high"` or `"very_high"` | Any | `"high"` | Flag: "Request Bedrock quota increase before migration (allow 1–5 business days)" |
+| `"medium"` | Claude (5× burndown) | `"medium"` | Flag: "Monitor TPM usage; quota increase may be needed at peak" |
+| `"medium"` | Nova / Llama / other (1× burndown) | `"low"` | No action |
+| `"low"` | Any | `"low"` | No action |
+
+Include `quota_risk` in `aws-design-ai.json` → `ai_architecture` alongside `honest_assessment`.
 
 ---
 

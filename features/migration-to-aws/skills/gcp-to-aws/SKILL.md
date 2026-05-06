@@ -227,7 +227,8 @@ gcp-to-aws/
 │       ├── schema-discover-billing.md          # billing-profile schema (loaded by discover-billing.md)
 │       ├── schema-estimate-infra.md            # estimation-infra.json schema (loaded by estimate-infra.md at write time)
 │       ├── migration-complexity.md             # Complexity tier definitions (small/medium/large) for timeline scaling
-│       └── pricing-cache.md                    # Cached AWS + source provider pricing (±5-25%, primary source)
+│       ├── pricing-cache.md                    # Cached AWS + source provider pricing (±5-25%, primary source)
+│       └── bedrock-quotas.md                   # Bedrock TPM/RPM quota awareness, burndown rates, capacity planning
 ```
 
 | Condition                                                     | Action                                                                                                                                                  |
