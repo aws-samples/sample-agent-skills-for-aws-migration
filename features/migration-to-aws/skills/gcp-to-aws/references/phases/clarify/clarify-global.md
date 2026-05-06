@@ -120,6 +120,47 @@ Default: B — `gcp_monthly_spend: "$1K-$5K"`.
 
 ---
 
+## Q3.5 — Do you have active GCP Committed Use Discounts (CUDs)?
+
+**Rationale:** Active CUDs affect migration timing and cost comparison accuracy. If a customer has unexpired CUDs, they'll continue paying commitment fees even after migrating — this is a sunk cost that affects the migration ROI timeline. Also determines whether to compare against GCP list price or committed rate.
+
+**Conditional:** Only ask if `billing-profile.json` exists AND `commitments.has_active_cuds == true`. If billing data shows active CUDs, present the detected information and ask for confirmation/details.
+
+> Your billing data shows active Committed Use Discounts (~[effective_discount_percent]% effective discount). CUD timing affects migration ROI — commitment fees continue regardless of usage until the term expires.
+>
+> A) Yes, and they expire within 6 months
+> B) Yes, and they expire in 6–12 months
+> C) Yes, and they have more than 12 months remaining
+> D) Yes, but I'm not sure when they expire
+> E) No active CUDs / I don't know
+> F) I plan to let them expire and not renew
+
+| Answer | Recommendation Impact |
+| ------ | --------------------- |
+| Expire within 6 months | Migration timing favorable — plan migration to coincide with CUD expiration for clean cost transition |
+| Expire in 6–12 months | Consider phased migration starting now; some overlap cost is acceptable for operational benefits |
+| More than 12 months remaining | Factor CUD overlap cost into ROI analysis; migration still viable if operational benefits justify dual-payment period |
+| Not sure when they expire | Recommend customer check GCP console (Billing → Commitments) before finalizing migration timeline |
+| No active CUDs | No commitment overlap concern; migrate on any timeline |
+| Plan to let them expire | Align migration completion with CUD expiration date for optimal cost transition |
+
+Interpret:
+
+```
+A -> cud_status: "expiring_soon" — Align migration with CUD expiration
+B -> cud_status: "expiring_medium" — Phased migration acceptable; some overlap cost
+C -> cud_status: "long_remaining" — Factor overlap into ROI; justify with operational benefits
+D -> cud_status: "unknown_expiry" — Recommend checking GCP console
+E -> cud_status: "none" — No constraint
+F -> cud_status: "not_renewing" — Align migration completion with expiration
+```
+
+Default: E — `cud_status: "none"` (no constraint on migration timing).
+
+If `billing-profile.json` does not exist or `commitments.has_active_cuds == false`, **skip this question entirely**.
+
+---
+
 ## Q4 — _(Skipped)_
 
 Credits program eligibility is inferred from Q3 (GCP spend) alone. No question asked.

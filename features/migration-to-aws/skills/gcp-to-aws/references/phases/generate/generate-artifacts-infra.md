@@ -274,7 +274,9 @@ Generated terraform artifacts:
 - terraform/variables.tf
 - terraform/outputs.tf
 - terraform/[domain].tf (for each domain with resources)
+- validation-report.json (status: <validation_status>)
 
 Total: [N] Terraform files
+Validation: <validation_status> (attempts=<N>, errors_fixed=<N>)
 TODO markers: [N] items requiring manual configuration
 ```

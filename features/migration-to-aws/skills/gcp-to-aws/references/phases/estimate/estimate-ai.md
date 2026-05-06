@@ -27,7 +27,7 @@ For typical migrations (Claude, Llama, Nova, Mistral, DeepSeek, Gemma, OpenAI gp
 
 Read from `$MIGRATION_DIR/`:
 
-- **`ai-workload-profile.json`** — `current_costs.monthly_ai_spend`, `current_costs.services_detected`, `models[]`
+- **`ai-workload-profile.json`** — `current_costs.monthly_ai_spend`, `current_costs.services_detected`, `models[]`, `metadata.profile_source`, `summary.inferred_from_iac`
 - **`preferences.json`** — `ai_constraints.ai_token_volume.value`, `ai_constraints.ai_capabilities_required.value`
 - **`aws-design-ai.json`** — `metadata.ai_source`, `ai_architecture.honest_assessment`, `ai_architecture.tiered_strategy`, `ai_architecture.bedrock_models[]` (with `source_provider_price`, `bedrock_price`, `honest_assessment`), `ai_architecture.capability_mapping`
 
@@ -40,6 +40,8 @@ Determine current Vertex AI spending from the best available source:
 1. **Billing data (preferred)** — Use `current_costs.monthly_ai_spend` from `ai-workload-profile.json`
 2. **Estimated from token volume** — Use `ai_constraints.ai_token_volume.value` from `preferences.json` with Gemini pricing from `pricing-cache.md` (under "Source Provider Pricing"). Apply 60/40 input/output ratio if actual ratio unknown.
 3. **Neither available** — Note in output and present model comparison at multiple volume tiers so user can find their range.
+
+**IaC-only profile:** If `metadata.profile_source` is `iac_vertex` or `summary.inferred_from_iac` is true and billing/token data is missing, state explicitly that **current GCP AI spend is unverified** and widen uncertainty bands (use the same multi-tier comparison approach as in case 3).
 
 ---
 
@@ -97,6 +99,7 @@ From `ai-workload-profile.json`, record non-monetary factors in `migration_cost_
 - `integration.pattern = "direct_sdk"` → moderate SDK and API pattern changes
 - `integration.pattern = "rest_api"` → higher endpoint, auth, and parsing changes
 - `summary.total_models_detected` > 3 → multi-model coordination
+- `quota_risk = "high"` (from `aws-design-ai.json`) → Bedrock quota increase required before migration; allow 1–5 business days (see `shared/bedrock-quotas.md`)
 
 Do **not** repeat these as "costs" in the user-facing summary.
 

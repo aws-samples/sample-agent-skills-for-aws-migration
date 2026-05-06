@@ -28,7 +28,14 @@ Check `preferences.json` → `ai_constraints.ai_framework` to determine timeline
 | Voice Platform (Vapi, Bland.ai)   | Check native Bedrock support, update dashboard                | Dashboard config  |
 | Framework (LangChain, LlamaIndex) | Swap provider import (e.g., `ChatBedrock` for `ChatVertexAI`) | 1-5 lines of code |
 
-**Direct SDK users (1-3 weeks)** — `ai_framework` = `direct`:
+**OpenAI SDK users via Mantle (hours to 1 day)** — `ai_framework` = `direct` AND `ai_source` = `openai` AND `migration_path` = `mantle`:
+
+- Set `OPENAI_BASE_URL` and `OPENAI_API_KEY` environment variables
+- Update model string to Bedrock model ID
+- Test in staging, validate responses
+- No SDK changes, no new dependencies, no provider adapter needed
+
+**Direct SDK users (1-3 weeks)** — `ai_framework` = `direct` AND (`ai_source` != `openai` OR `migration_path` = `converse`):
 
 - **Week 1:** Enable Bedrock access, create IAM role, develop provider adapter with feature flag, unit test
 - **Week 2:** Deploy to staging, run A/B comparison, measure latency/quality/cost, tune prompts
@@ -46,11 +53,12 @@ Based on `ai-workload-profile.json` → `integration.pattern` and `integration.l
 
 | Source SDK         | Target                            | Key Change                                                       |
 | ------------------ | --------------------------------- | ---------------------------------------------------------------- |
+| OpenAI SDK         | Mantle OpenAI-compat              | Set `OPENAI_BASE_URL` + `OPENAI_API_KEY` + model string (zero code changes) |
 | Vertex AI (Python) | boto3 Bedrock Converse API        | `GenerativeModel.generate_content()` → `bedrock.converse()`      |
 | Vertex AI (JS)     | @aws-sdk/client-bedrock-runtime   | `model.generateContent()` → `client.send(new ConverseCommand())` |
 | Vertex AI (Go)     | aws-sdk-go-v2 bedrockruntime      | `aiplatform` → `bedrockruntime.Converse()`                       |
 | Vertex AI (Java)   | AWS SDK BedrockRuntimeClient      | `GenerativeModel` → `BedrockRuntimeClient.converse()`            |
-| OpenAI SDK         | boto3 Bedrock Converse API        | `client.chat.completions.create()` → `bedrock.converse()`        |
+| OpenAI SDK         | boto3 Bedrock Converse API        | `client.chat.completions.create()` → `bedrock.converse()` (if Mantle unavailable) |
 | LiteLLM            | LiteLLM config change             | `model="gpt-4o"` → `model="bedrock/anthropic.claude-sonnet-4-6"` |
 | LangChain          | langchain_aws                     | `ChatOpenAI`/`ChatVertexAI` → `ChatBedrock`                      |
 | LlamaIndex         | llama_index.llms.bedrock_converse | `Vertex` → `BedrockConverse`                                     |

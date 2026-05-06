@@ -10,9 +10,10 @@ Before presenting questions, show:
 
 > **AI Context Summary:**
 > **AI source:** [from `summary.ai_source`: "Gemini", "OpenAI", "Both", or "Other"]
-> **Models detected:** [from `models[].model_id`]
-> **Capabilities in use:** [from `integration.capabilities_summary` where true]
-> **Integration pattern:** [from `integration.pattern`] via [from `integration.primary_sdk`]
+> **Profile origin:** [from `metadata.profile_source`: if `iac_vertex` or `summary.inferred_from_iac` is true, state that Terraform was the primary signal and application code did not fully characterize the workload]
+> **Models detected:** [from `models[].model_id`; if empty, say **None inferred from code or IaC** — the following questions will pin down models and frameworks]
+> **Capabilities in use:** [from `integration.capabilities_summary` where true; if all false or pattern is `unknown`, say **Not inferred — confirm below**]
+> **Integration pattern:** [from `integration.pattern`; if `unknown`, say **Unknown (IaC-only)**] via [from `integration.primary_sdk`, or **not determined**]
 > **Gateway/router:** [from `integration.gateway_type`, or "None (direct SDK)"]
 > **Frameworks:** [from `integration.frameworks`, or "None"]
 
@@ -114,7 +115,7 @@ Present with concrete anchors: Quality = legal analysis/code gen; Speed = autoco
 
 | Answer                 | Recommendation Impact                                                                                                        |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Best quality/reasoning | Claude Sonnet 4.6 (latest, highest reasoning in Sonnet family) — primary; Claude Opus 4.6 for most demanding reasoning tasks |
+| Best quality/reasoning | Claude Sonnet 4.6 (latest, highest reasoning in Sonnet family) — primary; Claude Opus 4.7 for the most demanding reasoning tasks (same headline on-demand $5/$25 as Opus 4.6 on standard Bedrock pricing); Claude Opus 4.6 remains a valid alternative |
 | Fastest speed          | Claude Haiku 4.5 — lowest latency in Claude family; also consider Amazon Nova Micro/Lite for cost-optimized speed            |
 | Lowest cost            | Claude Haiku 4.5 or Amazon Nova Micro — lowest cost per token                                                                |
 | Specialized capability | Deferred to Q17 to determine which model                                                                                     |
@@ -181,9 +182,10 @@ Establishes baseline Bedrock recommendation. **Override hierarchy:** Q17 special
 > E) GPT-4o
 > F) GPT-5.4 / GPT-5.4 Mini / GPT-5.4 Nano
 > G) GPT-5 / GPT-5.x (older)
-> H) o-series (o1, o3)
-> I) Other / Multiple models
-> J) I don't know
+> H) GPT-5.5 / GPT-5.5 Pro
+> I) o-series (o1, o3)
+> J) Other / Multiple models
+> K) I don't know
 
 | Source Model              | Baseline Bedrock Recommendation                                       | Pricing Context                                                                   |
 | ------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
@@ -198,9 +200,12 @@ Establishes baseline Bedrock recommendation. **Override hierarchy:** Q17 special
 | GPT-5.4 Pro               | Nova 2 Pro ($1.38/$11) — flagship reasoning on AWS                    | 94% cheaper on Bedrock; strongest migration case                                  |
 | GPT-5 / GPT-5.x (older)   | Claude Sonnet 4.6 ($3/$15) — performance equivalent                   | GPT-5 is $1.25/$10 — savings story is quality/features, not cost                  |
 | GPT-5 (flagship use case) | Claude Opus 4.6 ($5/$25) — flagship-to-flagship                       | Opus still cheaper than GPT-5 Pro ($15/$120)                                      |
+| GPT-5.5                   | Claude Opus 4.6 ($5/$25) — flagship-to-flagship                       | Bedrock 17% cheaper on output ($25 vs $30); same input price                      |
+| GPT-5.5 (cost-sensitive)  | Claude Sonnet 4.6 ($3/$15) — 53% cheaper                              | Strong cost case; Sonnet leads on agentic reliability                             |
+| GPT-5.5 Pro               | Nova 2 Pro ($1.38/$11) — flagship reasoning on AWS                    | 95% cheaper on Bedrock; strongest migration case                                  |
 | o-series (o1, o3)         | Claude Sonnet 4.6 with extended thinking; Opus 4.6 for most demanding | o1 is $15/$60 — significant savings with Sonnet 4.6 at $3/$15                     |
 
-**Override examples:** GPT-4 + Q16=cost → Haiku; Flash + Q17=extended thinking → Sonnet; GPT-4o + Q17=speech → Nova 2 Sonic; GPT-3.5 + Q22=complex → Sonnet; GPT-5 + Q16=balanced → Sonnet.
+**Override examples:** GPT-4 + Q16=cost → Haiku; Flash + Q17=extended thinking → Sonnet; GPT-4o + Q17=speech → Nova 2 Sonic; GPT-3.5 + Q22=complex → Sonnet; GPT-5 + Q16=balanced → Sonnet; GPT-5.5 + Q16=cost → Sonnet 4.6.
 
 Interpret → `ai_model_baseline`. Default: auto-detect from code, fallback Q16 priority-based.
 
@@ -252,6 +257,150 @@ Present with concrete examples: Simple = classify/extract/summarize; Moderate = 
 | -------- | ------------------------------------------------------------------------------------------- |
 | Simple   | Claude Haiku 4.5 or Nova Micro sufficient; significant cost savings vs larger models        |
 | Moderate | Claude Sonnet 4.6 recommended; Haiku may suffice with prompt engineering                    |
-| Complex  | Claude Sonnet 4.6 required; extended thinking considered; Claude Opus 4.6 for hardest tasks |
+| Complex  | Claude Sonnet 4.6 required; extended thinking considered; Claude Opus 4.7 / 4.6 for hardest tasks |
 
 Interpret → `ai_complexity`. Default: B → `"moderate"`.
+
+---
+
+## Category G — Agentic Workflows (If `agentic_profile` exists in `ai-workload-profile.json`)
+
+_Fire when:_ `ai-workload-profile.json` contains `agentic_profile` with `is_agentic: true`.
+
+_Skip entirely when:_ `agentic_profile` is absent from `ai-workload-profile.json`.
+
+---
+
+## Agentic Context Summary
+
+Before presenting Category G questions, show:
+
+> **Agentic Context Summary:**
+> **Framework:** [from `agentic_profile.framework`]
+> **Agents detected:** [from `agentic_profile.agent_count`] ([list `agents[].agent_id`])
+> **Orchestration pattern:** [from `agentic_profile.orchestration_pattern`]
+> **Tools:** [from `agentic_profile.tool_count`] tools detected
+> **Memory:** [from `agentic_profile.has_memory`; if true, backend: `agentic_profile.memory_backend`]
+> **Human-in-the-loop:** [from `agentic_profile.has_human_in_loop`]
+
+---
+
+## Q23 — How do you want to migrate your agent system?
+
+**Auto-detect signals** — recommend default based on `agentic_profile.framework`:
+
+- `langgraph`, `crewai`, `autogen` → Default to A (retarget). These frameworks support Bedrock as a model provider with minimal code changes.
+- `openai_agents` → Surface all options. OpenAI Agents SDK is tightly coupled to OpenAI API; retarget is harder. Note partial retarget (HTTP-compatible routing to Bedrock) as a bridge.
+- `strands` → Already AWS-native. Recommend B (Harness) for managed deployment or note "already on target framework."
+- `custom` → Surface all options. Custom loops vary widely in complexity.
+
+_Skip when:_ Auto-detection fully resolves AND user has no preference signal. Use detected default with `chosen_by: "extracted"`.
+
+> Your agent system can migrate to AWS in different ways, each with different effort and risk:
+>
+> A) **Retarget** — Keep your current framework ([framework name]), swap the model layer to Bedrock. Fastest path, lowest risk. Your orchestration code stays the same.
+> B) **AgentCore Harness** — Declare your agent as configuration (model + tools + prompt). Get managed runtime, memory, identity, and observability. Good for simpler agents or incremental migration.
+> C) **Strands native** — Rewrite orchestration using AWS Strands SDK on AgentCore. Most AWS-integrated, highest effort. Best for teams wanting full AWS-native multi-agent capabilities.
+> D) **I'm not sure** — Help me decide based on my workload.
+
+| Answer | When it fits | Effort range | Risk |
+| ------ | ------------ | ------------ | ---- |
+| A) Retarget | Working system, team knows the framework, need to ship fast. LangGraph/CrewAI/AutoGen with Bedrock model provider support. | 1–3 weeks depending on agent count, tool count, test coverage | Low — orchestration unchanged |
+| B) AgentCore Harness | Simple single-agent, OpenAI Assistants migration, want managed runtime, or incremental migration (run existing models on AWS infra first). | 3–10 days depending on tool complexity and memory requirements | Low — config-based, reversible |
+| C) Strands native | OpenAI Agents SDK or custom loops where retarget doesn't work well, multi-agent systems, team willing to refactor for AWS-native benefits. | 2–6 weeks depending on agent count, graph complexity, tool count | Medium — orchestration rewrite |
+| D) Undecided | — | — | — |
+
+**For OpenAI Agents SDK users:** Note that a partial retarget (HTTP-compatible routing to Bedrock while keeping OpenAI SDK orchestration) is a valid short-lived bridge before committing to B or C. This is not a fourth path — it's a Phase 0 step within B or C.
+
+**If answer is D:** Recommend A (retarget) as default for LangGraph/CrewAI/AutoGen users. Recommend B (Harness) for OpenAI Assistants or simple single-agent patterns. Recommend C (Strands) only if user explicitly wants AWS-native multi-agent and accepts refactor cost.
+
+Interpret → `ai_constraints.agentic.migration_approach`: A → `"retarget"`, B → `"harness"`, C → `"strands"`, D → `"undecided"` (treated as `"retarget"` in Design unless overridden). Default: auto-detect based on framework.
+
+---
+
+## Q24 — Do your agents need to remember context across sessions?
+
+> A) No — each request is independent, no memory needed
+> B) Within a session — conversation history during a single interaction, but fresh start each time
+> C) Across sessions — remember user preferences, past interactions, accumulated knowledge between separate conversations
+
+| Answer | Recommendation Impact |
+| ------ | --------------------- |
+| No memory | Standard stateless invocation. No AgentCore Memory needed. |
+| Within session | AgentCore Harness sessions are stateful by default (microVM per session). No additional config needed for Harness path. For retarget path: existing framework memory (e.g., LangGraph checkpointer) continues to work. |
+| Across sessions | AgentCore Memory service recommended. Persists knowledge, user preferences, and interaction history across sessions. For retarget path: evaluate existing memory backend migration (Redis → ElastiCache, Postgres → RDS, vector store → OpenSearch Serverless). |
+
+Interpret → `ai_constraints.agentic.memory_requirement`: A → `"none"`, B → `"session"`, C → `"cross_session"`. Default: B → `"session"`.
+
+---
+
+## Q25 — How long do your agent tasks typically run?
+
+> A) Quick (< 30 seconds) — simple tool calls, single-turn responses
+> B) Medium (30 seconds – 5 minutes) — multi-step reasoning, several tool calls
+> C) Long (5 minutes – 1 hour) — complex research, multi-agent collaboration, iterative refinement
+> D) Very long (1+ hours) — extended autonomous work, large-scale data processing
+
+| Answer | Recommendation Impact |
+| ------ | --------------------- |
+| Quick | Standard invocation. Any deployment model works. |
+| Medium | AgentCore Runtime recommended for managed scaling. Harness sessions handle this natively. |
+| Long | AgentCore Runtime strongly recommended (supports up to 8-hour sessions). Serverless alternatives (Lambda) will timeout. |
+| Very long | AgentCore Runtime required (8-hour max session). If tasks exceed 8 hours: recommend breaking into sub-tasks with session chaining, or evaluate custom compute (ECS/EKS). |
+
+Interpret → `ai_constraints.agentic.task_duration`: A → `"quick"`, B → `"medium"`, C → `"long"`, D → `"very_long"`. Default: B → `"medium"`.
+
+---
+
+## Q26 — Do you want to migrate incrementally?
+
+> A) Yes — run my existing models (OpenAI/Gemini) on AWS infrastructure first, then swap to Bedrock models later when I'm confident
+> B) No — do a full model swap to Bedrock in one go
+> C) I'm not sure
+
+| Answer | Recommendation Impact |
+| ------ | --------------------- |
+| Yes (incremental) | AgentCore Harness multi-model switching: deploy on Harness with existing OpenAI/Gemini model (API key in AgentCore Identity), then override `--model-id` per invocation to A/B test Bedrock. Swap default when confident. Works for both Harness and retarget paths. |
+| No (full swap) | Standard migration: swap model layer directly to Bedrock. Faster to complete but higher risk per deployment. |
+| Not sure | Default to incremental if using Harness path (it's free — multi-model switching is built in). Default to full swap if retarget path with LangChain/LangGraph (simpler to test with framework's built-in model switching). |
+
+Interpret → `ai_constraints.agentic.incremental_migration`: A → `true`, B → `false`, C → auto-select based on `migration_approach`. Default: `true` for Harness path, `false` for retarget path.
+
+---
+
+## Category G Combination Logic
+
+| Combination | Design Impact |
+| ----------- | ------------- |
+| A (retarget) + C (cross-session memory) | Retarget model layer + migrate memory backend to AWS (Redis → ElastiCache, etc.) |
+| B (harness) + A (no memory) | Simplest Harness config — model + tools + prompt, no memory setup |
+| B (harness) + C (cross-session memory) | Harness + AgentCore Memory service |
+| B (harness) + D (very long tasks) | Flag: 8-hour session limit. Recommend task decomposition or session chaining. |
+| C (strands) + C (cross-session memory) | Strands SessionManager + AgentCore Memory |
+| Any + A (incremental) | Include incremental migration script in Generate artifacts |
+
+---
+
+## Preferences Output — `ai_constraints.agentic`
+
+Category G answers are stored in `preferences.json` → `ai_constraints.agentic`:
+
+```json
+{
+  "ai_constraints": {
+    "agentic": {
+      "migration_approach": "retarget|harness|strands|undecided",
+      "memory_requirement": "none|session|cross_session",
+      "task_duration": "quick|medium|long|very_long",
+      "incremental_migration": true
+    }
+  }
+}
+```
+
+**Field contract (consumed by Design phase):**
+
+- `migration_approach` — Routes Design to the correct path: `"retarget"` uses existing model-swap flow, `"harness"` loads `design-ref-harness.md`, `"strands"` loads `design-ref-agentic-to-agentcore.md`
+- `memory_requirement` — Determines whether AgentCore Memory is included in design
+- `task_duration` — Determines AgentCore Runtime recommendation and session limit warnings
+- `incremental_migration` — Determines whether incremental migration artifacts are generated

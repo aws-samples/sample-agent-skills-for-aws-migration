@@ -14,7 +14,8 @@ Confidence: `deterministic` (always 1:1, no decision tree)
 
 - Bucket versioning → S3 versioning
 - Lifecycle rules → S3 Lifecycle policies
-- Access control (UNIFORM vs FINE-GRAINED) → S3 ACLs + Bucket Policies
+- Access control (UNIFORM) → S3 Object Ownership "BucketOwnerEnforced" (ACLs disabled) + Bucket Policies
+- Access control (FINE-GRAINED) → S3 Bucket Policies (ACLs disabled; translate per-object grants to policy conditions)
 - Regional location → S3 region selection
 - Encryption (default or CSEK) → S3 encryption (default AES-256 or KMS)
 
@@ -25,7 +26,7 @@ Confidence: `deterministic` (always 1:1, no decision tree)
 | `location` (region)           | `region`                                    | Direct mapping; respect user's region choice |
 | `versioning_enabled`          | `versioning_enabled`                        | 1:1 copy                                     |
 | `lifecycle_rules`             | `lifecycle_rule`                            | Adapt rule conditions                        |
-| `uniform_bucket_level_access` | `block_public_acl` + policies               | Convert UNIFORM to S3 ACL block              |
+| `uniform_bucket_level_access` | `object_ownership = "BucketOwnerEnforced"` + bucket policy | ACLs disabled (AWS default since Apr 2023); use bucket policies for access control |
 | `encryption` (CSEK)           | `sse_algorithm = "aws:kms"`                 | Use AWS KMS (customer-managed key)           |
 | `cors`                        | `cors_rule`                                 | 1:1 copy                                     |
 | `retention_policy`            | `object_lock_configuration` (if applicable) | Object Lock stricter than GCS retention      |

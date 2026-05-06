@@ -152,13 +152,14 @@ If the command fails with dependency errors, investigate the listed resources be
 
 **Troubleshooting section** with a Common Issues table:
 
-| Issue                        | Cause                      | Resolution                                 |
-| ---------------------------- | -------------------------- | ------------------------------------------ |
-| Terraform apply fails        | Missing permissions        | Check IAM role has required policies       |
-| Database connection refused  | Security group rules       | Verify inbound rules allow app subnet CIDR |
-| Container image pull fails   | ECR authentication         | Run `aws ecr get-login-password`           |
-| Bedrock InvokeModel fails    | Model access not enabled   | Enable in AWS Console                      |
-| High latency after migration | Suboptimal instance sizing | Review CloudWatch metrics and right-size   |
+| Issue                                                    | Cause                                               | Resolution                                                                                                                 |
+| -------------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Terraform apply fails                                    | Missing permissions                                 | Check IAM role has required policies                                                                                       |
+| Database connection refused                              | Security group rules                                | Verify inbound rules allow app subnet CIDR                                                                                 |
+| Container image pull fails                               | ECR authentication                                  | Run `aws ecr get-login-password`                                                                                           |
+| Bedrock InvokeModel fails                                | Model access not enabled                            | Enable in AWS Console                                                                                                      |
+| High latency after migration                             | Suboptimal instance sizing                          | Review CloudWatch metrics and right-size                                                                                   |
+| `validation-report.json` shows `passed_degraded_offline` | Provider registry was unreachable when Generate ran | From a network-connected shell, run `cd terraform/ && terraform init && terraform validate` to complete the skipped checks |
 
 Rollback Procedure subsection (from generation plan — rollback triggers, steps, and RTO).
 
