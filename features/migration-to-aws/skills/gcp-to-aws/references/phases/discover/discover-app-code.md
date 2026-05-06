@@ -174,7 +174,7 @@ Scan files that contained AI signals for specific model information:
   - `openai.ChatCompletion.create(model="gpt-4")` -> model_id: `"gpt-4"` (legacy API)
   - `client.embeddings.create(model="text-embedding-3-small")` -> model_id: `"text-embedding-3-small"`
   - Model strings in config files or environment variables: `OPENAI_MODEL`, `MODEL_NAME`, etc.
-  - Look for model string patterns: `gpt-*`, `o1*`, `o3*`, `o4*`, `text-embedding-*`, `dall-e-*`, `whisper-*`, `tts-*`
+  - Look for model string patterns: `gpt-*`, `o1*`, `o3*`, `o4*`, `text-embedding-*`, `dall-e-*`, `gpt-image-*`, `whisper-*`, `tts-*`
 
   **Other provider patterns:**
   - `anthropic.Anthropic().messages.create(model="claude-*")` -> model_id: `"claude-*"`
@@ -187,7 +187,7 @@ Scan files that contained AI signals for specific model information:
   - `embeddings`: `TextEmbeddingModel`, `VertexAIEmbeddings`, `client.embeddings.create()`, embedding API calls
   - `batch_processing`: batch predict calls, bulk processing patterns
   - `json_mode`: `response_format={"type": "json_object"}` (OpenAI), structured output schemas
-  - `image_generation`: `client.images.generate()` (DALL-E), Imagen API calls
+  - `image_generation`: `client.images.generate()` (gpt-image / DALL-E legacy), Imagen API calls
   - `speech_to_text`: `client.audio.transcriptions.create()` (Whisper)
   - `text_to_speech`: `client.audio.speech.create()` (TTS)
 
