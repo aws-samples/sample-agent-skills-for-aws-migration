@@ -74,6 +74,16 @@ Determine the current GCP monthly infrastructure costs. Use the best available s
 
 Present the GCP baseline as a total and per-service breakdown, noting which source was used.
 
+### CUD-Aware Baseline (when billing data available)
+
+If `billing-profile.json` contains `commitments.has_active_cuds == true`:
+
+1. **Use list price as the GCP baseline**: The `services[].monthly_cost` values already use list price (commitment fee rows excluded by discover phase). Use `cost_basis.total_at_list` as the total GCP baseline for comparison.
+2. **Do not include commitment fees in workload costs**: Commitment fee rows are billing artifacts with no AWS equivalent — they are already excluded from `services[]`.
+3. **Record the effective discount for Part 3**: Note `commitments.effective_discount_percent` — this is the customer's current GCP discount rate that will be compared against AWS Savings Plan rates.
+
+This ensures the comparison is GCP list price vs. AWS on-demand (both uncommitted baselines), with commitment options presented separately as optimization opportunities.
+
 ---
 
 ## Part 2: Calculate Projected AWS Costs
@@ -118,10 +128,35 @@ Show calculation breakdown per service: rate × quantity = cost. Present all 3 t
 
 Present a side-by-side comparison:
 
-- GCP current monthly total
+- GCP current monthly total (at list price)
 - AWS Premium / Balanced / Optimized monthly totals
 - Difference (savings or increase) per tier vs GCP
 - Per-service breakdown for the Balanced tier
+
+### Commitment Context (if CUDs detected)
+
+If `billing-profile.json` has `commitments.has_active_cuds == true`, add a `commitment_context` section to the comparison:
+
+- **GCP effective committed rate**: The customer currently pays `effective_discount_percent`% below list via CUDs
+- **AWS equivalent**: 1-year Savings Plans typically save 20-30%; 3-year Savings Plans save 40-60%
+- **Fair comparison framing**: Present both an uncommitted comparison (GCP list vs. AWS on-demand) and a committed comparison (GCP net-of-CUD vs. AWS with 1yr SP)
+- **Migration timing note**: If the customer has active CUDs, note that CUD fees continue regardless of usage — migrating mid-commitment means paying both GCP CUD fees and AWS costs until the CUD term expires
+
+Include in `estimation-infra.json` under `cost_comparison`:
+
+```json
+"commitment_context": {
+  "gcp_has_active_cuds": true,
+  "gcp_effective_discount_percent": 8.2,
+  "gcp_monthly_at_list": 2450.00,
+  "gcp_monthly_net_of_discounts": 2280.00,
+  "aws_1yr_savings_plan_typical_discount": "20-30%",
+  "aws_3yr_savings_plan_typical_discount": "40-60%",
+  "note": "GCP baseline uses list price for apples-to-apples comparison. Customer currently saves 8.2% via CUDs. AWS Savings Plans offer comparable or deeper discounts post-migration."
+}
+```
+
+If `commitments.has_active_cuds == false` or the section is absent, omit `commitment_context` from the output.
 
 ---
 

@@ -52,6 +52,16 @@ Per-service breakdown:
 
 This is actual spend data — higher confidence than inferred costs.
 
+### CUD-Aware Baseline Adjustment
+
+If `billing-profile.json` contains `commitments.has_active_cuds == true`:
+
+1. **Use list price as baseline**: The `services[].monthly_cost` values already reflect list price (commitment fee rows are excluded). Use these directly — do not subtract CUD credits from the baseline.
+2. **Exclude commitment fees from workload costs**: Commitment fee rows (e.g., "Commitment v1: E2 Cpu") are billing artifacts, not workload costs. They are already excluded from `services[]` by the discover phase.
+3. **Note the customer's effective discount**: Record `commitments.effective_discount_percent` for the comparison narrative. The customer currently pays this percentage below list price on GCP.
+
+If `commitments.has_active_cuds == false` or the `commitments` section is absent, proceed with `total_monthly_spend` as-is.
+
 ## Step 2: Generate AWS Cost Ranges
 
 For each service in `aws-design-billing.json`, produce low/mid/high estimates:
@@ -105,6 +115,26 @@ Difference:
   Expected:   [mid vs GCP] (roughly equivalent cost)
   Worst case: [high vs GCP] (potential increase of $X/month)
 ```
+
+### Commitment-to-Commitment Comparison (if CUDs detected)
+
+If `billing-profile.json` has `commitments.has_active_cuds == true`, add a commitment context note:
+
+```
+Commitment Context:
+  GCP current effective rate: [effective_discount_percent]% below list price via CUDs
+  GCP list price baseline:   $[cost_basis.total_at_list]/month
+  GCP net-of-discounts:      $[cost_basis.total_net_of_discounts]/month
+
+  AWS equivalent commitment options:
+    1-year Savings Plan: typically 20-30% below on-demand
+    3-year Savings Plan: typically 40-60% below on-demand
+
+  Fair comparison: GCP list price vs AWS on-demand (both uncommitted)
+  Committed comparison: GCP net-of-CUD vs AWS with 1yr Savings Plan
+```
+
+This ensures the customer understands that their current GCP discount has an AWS equivalent, and the comparison is apples-to-apples.
 
 ## Step 4: Human One-Time Migration Costs (Out of Scope)
 

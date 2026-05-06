@@ -16,7 +16,7 @@
 | Cloud Run       | Fargate    | GPU workload or >16 vCPU or >120 GB memory → use EC2                                                           |
 | Cloud Functions | Lambda     | Python version not supported (e.g., Python 2.7) → use custom runtime on Fargate                                |
 | GKE             | EKS        | Custom CRI incompatible → manual workaround or ECS                                                             |
-| Any             | App Runner | **Prefer Fargate** (default), Lambda (event-driven), or EKS (K8s required) for stronger ecosystem integration. |
+| Any             | App Runner | **Closed to new customers (April 30 2026).** Do not target App Runner for new migrations. Use Fargate (default), Lambda (event-driven), or EKS (K8s required). |
 
 ## Signals (Decision Criteria)
 
