@@ -42,12 +42,30 @@ If any required file is missing: **STOP**. Output: "Missing required artifact: [
 
 ## Step 0: Determine Artifact Path
 
-Check `preferences.json` → `ai_constraints.ai_framework.value`:
+Check `preferences.json` → `ai_constraints.ai_framework.value` and `aws-design-ai.json` → `ai_architecture.code_migration.migration_path`:
 
+- `migration_path` = `"mantle"` → Generate Mantle setup (Step 1M) + setup (Step 3) + test harness (Step 2). Skip provider adapter (Step 1).
 - `"direct"` or absent → Generate provider adapter (Step 1) + setup (Step 3) + test harness (Step 2)
 - `"llm_router"`, `"api_gateway"`, `"voice_platform"`, or `"framework"` → Skip Step 1, generate gateway config (Step 3B) instead
 
 **Determine language** (direct SDK users only): Read `ai-workload-profile.json` → `integration.languages` array. Use the first entry: `"python"` → `.py`, `"javascript"`/`"typescript"` → `.js`, `"go"` → `.go`, other/unknown → `.py`.
+
+---
+
+## Step 1M: Generate Mantle Migration Script (OpenAI SDK via Mantle)
+
+Generate `ai-migration/migrate_to_mantle.sh` — a shell script that configures the OpenAI SDK to use Bedrock's Mantle endpoints.
+
+**Requirements:**
+
+- Dry-run by default (`--execute` flag to apply)
+- Print the environment variables to set: `OPENAI_BASE_URL=https://bedrock-mantle.{region}.api.aws/v1`, `OPENAI_API_KEY=<bedrock-api-key>`
+- Print the model string change: current model ID → Bedrock model ID from `aws-design-ai.json`
+- Include a quick verification call using the OpenAI SDK against the Mantle endpoint
+- Note: "No code changes required. Your existing OpenAI SDK calls work unchanged."
+- Reference [Mantle documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) for API key generation
+
+Skip Step 1 (provider adapter) when this step runs — the OpenAI SDK is the adapter.
 
 ---
 

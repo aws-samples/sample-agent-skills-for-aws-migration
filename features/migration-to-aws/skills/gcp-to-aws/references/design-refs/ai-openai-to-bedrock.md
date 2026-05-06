@@ -150,7 +150,8 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 
 | OpenAI Feature       | Bedrock Equivalent                                        | Notes                                                            |
 | -------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| Function calling     | Claude tools (excellent, similar format)                  | Minimal changes                                                  |
+| OpenAI SDK (direct)  | Mantle OpenAI-compat endpoints                            | Zero code changes — set `OPENAI_BASE_URL` + API key + model ID  |
+| Function calling     | Claude tools (excellent, similar format)                  | Minimal changes (works via Mantle or Converse API)               |
 | Streaming            | All major models                                          | Verify gateway format                                            |
 | Vision (GPT-4V)      | Claude Sonnet/Haiku, Llama 4 Maverick                     | 70-95% cheaper                                                   |
 | Embeddings (ada-002) | Titan Embeddings ($0.02/1M, 1536 dims)                    | Must re-embed all docs                                           |
@@ -165,17 +166,17 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 
 ## Common Migration Paths
 
-### GPT-5.5 → Claude Opus 4.6
+### OpenAI SDK → Mantle (zero code changes)
 
-Same input price ($5/MTok), Bedrock 17% cheaper on output ($25 vs $30). Both are frontier-tier on SWE-Bench (Opus 4.6 80.8% vs GPT-5.5 88.7% on Verified). Migration case: cost savings on output + AWS consolidation + prompt caching. Caveat: GPT-5.5 has native omnimodal (audio/video) that Claude lacks; GPT-5.5 context is 1M vs Opus 200K.
+If the application uses the OpenAI Python/JS SDK directly (`from openai import OpenAI` / `new OpenAI()`), Bedrock's [Mantle OpenAI-compatible endpoints](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) allow migration with **zero code changes** — only environment variables:
 
-### GPT-5.5 → Claude Sonnet 4.6
+1. Set `OPENAI_BASE_URL=https://bedrock-mantle.{region}.api.aws/v1`
+2. Set `OPENAI_API_KEY=<bedrock-api-key>`
+3. Change model string (e.g., `gpt-5.4` → `anthropic.claude-sonnet-4-6` or `openai.gpt-oss-120b`)
 
-53% cheaper on Bedrock. Strong cost case if workload doesn't require absolute frontier reasoning. Sonnet 4.6 leads on agentic reliability (GDPval). Best for teams prioritizing cost + agentic tasks over raw benchmark scores.
+Supports Chat Completions API, Responses API, streaming, and stateful conversations. **Check regional availability** — Mantle is in 13 regions (US, EU, APAC, SA) as of April 2026. If the target region lacks Mantle, use the boto3 Converse API path instead.
 
-### GPT-5.5 Pro → Nova 2 Pro
-
-95% savings. Strongest migration case in the entire table. At $30/$180 vs $1.38/$11, even modest volume produces massive savings.
+**When to prefer Converse API over Mantle:** If you need Bedrock-specific features (Guardrails, Knowledge Bases, prompt caching, Bedrock Agents integration) or your target region doesn't have Mantle. Mantle is the fastest path; Converse API is the most feature-complete path.
 
 ### GPT-5.4 → Claude Sonnet 4.6
 
