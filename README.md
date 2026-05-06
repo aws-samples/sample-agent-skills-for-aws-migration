@@ -12,7 +12,7 @@ Point this plugin at your codebase, Terraform files, or GCP billing data. It run
 - **Recommends three migration paths** for agentic workloads: retarget (keep your framework, swap models), AgentCore Harness (config-based managed agents), or Strands Agents (AWS-native multi-agent SDK)
 - **Surfaces options you wouldn't find on your own** — like Strands Agents (open-source, powers AgentCore internally) and AgentCore Harness (declare an agent in 3 API calls)
 - **Generates runnable artifacts** — `harness.json`, deployment scripts, incremental migration scripts, provider adapters — tailored to your specific models, tools, and architecture
-- **Gives honest pricing comparisons** — shows when Bedrock is cheaper AND when staying on OpenAI/Gemini is the better call, with current April 2026 pricing data
+- **Gives honest pricing comparisons** — Gives honest pricing comparisons — finds you the best Bedrock option for your workload with current April 2026 pricing data, including side-by-side cost comparisons against your existing OpenAI/Gemini spend
 
 ## What You Get That a Base LLM Can't Give You
 
