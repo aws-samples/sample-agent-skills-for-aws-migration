@@ -16,14 +16,28 @@ Verify all pricing via AWS Pricing MCP or `references/shared/pricing-cache.md`. 
 
 **It is no longer "Bedrock is always cheaper."** It depends on the model.
 
+- **Bedrock cheaper:** GPT-5.5 flagship (17% cheaper output via Opus 4.6), Nova Lite vs Mini models (85-94%), Nova Micro vs Nano (65-87%), Nova 2 Pro vs Pro models (90-95%), DeepSeek-R1 vs o3 (32%)
 - **OpenAI cheaper:** GPT-5.4 (5%), GPT-5.2 (50%), GPT-5.1/5 (40%), GPT-4.1 (43%), GPT-4o (29%), o4-mini/o3-mini/o1-mini (69%)
-- **Bedrock cheaper:** Nova Lite vs Mini models (85-94%), Nova Micro vs Nano (65-87%), Nova 2 Pro vs Pro models (90-94%), DeepSeek-R1 vs o3 (32%)
+
+> **GPT-5.5 note (April 23, 2026):** GPT-5.5 doubled pricing to $5/$30 per MTok vs GPT-5.4's $2.50/$15. Claude Opus 4.6 at $5/$25 now matches on input and is **17% cheaper on output**. This reverses the GPT-5.4 dynamic where OpenAI was cheaper — at the GPT-5.5 tier, Bedrock wins on cost. GPT-5.5 uses 40% fewer output tokens on coding tasks (per OpenAI), partially offsetting the price hike for Codex-style workloads.
 
 ---
 
 ## Model Mapping Tables
 
-### GPT-5.4 Series (Latest)
+### GPT-5.5 Series (Latest — April 23, 2026)
+
+GPT-5.5 is the first fully retrained base model since GPT-4.5. Natively omnimodal (text + image + audio + video), 88.7% SWE-Bench Verified, 256K context in ChatGPT / 1M in API. Two variants: standard and Pro. No Mini/Nano variants at launch (expected Q3 2026). Percentages below are blended savings using a 2:1 input-to-output token ratio.
+
+| OpenAI Model | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price  | Winner              |
+| ------------ | --------------------- | -------------------- | -------------- | ------------------- |
+| GPT-5.5      | $5.00 / $30.00        | Claude Opus 4.6      | $5.00 / $25.00 | Bedrock 17% cheaper |
+| GPT-5.5      | $5.00 / $30.00        | Claude Sonnet 4.6    | $3.00 / $15.00 | Bedrock 53% cheaper |
+| GPT-5.5 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 95% cheaper |
+
+> **Token efficiency caveat:** OpenAI reports GPT-5.5 uses ~40% fewer output tokens on Codex-style tasks vs GPT-5.4. Effective cost increase over GPT-5.4 is ~50% (not 100%) for coding workloads. For non-coding workloads, the full 2× price applies.
+
+### GPT-5.4 Series
 
 Percentages below are blended savings using a 2:1 input-to-output token ratio. GPT-5.4 uses breakpoint pricing at 272K input tokens; rates below assume <272K context.
 
@@ -40,7 +54,7 @@ Percentages below are blended savings using a 2:1 input-to-output token ratio.
 
 | OpenAI Model    | Price (in/out per 1M) | Best Bedrock Match | Bedrock Price  | Winner              |
 | --------------- | --------------------- | ------------------ | -------------- | ------------------- |
-| GPT-5.2         | $1.75 / $14.00        | Claude Opus 4.6    | $5.00 / $25.00 | OpenAI 50% cheaper  |
+| GPT-5.2         | $1.75 / $14.00        | Claude Opus 4.7 / 4.6 | $5.00 / $25.00 | OpenAI 50% cheaper  |
 | GPT-5.1 / GPT-5 | $1.25 / $10.00        | Claude Sonnet 4.6  | $3.00 / $15.00 | OpenAI 40% cheaper  |
 | GPT-5 Mini      | $0.25 / $2.00         | Nova Lite          | $0.06 / $0.24  | Bedrock 86% cheaper |
 | GPT-5 Nano      | $0.05 / $0.40         | Nova Micro         | $0.035 / $0.14 | Bedrock 58% cheaper |
@@ -51,6 +65,7 @@ Percentages below are blended savings using a 2:1 input-to-output token ratio.
 
 | OpenAI Model | Price (in/out per 1M) | Best Bedrock Match   | Bedrock Price  | Winner              |
 | ------------ | --------------------- | -------------------- | -------------- | ------------------- |
+| GPT-5.5 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 95% cheaper |
 | GPT-5.4 Pro  | $30.00 / $180.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 94% cheaper |
 | GPT-5.2 Pro  | $21.00 / $168.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 93% cheaper |
 | GPT-5 Pro    | $15.00 / $120.00      | Nova 2 Pro (Preview) | $1.38 / $11.00 | Bedrock 90% cheaper |
@@ -109,7 +124,8 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 
 **Migrate to Bedrock if:**
 
-- Using Pro/expensive models (GPT-5.4 Pro, o1-pro) → 87-98% savings via Nova 2 Pro
+- Using GPT-5.5 flagship → Bedrock 17% cheaper on output via Opus 4.6 ($5/$25 vs $5/$30); Sonnet 4.6 is 53% cheaper
+- Using Pro/expensive models (GPT-5.5 Pro, GPT-5.4 Pro, o1-pro) → 87-98% savings via Nova 2 Pro
 - Using Mini/Nano models at high volume → 87-94% savings via Nova Lite/Micro
 - Using legacy GPT-4/3.5 → 42-82% savings
 - Need AWS infrastructure integration
@@ -119,10 +135,11 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 
 **Consider staying on OpenAI if:**
 
+- Using GPT-5.5 for omnimodal (audio/video) → Claude is text+image only; GPT-5.5 has native audio/video
 - Using GPT-5.4 flagship → only 5% cheaper than Sonnet 4.6; marginal either way
 - Using mid-tier flagships (GPT-5, GPT-4.1, o3, o4-mini) → OpenAI 29-69% cheaper
 - Low volume (<$500/mo) where absolute savings are small
-- Heavily integrated with OpenAI ecosystem (Assistants API, DALL-E, Whisper, Realtime)
+- Heavily integrated with OpenAI ecosystem (Assistants API, gpt-image, Whisper, Realtime)
 - Need Realtime API (no Bedrock equivalent)
 
 **Analyze carefully:** Calculate actual token usage x model-specific pricing. Small % differences matter at scale.
@@ -138,7 +155,7 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 | Streaming            | All major models                                          | Verify gateway format                                            |
 | Vision (GPT-4V)      | Claude Sonnet/Haiku, Llama 4 Maverick                     | 70-95% cheaper                                                   |
 | Embeddings (ada-002) | Titan Embeddings ($0.02/1M, 1536 dims)                    | Must re-embed all docs                                           |
-| DALL-E               | Nova Canvas ($0.04-$0.08/img)                             | Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
+| DALL-E / gpt-image   | Nova Canvas ($0.04-$0.08/img)                             | DALL-E EOL May 12, 2026; OpenAI replacement is gpt-image-1.5; Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
 | Whisper (STT)        | Amazon Transcribe ($0.024/min)                            | 4x more expensive but more features                              |
 | TTS                  | Amazon Polly                                              | Different pricing model                                          |
 | Assistants API       | Bedrock Agents (sessions, action groups, knowledge bases) | 2-4 week migration                                               |
