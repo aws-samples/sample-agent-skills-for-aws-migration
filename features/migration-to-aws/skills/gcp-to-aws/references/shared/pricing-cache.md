@@ -674,10 +674,12 @@ Prices per 1M tokens.
 
 ### OpenAI (Standard Tier)
 
-Prices per 1M tokens. GPT-5.4 and GPT-5.4 Pro use **breakpoint pricing** at 272K input tokens: rates below are for <272K context; above 272K, input is 2x and output is 1.5x.
+Prices per 1M tokens. GPT-5.5 and GPT-5.5 Pro use the same breakpoint pricing structure as GPT-5.4 at 272K input tokens. GPT-5.4 and GPT-5.4 Pro use **breakpoint pricing** at 272K input tokens: rates below are for <272K context; above 272K, input is 2x and output is 1.5x.
 
 | Model        | Input $/1M | Output $/1M | Context | Tier      |
 | ------------ | ---------- | ----------- | ------- | --------- |
+| GPT-5.5      | 5.00       | 30.00       | 1M      | flagship  |
+| GPT-5.5 Pro  | 30.00      | 180.00      | 1M      | premium   |
 | GPT-5.4      | 2.50       | 15.00       | 1.05M   | flagship  |
 | GPT-5.4 Mini | 0.75       | 4.50        | —       | fast      |
 | GPT-5.4 Nano | 0.20       | 1.25        | —       | budget    |
