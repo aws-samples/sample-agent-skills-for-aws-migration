@@ -35,6 +35,8 @@ For each model in `models[]`, select the best-fit Bedrock model using the loaded
 
 Treat model mapping as compatibility-guided, not 1:1 parity. Before cutover, require validation of prompts, tool-calling behavior, and eval metrics for the selected Bedrock model.
 
+**If `models[]` is empty:** Skip per-model rows; output a short **placeholder strategy** (one representative Bedrock model family per `ai_source` rubric) and dependency on Clarify answers — do not fabricate `models[]` entries.
+
 **Apply user preference overrides from `ai_constraints`:**
 
 | Preference                | Override                                          |
