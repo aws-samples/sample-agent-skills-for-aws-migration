@@ -22,6 +22,29 @@ description: "Migrate workloads from Google Cloud Platform to AWS. Triggers on: 
 
 ---
 
+## Context Loading Rules
+
+Each phase loads reference files on demand. To keep per-turn context manageable and prevent instruction-following degradation:
+
+- **Budget:** Each phase should load no more than ~800 lines of instructions (excluding user artifacts like JSON profiles and MCP tool results).
+- **Conditional loading:** Reference files with trigger conditions (e.g., `agentic_profile.is_agentic == true`) MUST NOT be loaded unless the condition is met. Do not speculatively load files.
+- **No duplication:** Model mapping tables, pricing data, and shared warnings exist in one canonical file. Other files reference them; they do not copy them inline.
+- **Progressive depth:** Phase orchestrators (`design.md`, `generate.md`) contain short routing logic that points to detailed sub-files. Load the sub-file only when its path is selected.
+
+**Conditional reference files (load ONLY when condition is true):**
+
+| File | Condition |
+|------|-----------|
+| `design-refs/ai-gemini-to-bedrock.md` | `ai-workload-profile.json` exists AND `summary.ai_source` = `"gemini"` or `"both"` |
+| `design-refs/ai-openai-to-bedrock.md` | `ai-workload-profile.json` exists AND `summary.ai_source` = `"openai"` or `"both"` |
+| `design-refs/ai.md` | `ai-workload-profile.json` exists AND `summary.ai_source` = `"other"` |
+| `design-refs/design-ref-harness.md` | `agentic_profile.is_agentic == true` AND `ai_constraints.agentic.migration_approach == "harness"` |
+| `design-refs/design-ref-agentic-to-agentcore.md` | `agentic_profile.is_agentic == true` AND `ai_constraints.agentic.migration_approach == "strands"` |
+
+When adding new reference files, verify the phase's total loaded instructions remain under budget. If a new file would exceed ~800 lines when combined with other loaded refs, split it or make it conditional.
+
+---
+
 ## Prerequisites
 
 User must provide at least one GCP source:
