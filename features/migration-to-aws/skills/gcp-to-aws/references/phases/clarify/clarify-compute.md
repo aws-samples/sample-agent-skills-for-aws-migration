@@ -73,7 +73,14 @@ D -> (no constraint written — no K8s workloads)
 E -> same as default (B) — assume neutral, evaluate both EKS and ECS
 ```
 
-Default: B — `kubernetes: "eks-or-ecs"`.
+Default: C — `kubernetes: "ecs-fargate"`.
+
+**Rationale for default:** The plugin's target audience is startups migrating from GCP. Most teams
+migrating from GKE are doing so to reduce operational complexity, not to preserve it. ECS Fargate
+eliminates control plane management, node group patching, and Kubernetes version upgrades. Teams
+that actively want Kubernetes will answer A or B explicitly. Teams that answer E ("I don't know")
+are unlikely to have strong Kubernetes operational expertise and are better served by Fargate as a
+starting point. EKS remains fully available via answers A and B.
 
 ---
 
