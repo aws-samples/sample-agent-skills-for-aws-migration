@@ -226,6 +226,16 @@ For each detected `integration.pattern` and `ai_source`, generate before/after m
 
 **Mantle (OpenAI-compatible endpoints):** If `ai_source = "openai"` and `integration.pattern = "direct_sdk"`, prefer the Mantle path as the primary migration option. Mantle provides OpenAI-compatible Chat Completions and Responses APIs on Bedrock — the existing OpenAI SDK code works with zero changes, only environment variable updates. Check [Mantle regional availability](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) — if the target region does not have Mantle, fall back to the boto3 Converse API path. Record `migration_path: "mantle"` or `migration_path: "converse"` in `aws-design-ai.json` → `ai_architecture.code_migration`.
 
+**Mantle throughput caveat:** Before recommending Mantle as the production path, check `ai_token_volume` from `preferences.json`. If `"medium"` or higher, surface the 10,000 RPM shared account limit from `references/shared/ai-migration-guardrails.md` → Bedrock Mantle Endpoint Throughput Limits. For high-volume workloads, recommend `bedrock-runtime` (Converse API) instead — it has separate, higher quotas and supports reserved capacity.
+
+**`gpt-oss` on Bedrock (OpenAI model architecture, AWS infrastructure):** If `ai_source = "openai"` and the user's primary concern is model-family risk (not wanting to change model behavior), surface `gpt-oss` as a fourth migration path alongside Mantle, Converse API, and LangChain swap. OpenAI's open-source models (`gpt-oss-120b` ≈ GPT-4o Mini tier, `gpt-oss-20b` ≈ GPT-5 Nano tier) run natively on Bedrock at similar pricing to their OpenAI equivalents. This path:
+- Requires no model evaluation (same model architecture)
+- Uses the standard Bedrock Converse API or Mantle endpoint
+- Eliminates OpenAI API dependency while preserving model behavior
+- Record `migration_path: "gpt-oss"` in `aws-design-ai.json` → `ai_architecture.code_migration` when selected
+
+Only surface this option when `ai_source = "openai"` and the detected models map to GPT-4o Mini or smaller tiers (where `gpt-oss` equivalents exist). Do not suggest for GPT-5.5 or flagship models — no `gpt-oss` equivalent exists at those tiers.
+
 Generate concrete code examples using actual model IDs from the selected Bedrock models. Only include patterns matching the detected integration.
 
 **OpenRouter-specific guidance** (if `gateway_type == "llm_router"` AND `detection_signals` contains OpenRouter evidence):
