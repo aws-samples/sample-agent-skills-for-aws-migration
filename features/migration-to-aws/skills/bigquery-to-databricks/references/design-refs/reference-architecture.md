@@ -8,9 +8,9 @@
 
 ## Summary
 
-Databricks Lakehouse Platform helps accelerate your BigQuery migration journey to Amazon Web Services (AWS) by providing a unified data intelligence platform that consolidates analytics, data engineering, and machine learning into a single environment. Using Lakehouse Federation, you can query BigQuery data directly from Databricks during migration — enabling parallel-run validation without disrupting business-as-usual analytics. SQL workloads are translated programmatically using SQLGlot, and data is migrated incrementally to Delta Lake on Amazon S3 via Auto Loader.
+For customers who choose Databricks as their BigQuery target on AWS, the Databricks Lakehouse Platform consolidates analytics, data engineering, and machine learning workloads into a single environment that runs on AWS infrastructure — Amazon EC2 / EKS for compute, Amazon S3 for storage. Lakehouse Federation enables querying BigQuery data directly from Databricks during migration, supporting parallel-run validation without disrupting business-as-usual analytics. SQL workloads are translated programmatically using Databricks Lakebridge, and data is migrated incrementally to Delta Lake on Amazon S3 via Auto Loader.
 
-Unlike migrating to multiple disparate AWS services (Redshift for warehousing, Athena for ad-hoc queries, Glue for ETL, SageMaker for ML), Databricks Lakehouse provides a single platform that maps to all BigQuery capabilities — reducing architectural complexity and operational overhead.
+Databricks is one of several AWS-targets a customer may select when exiting BigQuery; this skill scopes the path for customers who choose Databricks specifically.
 
 ---
 
@@ -83,7 +83,7 @@ The following roles are typically required to complete a BigQuery-to-Databricks 
 - **Cloud Administrator** — Responsible for provisioning AWS infrastructure (VPC, S3 buckets, IAM roles) and Databricks workspace via Terraform
 - **Databricks Administrator** — Responsible for configuring Unity Catalog, SQL Warehouses, cluster policies, and access controls
 - **Data Engineer** — Responsible for:
-  - Translating BigQuery SQL to Databricks SQL using SQLGlot
+  - Translating BigQuery SQL to Databricks SQL using Databricks Lakebridge
   - Building data migration pipelines (Auto Loader, COPY INTO)
   - Migrating scheduled queries to Databricks Workflows
   - Setting up Lakehouse Federation for parallel-run validation
@@ -428,6 +428,3 @@ df = (spark.readStream
 - [Databricks on AWS — Getting Started](https://docs.databricks.com/en/getting-started/index.html)
 - [AWS PrivateLink for Databricks](https://docs.databricks.com/en/security/network/classic/privatelink.html)
 
-### Interactive Demo
-- [BigQuery → Databricks SQL Translator (Streamlit app)](../demo/app.py) — Paste BigQuery SQL, get Databricks SQL instantly
-- [Sample Queries](../demo/sample_queries.sql) — 8 BigQuery/Databricks side-by-side examples

@@ -94,7 +94,7 @@ Write to `$MIGRATION_DIR/bigquery-inventory.json`:
                     │         └── Tables (= BQ Tables)    │
                     │                                     │
   BigQuery SQL ──►  │  SQL Warehouse (Serverless)         │
-  (SQLGlot)         │    └── Photon Engine                │
+  (Lakebridge)      │    └── Photon Engine                │
                     │                                     │
   BigQuery ML ──►   │  MLflow + Model Serving             │
                     │    └── Feature Store                 │
