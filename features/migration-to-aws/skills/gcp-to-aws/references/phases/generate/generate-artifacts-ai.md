@@ -84,13 +84,22 @@ Generate `ai-migration/provider_adapter.{py,js,go}` — an abstraction layer tha
 - **Bedrock provider class**: Use `boto3` Converse API (`converse` for generate, `converse_stream` for streaming, `invoke_model` for embeddings with Titan). Use model IDs from `aws-design-ai.json` → `ai_architecture.bedrock_models[].aws_model_id`. Use region from `preferences.json` → `design_constraints.target_region`.
 - **`max_tokens` — IMPORTANT:** Do NOT carry over the source provider's `max_tokens` value directly. Bedrock deducts `max_tokens` from TPM quota at request start before any tokens are generated — unused quota is returned after the response, but peak concurrency is reduced. Add this comment to the Bedrock provider class:
   ```python
-  # max_tokens: Set to ~1.5x your expected output length, NOT the model maximum.
+  # max_tokens: TUNE THIS FOR YOUR WORKLOAD before going to production.
   # Bedrock reserves max_tokens from your TPM quota at request start.
-  # Example: if typical responses are ~500 tokens, set max_tokens=750.
-  # Using the model maximum (e.g., 4096) reduces concurrency by ~5-8x unnecessarily.
+  # Using the model maximum (e.g., 4096) reduces concurrency by ~5-8x unnecessarily
+  # if your typical responses are much shorter.
+  #
+  # Conservative starting default: 1024 tokens.
+  # Rule of thumb: set to ~1.5x your expected output length.
+  # Examples:
+  #   Short answers / classification: 256-512
+  #   Chat responses: 512-1024
+  #   Long-form / JSON tool outputs: 2048-4096
+  #
+  # TODO: Profile your actual output lengths and adjust accordingly.
   # See: https://docs.aws.amazon.com/bedrock/latest/userguide/quotas-token-burndown.html
   ```
-  Use a default of `1024` in the generated adapter (not the model maximum). Add a TODO comment prompting the user to tune this to their actual workload.
+  Use a default of `1024` in the generated adapter. This is a **conservative starting point, not a universal optimum** — workloads that routinely emit long JSON, tool call results, or multi-step reasoning outputs will need a higher value. The TODO comment and the note above make this explicit.
 - **Shadow mode**: Send requests to both providers, return source response, log Bedrock response for comparison.
 - Include error handling and logging for API calls.
 
