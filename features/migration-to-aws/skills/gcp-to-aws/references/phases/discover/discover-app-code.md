@@ -214,6 +214,7 @@ Scan files that contained AI signals for specific model information:
   - `GenerativeModel("gemini-pro")` -> model_id: `"gemini-pro"`
   - `aiplatform.Model.list(filter='display_name="my-model"')` -> model_id: `"my-model"`
   - `TextEmbeddingModel.from_pretrained("text-embedding-004")` -> model_id: `"text-embedding-004"`
+  - Look for Gemini model string patterns: `gemini-pro`, `gemini-1.5-*`, `gemini-2.0-*`, `gemini-2.5-*`, `gemini-3-*`, `gemini-3.1-*` — including versioned variants like `gemini-2.5-flash-latest`, `gemini-2.5-flash-preview-*`, `gemini-2.5-flash-thinking`, `gemini-2.5-pro-preview-*`. Normalize all `gemini-2.5-flash-*` variants to `model_id: "gemini-2.5-flash"` (or `"gemini-2.5-flash-thinking"` if the thinking variant is explicit). Normalize all `gemini-2.5-pro-*` variants to `model_id: "gemini-2.5-pro"`. Record the raw string in `detection_signals` for reference.
 
   **OpenAI patterns:**
   - `client.chat.completions.create(model="gpt-4o")` -> model_id: `"gpt-4o"`

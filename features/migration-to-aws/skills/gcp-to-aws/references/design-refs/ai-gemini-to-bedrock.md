@@ -72,11 +72,12 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 
 ### Gemini Flash/Lite Tier
 
-| Gemini Model     | Price (in/out per 1M) | Best Bedrock Match | Bedrock Price  | Winner              |
-| ---------------- | --------------------- | ------------------ | -------------- | ------------------- |
-| Gemini 2.5 Flash | $0.30 / $2.50         | Nova Lite          | $0.06 / $0.24  | Bedrock 88% cheaper |
-| Gemini 2.0 Flash | $0.10 / $0.40         | Nova Micro         | $0.035 / $0.14 | Bedrock 65% cheaper |
-| Gemini Flash     | $0.075 / $0.30        | Nova Micro         | $0.035 / $0.14 | Bedrock 53% cheaper |
+| Gemini Model              | Price (in/out per 1M)                          | Best Bedrock Match | Bedrock Price  | Winner              |
+| ------------------------- | ---------------------------------------------- | ------------------ | -------------- | ------------------- |
+| Gemini 2.5 Flash          | $0.30 / $2.50                                  | Nova Lite          | $0.06 / $0.24  | Bedrock 88% cheaper |
+| Gemini 2.5 Flash Thinking | $0.30 / $0.60–$3.50 (varies by thinking budget) | Claude Sonnet 4.6 with extended thinking | $3.00 / $15.00 | Depends on thinking budget — at full thinking ($3.50/M output) Sonnet 4.6 is comparable; at low thinking ($0.60/M output) Gemini is cheaper. Profile actual thinking token usage before recommending. |
+| Gemini 2.0 Flash          | $0.10 / $0.40                                  | Nova Micro         | $0.035 / $0.14 | Bedrock 65% cheaper |
+| Gemini Flash 1.5          | $0.075 / $0.30                                 | Nova Micro         | $0.035 / $0.14 | Bedrock 53% cheaper |
 
 ### Legacy/Specialized
 
