@@ -35,6 +35,30 @@ AgentCore services have different regional footprints. Always validate via `get_
 
 ---
 
+## Bedrock Mantle Endpoint Throughput Limits
+
+The `bedrock-mantle` endpoint (OpenAI-compatible) has a **hard limit of 10,000 RPM per account per region, shared across all models on that endpoint**. This is separate from the per-model TPM quotas on `bedrock-runtime`.
+
+**Key implications for migrations:**
+
+| Scenario | Risk | Action |
+|----------|------|--------|
+| Single model, moderate traffic | Low | Standard on-demand acceptable |
+| Multiple models all routed through Mantle | Medium | 10K RPM is shared — monitor aggregate RPM, not per-model |
+| High-volume production workload on Mantle | High | Request RPM quota increase via Service Quotas; consider `bedrock-runtime` (Converse API) for higher throughput |
+
+**Claude 4.7+ on Mantle:** Input TPM is account-history-dependent (check Service Quotas console). Output TPM is capped at 2M. All other models on Mantle have no per-model TPM limit — only the shared 10K RPM applies.
+
+**When to recommend `bedrock-runtime` over Mantle:**
+- User has `ai_token_volume = "high"` or `"very_high"`
+- Multiple models are being migrated simultaneously
+- User needs batch inference (not available on Mantle)
+- User needs reserved capacity (not available on Mantle)
+
+Surface this in the design summary when `integration.pattern = "direct_sdk"` and `ai_source = "openai"` and `ai_token_volume` is `"medium"` or higher.
+
+---
+
 ## Model Lifecycle Checks
 
 Before recommending any Bedrock model in an agentic design:

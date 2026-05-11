@@ -299,14 +299,14 @@ _Skip when:_ Auto-detection fully resolves AND user has no preference signal. Us
 > Your agent system can migrate to AWS in different ways, each with different effort and risk:
 >
 > A) **Retarget** — Keep your current framework ([framework name]), swap the model layer to Bedrock. Fastest path, lowest risk. Your orchestration code stays the same.
-> B) **AgentCore Harness** — Declare your agent as configuration (model + tools + prompt). Get managed runtime, memory, identity, and observability. Good for simpler agents or incremental migration.
+> B) **AgentCore Harness** _(public preview — available in us-east-1, us-west-2, eu-central-1, ap-southeast-2 only)_ — Declare your agent as configuration (model + tools + prompt). Get managed runtime, memory, identity, and observability. Good for simpler agents or incremental migration.
 > C) **Strands native** — Rewrite orchestration using AWS Strands SDK on AgentCore. Most AWS-integrated, highest effort. Best for teams wanting full AWS-native multi-agent capabilities.
 > D) **I'm not sure** — Help me decide based on my workload.
 
 | Answer | When it fits | Effort range | Risk |
 | ------ | ------------ | ------------ | ---- |
 | A) Retarget | Working system, team knows the framework, need to ship fast. LangGraph/CrewAI/AutoGen with Bedrock model provider support. | 1–3 weeks depending on agent count, tool count, test coverage | Low — orchestration unchanged |
-| B) AgentCore Harness | Simple single-agent, OpenAI Assistants migration, want managed runtime, or incremental migration (run existing models on AWS infra first). | 3–10 days depending on tool complexity and memory requirements | Low — config-based, reversible |
+| B) AgentCore Harness | Simple single-agent, OpenAI Assistants migration, want managed runtime, or incremental migration (run existing models on AWS infra first). **Check regional availability before committing — currently preview in 4 regions only.** | 3–10 days depending on tool complexity and memory requirements | Low — config-based, reversible |
 | C) Strands native | OpenAI Agents SDK or custom loops where retarget doesn't work well, multi-agent systems, team willing to refactor for AWS-native benefits. | 2–6 weeks depending on agent count, graph complexity, tool count | Medium — orchestration rewrite |
 | D) Undecided | — | — | — |
 

@@ -62,9 +62,78 @@ Build a generation manifest: read all resources from `aws-design.json` clusters,
 **Requirements:**
 
 - **File header comment block (first lines in `main.tf`, before `terraform {`):** Explain that (1) this directory implements the **single** architecture in `aws-design.json`; (2) the migration report’s **Premium / Balanced / Optimized** figures are **three pricing scenarios** from `estimation-infra.json` for that same map — **not** three separate generated stacks; (3) **this Terraform is aligned with the Balanced cost scenario** (default sizing/HA posture used for the middle estimate); (4) **Premium** = higher HA / higher $ model; **Optimized** = cost-optimization assumptions — users must **edit IaC or add modules** to realize those postures. Point readers to `terraform/README.md` and the `migration_summary` output.
-- `terraform` block: `required_version >= 1.5.0`, `hashicorp/aws ~> 5.0`, commented S3 backend
+- `terraform` block: `required_version >= 1.5.0`, `hashicorp/aws ~> 5.80`, active S3 backend (see Step 1a below — do NOT comment it out)
 - `provider "aws"` block: `region = var.aws_region`, `default_tags` with Project, Environment, ManagedBy, MigrationId
 - Data sources: `aws_caller_identity`, `aws_region`, `aws_availability_zones`
+
+## Step 1a: Remote state backend
+
+Always emit an **active** (not commented-out) S3 backend block in `main.tf`. Local state is not safe for production — `terraform.tfstate` stores resource metadata and sensitive values in plaintext on the local filesystem.
+
+Emit the following backend block inside the `terraform {}` block in `main.tf`:
+
+```hcl
+backend "s3" {
+  # Bootstrap: these resources are created by baseline.tf.
+  # First run: terraform init -backend=false && terraform apply \
+  #   -target=aws_s3_bucket.tfstate \
+  #   -target=aws_s3_bucket_versioning.tfstate \
+  #   -target=aws_s3_bucket_server_side_encryption_configuration.tfstate \
+  #   -target=aws_s3_bucket_public_access_block.tfstate \
+  #   -target=aws_dynamodb_table.tfstate_lock
+  # Then re-run: terraform init  (migrates local state to S3)
+  bucket         = "<project_name>-<environment>-tfstate-<account_id>"  # TODO: substitute values
+  key            = "migration/terraform.tfstate"
+  region         = "<aws_region>"                                        # TODO: substitute target region
+  dynamodb_table = "<project_name>-<environment>-tfstate-lock"          # TODO: substitute values
+  encrypt        = true
+}
+```
+
+Also emit the following resources in `baseline.tf` (append after the always-on resources):
+
+```hcl
+# Remote state backend infrastructure
+resource "aws_s3_bucket" "tfstate" {
+  bucket = "${var.project_name}-${var.environment}-tfstate-${data.aws_caller_identity.current.account_id}"
+  tags   = merge(local.baseline_tags, { Component = "terraform-state" })
+}
+
+resource "aws_s3_bucket_versioning" "tfstate" {
+  bucket = aws_s3_bucket.tfstate.id
+  versioning_configuration { status = "Enabled" }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "tfstate" {
+  bucket = aws_s3_bucket.tfstate.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "tfstate" {
+  bucket                  = aws_s3_bucket.tfstate.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_dynamodb_table" "tfstate_lock" {
+  name         = "${var.project_name}-${var.environment}-tfstate-lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+  tags = merge(local.baseline_tags, { Component = "terraform-state" })
+}
+```
+
+Add a **Bootstrap** section to `terraform/README.md` explaining the two-step init process.
 
 ## Step 1b: Generate terraform/README.md
 
@@ -165,6 +234,34 @@ Always emitted. The baseline applies account-wide security controls that should 
 
 **Per-cluster variables:** Extract configurable values from `aws_config` in `aws-design.json`. Infer types (`string`, `number`, `bool`, `list(string)`, `map(string)`). Use `aws_config` values as defaults. Deduplicate shared variables. Add GCP source as comment (e.g., `# GCP source: db-custom-2-7680`).
 
+## Step 2b: Generate terraform.tfvars.example and .gitignore
+
+Always emit `$MIGRATION_DIR/terraform/terraform.tfvars.example` alongside `variables.tf`. Populate it with actual values from `aws-design.json`, `preferences.json`, and `estimation-infra.json` where available. Use descriptive placeholder strings (not empty values) for anything that cannot be inferred. Format:
+
+```hcl
+# Copy this file to terraform.tfvars and fill in the values before running terraform plan.
+# Do NOT commit terraform.tfvars to source control — it may contain sensitive values.
+
+aws_region   = "<target_region>"   # from preferences.json target_region
+project_name = "<your-project>"    # TODO: set your project name
+environment  = "production"        # TODO: dev | staging | production
+migration_id = "<MMDD-HHMM>"       # from migration run ID
+
+# One entry per variable in variables.tf, with source annotation as comment
+```
+
+Also emit `$MIGRATION_DIR/terraform/.gitignore` with:
+
+```
+# Never commit actual variable values — may contain sensitive data
+terraform.tfvars
+*.tfvars
+!terraform.tfvars.example
+.terraform/
+*.tfstate
+*.tfstate.backup
+```
+
 ## Step 3: Generate Per-Domain .tf Files
 
 For each domain with resources in the generation manifest:
@@ -187,7 +284,7 @@ For each domain with resources in the generation manifest:
 | Security   | Least-privilege IAM (specific ARNs, never wildcards); per-service roles for Fargate/Lambda; Secrets Manager resources with no plaintext defaults                                       |
 | Storage    | Versioning enabled; SSE-S3 or SSE-KMS encryption; block public access by default; lifecycle policies; if public content is required use CloudFront/OAC instead of public bucket policy |
 | Database   | Private subnets; subnet group + parameter group + security group; backups; encryption                                                                                                  |
-| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling                                                                                                |
+| Compute    | Fargate in private subnets; task definitions from `aws_config` CPU/memory; auto-scaling; for EKS clusters set `endpoint_private_access = true` and `endpoint_public_access = false` by default — add inline comment: `# Public endpoint disabled. To enable kubectl access from outside the VPC set endpoint_public_access = true and restrict public_access_cidrs to known CIDRs.` |
 | Monitoring | Log groups per service; dashboard with key metrics; alarms from `generation-infra.json` success_metrics; 30-day log retention                                                          |
 
 ## Step 4: Generate outputs.tf
