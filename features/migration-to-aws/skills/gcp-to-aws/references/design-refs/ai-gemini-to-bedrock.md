@@ -77,12 +77,13 @@ Gemini 3.1 Pro Preview (Feb 19, 2026) has shifted the landscape. Be honest with 
 | Gemini 2.5 Flash          | $0.30 / $2.50                                  | Nova Lite          | $0.06 / $0.24  | Bedrock 88% cheaper |
 | Gemini 2.5 Flash Thinking | $0.30 / $0.60–$3.50 (varies by thinking budget) | Claude Sonnet 4.6 with extended thinking | $3.00 / $15.00 | Depends on thinking budget — at full thinking ($3.50/M output) Sonnet 4.6 is comparable; at low thinking ($0.60/M output) Gemini is cheaper. Profile actual thinking token usage before recommending. |
 | Gemini 2.0 Flash          | $0.10 / $0.40                                  | Nova Micro         | $0.035 / $0.14 | Bedrock 65% cheaper |
-| Gemini Flash 1.5          | $0.075 / $0.30                                 | Nova Micro         | $0.035 / $0.14 | Bedrock 53% cheaper |
+| Gemini Flash 1.5          | **Legacy — EOL Sep 24, 2025. Migrate to Gemini 2.5 Flash.** | Nova Lite | $0.06 / $0.24 | If still in use, migrate source model first; strong Bedrock cost case once on 2.5 Flash |
 
 ### Legacy/Specialized
 
 | Gemini Model            | Price (in/out per 1M) | Best Bedrock Match  | Bedrock Price   | Winner                                                           |
 | ----------------------- | --------------------- | ------------------- | --------------- | ---------------------------------------------------------------- |
+| Gemini 1.5 Pro          | **Legacy — EOL Sep 24, 2025. Migrate to Gemini 2.5 Pro or 3.x Pro.** | Claude Sonnet 4.6 | $3.00 / $15.00 | If still in use, migrate source model first |
 | text-bison / chat-bison | Legacy                | Llama 4 Scout       | $0.17 / $0.66   | Bedrock (better quality + cheaper)                               |
 | text-embedding-004      | $0.025 / N/A          | Titan Embeddings V2 | $0.02 / N/A     | Bedrock 20% cheaper                                              |
 | imagen-*                | Varies                | Nova Canvas         | $0.04-$0.08/img | Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
