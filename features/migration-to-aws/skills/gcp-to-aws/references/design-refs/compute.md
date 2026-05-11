@@ -40,7 +40,9 @@
 ### GKE
 
 - **Kubernetes orchestration explicitly required** (`kubernetes = "eks-managed"` or `"eks-or-ecs"` in `preferences.json`) → EKS
-- **Default / no explicit K8s preference** (`kubernetes = "ecs-fargate"` or absent) → **Fargate** (simpler, no cluster overhead, no control plane cost)
+- **Default / no explicit K8s preference** (`kubernetes = "ecs-fargate"` or absent):
+  - If `gcp-resource-inventory.json` contains `google_container_cluster` → EKS (IaC signal shows K8s workload)
+  - Otherwise → **Fargate** (no K8s signal; lower-ops default)
 
 ## 6-Criteria Rubric
 
