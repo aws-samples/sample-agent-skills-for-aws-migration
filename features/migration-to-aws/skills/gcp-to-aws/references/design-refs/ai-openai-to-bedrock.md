@@ -158,7 +158,7 @@ _Percentages are blended savings using a 2:1 input-to-output token ratio. Actual
 | DALL-E / gpt-image   | Nova Canvas ($0.04-$0.08/img)                             | DALL-E EOL May 12, 2026; OpenAI replacement is gpt-image-1.5; Titan Image Gen v2 is Legacy (EOL Jun 30, 2026); use Nova Canvas |
 | Whisper (STT)        | Amazon Transcribe ($0.024/min)                            | 4x more expensive but more features                              |
 | TTS                  | Amazon Polly                                              | Different pricing model                                          |
-| Assistants API       | Bedrock Agents (sessions, action groups, knowledge bases) | 2-4 week migration                                               |
+| Assistants API       | Bedrock Agents (sessions, action groups, knowledge bases) | 2-4 week migration; if only using stateful conversations, Mantle Responses API may suffice (same-day) |
 | JSON mode            | Claude (excellent), Nova Pro (good)                       | Most models via prompt                                           |
 | Realtime API         | No equivalent                                             | Stay on OpenAI for this                                          |
 
@@ -175,6 +175,14 @@ If the application uses the OpenAI Python/JS SDK directly (`from openai import O
 3. Change model string (e.g., `gpt-5.4` → `anthropic.claude-sonnet-4-6` or `openai.gpt-oss-120b`)
 
 Supports Chat Completions API, Responses API, streaming, and stateful conversations. **Check regional availability** — Mantle is in 13 regions (US, EU, APAC, SA) as of April 2026. If the target region lacks Mantle, use the boto3 Converse API path instead.
+
+**Responses API capabilities (when stateful conversations matter):**
+- **Stateful conversation management** — Bedrock rebuilds context automatically; no need to pass full conversation history on each request
+- **Async / long-running inference** — background processing for workloads that exceed typical request timeouts (useful for complex agentic tasks)
+- **Streaming + non-streaming** — both modes supported via the same endpoint
+- **Note:** Not all models support the Responses API — check [API compatibility](https://docs.aws.amazon.com/bedrock/latest/userguide/models-api-compatibility.html) before selecting a model for stateful use cases
+
+**Migration path implication:** Apps using OpenAI's Assistants API *only* for stateful multi-turn conversations (not file search, code interpreter, or other Assistants-specific features) may be able to use Mantle's Responses API instead of a full Bedrock Agents migration. This reduces a 2-4 week migration to a same-day env var swap. Evaluate the app's actual Assistants API feature usage before defaulting to the Bedrock Agents path.
 
 **When to prefer Converse API over Mantle:** If you need Bedrock-specific features (Guardrails, Knowledge Bases, prompt caching, Bedrock Agents integration) or your target region doesn't have Mantle. Mantle is the fastest path; Converse API is the most feature-complete path.
 
