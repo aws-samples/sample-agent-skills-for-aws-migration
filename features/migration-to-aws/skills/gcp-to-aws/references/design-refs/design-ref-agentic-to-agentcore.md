@@ -196,6 +196,36 @@ When Strands path is selected, write this to `aws-design-ai.json`:
 
 ---
 
+## AgentCore Agent Performance Loop (May 2026 GA)
+
+A key migration argument for agentic workloads moving from GCP to AgentCore is the built-in observe-evaluate-optimize-deploy loop, now GA across all 15 AgentCore Runtime regions. Surface this when the source workload has any of: production traffic, eval requirements, or quality improvement needs.
+
+**Three capabilities:**
+
+| Capability | What it does | When to surface |
+|---|---|---|
+| **Optimization** | Analyzes production traces + evaluator outputs → recommends targeted updates to system prompts and tool descriptions. Built-in A/B testing validates changes before rollout. | Source app has system prompts or tool descriptions that need tuning in production |
+| **Batch Evaluation** | Replays curated or historical sessions to compare pre/post scores and catch regressions before changes reach end users. | Source app has any eval or regression testing requirement |
+| **User Simulation** | Generates realistic multi-turn conversations using LLM-backed actors to reveal behaviors beyond scripted test cases. | Source app lacks comprehensive test coverage for agentic behavior |
+
+**Migration argument:** GCP has no equivalent managed loop for agentic workloads. Vertex AI Agent Builder has basic eval tooling but no automated optimization or user simulation. Teams migrating to AgentCore get this loop without building it themselves.
+
+**When to include in design summary:** Always include when `agentic_profile.is_agentic == true` and `migration_approach == "strands"`. Add a note to `agentic_design.warnings[]` if the source workload has no eval infrastructure — this is an upgrade, not just a migration.
+
+**Output addition to `aws-design-ai.json`:**
+
+Add to `agentic_design`:
+
+```json
+"performance_loop": {
+  "available": true,
+  "capabilities": ["optimization", "batch_evaluation", "user_simulation"],
+  "note": "GA across all 15 AgentCore Runtime regions as of May 2026. No equivalent on GCP."
+}
+```
+
+---
+
 ## Present Summary (Strands-specific additions)
 
 After the standard model comparison summary from `design-ai.md`, add:
@@ -209,4 +239,5 @@ After the standard model comparison summary from `design-ai.md`, add:
 > - Memory: [session_manager] + [AgentCore Memory if cross_session]
 > - Bridge phase: [yes/no — for OpenAI Agents SDK users]
 > - Estimated effort: [range] depending on [drivers from guardrails]
+> - **Performance loop:** Optimization, batch evaluation, and user simulation available GA — no equivalent on GCP. Included at no additional setup cost.
 > - **Note:** Strands Agents is an open-source AWS framework (strandsagents.com) that powers AgentCore internally. It provides multi-agent primitives (Graphs, Swarms, Agents-as-Tools, A2A) with native AgentCore deployment.
