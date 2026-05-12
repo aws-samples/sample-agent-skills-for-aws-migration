@@ -196,31 +196,38 @@ When Strands path is selected, write this to `aws-design-ai.json`:
 
 ---
 
-## AgentCore Agent Performance Loop (May 2026 GA)
+## AgentCore Agent Performance Loop (Public Preview, May 2026)
 
-A key migration argument for agentic workloads moving from GCP to AgentCore is the built-in observe-evaluate-optimize-deploy loop, now GA across all 15 AgentCore Runtime regions. Surface this when the source workload has any of: production traffic, eval requirements, or quality improvement needs.
+AgentCore launched an observe-evaluate-optimize-deploy loop in **public preview** (May 2026). APIs may change before GA; CloudTrail audit logging is not yet supported for these features. Surface this as an optional post-migration capability for teams that care about production evals, regression testing, prompt/tool optimization, and A/B rollout — not as an unconditional migration advantage.
 
-**Three capabilities:**
+**When to surface:** `agentic_profile.is_agentic == true` AND the design targets AgentCore Runtime, Evaluations, or Gateway. Not gated on `migration_approach == "strands"` alone — the capability is tied to AgentCore, not the Strands SDK specifically.
 
-| Capability | What it does | When to surface |
-|---|---|---|
-| **Optimization** | Analyzes production traces + evaluator outputs → recommends targeted updates to system prompts and tool descriptions. Built-in A/B testing validates changes before rollout. | Source app has system prompts or tool descriptions that need tuning in production |
-| **Batch Evaluation** | Replays curated or historical sessions to compare pre/post scores and catch regressions before changes reach end users. | Source app has any eval or regression testing requirement |
-| **User Simulation** | Generates realistic multi-turn conversations using LLM-backed actors to reveal behaviors beyond scripted test cases. | Source app lacks comprehensive test coverage for agentic behavior |
+**Capabilities (all preview):**
 
-**Migration argument:** GCP has no equivalent managed loop for agentic workloads. Vertex AI Agent Builder has basic eval tooling but no automated optimization or user simulation. Teams migrating to AgentCore get this loop without building it themselves.
+| Capability | What it does | Prerequisite | Cost note |
+|---|---|---|---|
+| **Recommendations** | Analyzes production traces + evaluator outputs → recommends targeted updates to system prompts and tool descriptions | AgentCore traces + evaluations must be active | No separate charge; underlying AgentCore service costs apply |
+| **A/B Testing** | Validates prompt/tool changes via controlled rollout before full deployment | AgentCore Gateway | No separate charge |
+| **Batch Evaluation** | Replays curated or historical sessions to compare pre/post scores; catches regressions before changes reach end users | AgentCore Evaluations | No separate charge |
+| **User Simulation** | Generates realistic multi-turn conversations using LLM-backed actors to reveal behaviors beyond scripted test cases | AgentCore Evaluations | Incurs Bedrock model invocation costs per simulated turn |
 
-**When to include in design summary:** Always include when `agentic_profile.is_agentic == true` and `migration_approach == "strands"`. Add a note to `agentic_design.warnings[]` if the source workload has no eval infrastructure — this is an upgrade, not just a migration.
+**Caveats to surface explicitly:**
+- All capabilities are **public preview** — APIs may change before GA
+- **CloudTrail not yet supported** — do not recommend for workloads requiring complete audit coverage
+- User simulation incurs model invocation costs; estimate before enabling at scale
+- Requires AgentCore traces/evaluations to be active before recommendations are useful
 
 **Output addition to `aws-design-ai.json`:**
 
-Add to `agentic_design`:
+Add to `agentic_design` (optional — only when AgentCore Runtime/Evaluations/Gateway is in the design):
 
 ```json
 "performance_loop": {
-  "available": true,
-  "capabilities": ["optimization", "batch_evaluation", "user_simulation"],
-  "note": "GA across all 15 AgentCore Runtime regions as of May 2026. No equivalent on GCP."
+  "status": "preview",
+  "capabilities": ["recommendations", "batch_evaluations", "user_simulation", "ab_testing"],
+  "recommended_when": ["production eval requirements", "regression testing needed", "prompt/tool optimization desired", "A/B rollout required"],
+  "prerequisites": ["AgentCore traces and evaluations active", "AgentCore Gateway for A/B testing"],
+  "caveats": ["preview APIs — may change before GA", "CloudTrail not supported yet", "user simulation incurs model invocation costs"]
 }
 ```
 
@@ -239,5 +246,5 @@ After the standard model comparison summary from `design-ai.md`, add:
 > - Memory: [session_manager] + [AgentCore Memory if cross_session]
 > - Bridge phase: [yes/no — for OpenAI Agents SDK users]
 > - Estimated effort: [range] depending on [drivers from guardrails]
-> - **Performance loop:** Optimization, batch evaluation, and user simulation available GA — no equivalent on GCP. Included at no additional setup cost.
+> - **Performance loop (preview):** Because this design targets AgentCore Runtime, you can optionally add AgentCore's preview performance loop for evaluation, simulation, prompt/tool recommendations, and A/B validation. Note: CloudTrail not yet supported; user simulation incurs model costs.
 > - **Note:** Strands Agents is an open-source AWS framework (strandsagents.com) that powers AgentCore internally. It provides multi-agent primitives (Graphs, Swarms, Agents-as-Tools, A2A) with native AgentCore deployment.
