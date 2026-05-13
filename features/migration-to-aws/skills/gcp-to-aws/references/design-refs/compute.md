@@ -39,8 +39,10 @@
 
 ### GKE
 
-- **Kubernetes orchestration** required → EKS
-- **No K8s requirement** + **microservices** → Fargate (simpler, no cluster overhead)
+- **Kubernetes orchestration explicitly required** (`kubernetes = "eks-managed"` or `"eks-or-ecs"` in `preferences.json`) → EKS
+- **Default / no explicit K8s preference** (`kubernetes = "ecs-fargate"` or absent):
+  - If `gcp-resource-inventory.json` contains `google_container_cluster` → EKS (IaC signal shows K8s workload)
+  - Otherwise → **Fargate** (no K8s signal; lower-ops default)
 
 ## 6-Criteria Rubric
 
@@ -51,7 +53,9 @@ Apply in order; first match wins:
    - Prefer managed unless: Always-on + high baseline cost → EC2
 3. **User Preference**: From `preferences.json`: `design_constraints.kubernetes`, `design_constraints.cost_sensitivity`?
    - If `kubernetes = "eks-managed"` → EKS (preserves K8s investment)
+   - If `kubernetes = "eks-or-ecs"` → EKS with managed node groups (user is competent with K8s)
    - If `kubernetes = "ecs-fargate"` → Fargate (simpler managed containers)
+   - If `kubernetes` is **absent** → Fargate (treat same as `"ecs-fargate"` — do not default to EKS)
    - If `cost_sensitivity` present and high → prefer Fargate (lower operational cost)
 4. **Feature Parity**: Does GCP config require AWS-unsupported features?
    - Example: GCP auto-scaling to zero + cold-start-sensitive → Fargate (not Lambda)

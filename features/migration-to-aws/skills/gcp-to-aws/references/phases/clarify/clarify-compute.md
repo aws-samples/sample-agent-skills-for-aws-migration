@@ -70,10 +70,16 @@ A -> kubernetes: "eks-managed" — EKS recommended, preserves K8s investment
 B -> kubernetes: "eks-or-ecs" — EKS with managed node groups to reduce operational burden
 C -> kubernetes: "ecs-fargate" — Strong ECS Fargate recommendation, eliminates K8s management
 D -> (no constraint written — no K8s workloads)
-E -> same as default (B) — assume neutral, evaluate both EKS and ECS
+E -> same as default — see IaC-signal default rule below
 ```
 
-Default: B — `kubernetes: "eks-or-ecs"`.
+**Default (IaC-signal driven):**
+
+- If `gcp-resource-inventory.json` contains `google_container_cluster` resources → Default **B** (`kubernetes: "eks-or-ecs"`). Discovery shows the team is running Kubernetes; defaulting to Fargate produces a wrong first-pass architecture for users who skip questions.
+- If no `google_container_cluster` in inventory (Cloud Run, Cloud Functions, or billing-only) → Default **C** (`kubernetes: "ecs-fargate"`). No Kubernetes signal; Fargate is the lower-ops starting point.
+- If inventory is absent (billing-only mode) → Default **C** (`kubernetes: "ecs-fargate"`).
+
+**Rationale:** The default follows what discovery found, not a blanket product preference. Teams running GKE who answer E ("I don't know") are more likely to want EKS than Fargate — they already operate Kubernetes. Teams migrating from Cloud Run who answer E have no Kubernetes investment to preserve and are better served by Fargate. EKS and Fargate remain fully available via explicit answers A–C regardless of default.
 
 ---
 
