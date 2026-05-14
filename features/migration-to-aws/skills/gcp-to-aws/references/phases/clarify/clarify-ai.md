@@ -306,7 +306,7 @@ _Skip when:_ Auto-detection fully resolves AND user has no preference signal. Us
 | Answer | When it fits | Effort range | Risk |
 | ------ | ------------ | ------------ | ---- |
 | A) Retarget | Working system, team knows the framework, need to ship fast. LangGraph/CrewAI/AutoGen with Bedrock model provider support. | 1–3 weeks depending on agent count, tool count, test coverage | Low — orchestration unchanged |
-| B) AgentCore Harness | Simple single-agent, OpenAI Assistants migration, want managed runtime, or incremental migration (run existing models on AWS infra first). **Check regional availability before committing — currently preview in 4 regions only.** | 3–10 days depending on tool complexity and memory requirements | Low — config-based, reversible |
+| B) AgentCore Harness | Simple single-agent, OpenAI Assistants migration, want managed runtime, or incremental migration (run existing models on AWS infra first). **Check regional availability before committing — currently preview in 4 regions only (us-east-1, us-west-2, eu-central-1, ap-southeast-2).** | 3–10 days depending on tool complexity and memory requirements | Low — config-based, reversible |
 | C) Strands native | OpenAI Agents SDK or custom loops where retarget doesn't work well, multi-agent systems, team willing to refactor for AWS-native benefits. | 2–6 weeks depending on agent count, graph complexity, tool count | Medium — orchestration rewrite |
 | D) Undecided | — | — | — |
 

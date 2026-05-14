@@ -8,14 +8,14 @@ Shared warnings and constraints for all agentic migration paths. Loaded once by 
 
 AgentCore services have different regional footprints. Always validate via `get_regional_availability` from the `awsknowledge` MCP server before recommending.
 
-**As of April 2026:**
+**As of May 2026:**
 
 | Service | Availability | Regions |
 |---------|-------------|---------|
-| AgentCore Runtime (GA) | 9 regions | us-east-1, us-east-2, us-west-2, ap-southeast-1, ap-southeast-2, ap-northeast-1, eu-central-1, eu-west-1, ap-south-1 |
+| AgentCore Runtime (GA) | 15 regions | us-east-1, us-east-2, us-west-2, ap-southeast-1, ap-southeast-2, ap-northeast-1, ap-south-1, ap-southeast-3 (Jakarta), ap-northeast-2 (Seoul), eu-central-1, eu-west-1, eu-west-2 (London), eu-west-3 (Paris), eu-north-1 (Stockholm), ca-central-1 |
 | AgentCore Harness (Preview) | 4 regions | us-west-2, us-east-1, ap-southeast-2, eu-central-1 |
-| AgentCore Memory (GA) | 9 regions | Same as Runtime |
-| AgentCore Gateway (GA) | 9 regions | Same as Runtime |
+| AgentCore Memory (GA) | 15 regions | Same as Runtime |
+| AgentCore Gateway (GA) | 15 regions | Same as Runtime |
 
 **IMPORTANT:** These lists go stale. The `get_regional_availability` MCP call is the source of truth. Use the table above only as a fallback if the MCP call fails.
 
@@ -44,16 +44,24 @@ The `bedrock-mantle` endpoint (OpenAI-compatible) has a **hard limit of 10,000 R
 | Scenario | Risk | Action |
 |----------|------|--------|
 | Single model, moderate traffic | Low | Standard on-demand acceptable |
-| Multiple models all routed through Mantle | Medium | 10K RPM is shared — monitor aggregate RPM, not per-model |
-| High-volume production workload on Mantle | High | Request RPM quota increase via Service Quotas; consider `bedrock-runtime` (Converse API) for higher throughput |
+| Multiple models all routed through Mantle | Medium | 10K RPM is shared across all models on the endpoint — monitor aggregate RPM, not per-model |
+| High-volume production workload on Mantle | High | Request RPM quota increase via Service Quotas; consider `bedrock-runtime` (Converse API) for higher throughput and reserved capacity |
 
-**Claude 4.7+ on Mantle:** Input TPM is account-history-dependent (check Service Quotas console). Output TPM is capped at 2M. All other models on Mantle have no per-model TPM limit — only the shared 10K RPM applies.
+**TPM limits differ by model family on Mantle:**
+
+| Model family | Input TPM | Output TPM | Notes |
+|---|---|---|---|
+| Claude 4.7+ | Account-history-dependent (check Service Quotas console) | 2M cap | Tighter limits — high-volume Claude workloads should use `bedrock-runtime` |
+| All other models (Nova, Llama, gpt-oss, Mistral, etc.) | No per-customer limit | No per-customer limit | Only the shared 10K RPM applies |
+
+This asymmetry matters for migrations: a team moving GPT-4o Mini to `gpt-oss-120b` via Mantle has no TPM cap, but a team moving to Claude Sonnet 4.6 via Mantle hits the 2M output TPM ceiling at scale.
 
 **When to recommend `bedrock-runtime` over Mantle:**
 - User has `ai_token_volume = "high"` or `"very_high"`
 - Multiple models are being migrated simultaneously
 - User needs batch inference (not available on Mantle)
 - User needs reserved capacity (not available on Mantle)
+- User is migrating to Claude and expects output-heavy workloads (code gen, long-form, tool outputs)
 
 Surface this in the design summary when `integration.pattern = "direct_sdk"` and `ai_source = "openai"` and `ai_token_volume` is `"medium"` or higher.
 
