@@ -73,9 +73,10 @@ Point this plugin at your codebase, Terraform files, or GCP billing data. It run
 
 ### Agent Skill Triggers
 
-| Agent Skill    | Triggers                                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **gcp-to-aws** | "migrate GCP to AWS", "move from GCP", "GCP migration plan", "estimate AWS costs", "migrate my AI app to AWS" |
+| Agent Skill                | Triggers                                                                                                                                                |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **gcp-to-aws**             | "migrate GCP to AWS", "move from GCP", "GCP migration plan", "estimate AWS costs", "migrate my AI app to AWS"                                           |
+| **bigquery-to-databricks** | "migrate BigQuery to Databricks", "BigQuery to Lakehouse", "move off BigQuery", "BigQuery to Delta Lake" — partner skill for the BigQuery specialist gate |
 
 ### MCP Servers
 
